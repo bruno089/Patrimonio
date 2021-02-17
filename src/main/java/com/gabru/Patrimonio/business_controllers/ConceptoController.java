@@ -5,23 +5,26 @@ import com.gabru.Patrimonio.repositories.ConceptoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 
 public class ConceptoController {
+
     @Autowired
     ConceptoRepository conceptoRepository;
 
-    public String listar(){
-        long total = conceptoRepository.count();
-        //conceptoRepository.findAll();
-        return String.valueOf("Total: " + total);
+    public List<Concepto> findAll(){
+        List<Concepto> conceptosLis;
+        conceptosLis = conceptoRepository.findAll();
+        return conceptosLis;
     }
 
-    public Concepto agregar(){
+    public Concepto save(){
         Concepto concepto = new Concepto();
         concepto.setNombre("Rodo");
         concepto.setIngreso(true);
-
         return conceptoRepository.save(concepto);
     }
 }
