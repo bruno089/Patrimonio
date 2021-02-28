@@ -1,5 +1,6 @@
 package com.gabru.Patrimonio.business_controllers;
 
+import com.gabru.Patrimonio.dtos.ConceptoDto;
 import com.gabru.Patrimonio.entities.Concepto;
 import com.gabru.Patrimonio.repositories.ConceptoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ public class ConceptoController {
     }
 
     public Optional<Concepto> buscar(int id){
+        //todo cambiar con manejo de excepciones
         Optional<Concepto> con = conceptoRepository.findById(id);
 
         if (con.isPresent()){
@@ -33,16 +35,18 @@ public class ConceptoController {
         }
     }
 
-    public Concepto guardar(){
+    public Concepto guardar(ConceptoDto conceptoDto){
+        //todo Bru: manejo de excepciones
         Concepto concepto = new Concepto();
-        concepto.setNombre("Rodo");
-        concepto.setIngreso(true);
+        concepto.setNombre(conceptoDto.getNombre());
+        concepto.setIngreso(conceptoDto.isIngreso());
 
         return conceptoRepository.save(concepto);
     }
 
-    public void borrar(){
-        int n = 1;
-        conceptoRepository.deleteById(n);
+    public void borrar(int id){
+        if (conceptoRepository.findById(id).isPresent()){
+            conceptoRepository.deleteById(id);
+        }
     }
 }
