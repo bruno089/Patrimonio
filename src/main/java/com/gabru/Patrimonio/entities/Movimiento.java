@@ -4,18 +4,17 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-
-@Table(name = "tPatPatrimonio")
-
+@Table(name = "tpatpatrimonio")
 public class Movimiento {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id    @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(name = "nidpatrimonio")
     int id;
-
+    @Column(name = "npatimporte")
     Double importe;
+    @Column(name = "spatobservacion")
     String observacion;
+    @Column(name = "dpatfecha",columnDefinition = "smalldatetime")
     LocalDate fecha;
-    @ManyToOne
+    @ManyToOne @JoinColumn(name = "nidconcepto")
     Concepto concepto;
 
     public Double getImporte() {

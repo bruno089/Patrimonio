@@ -2,11 +2,13 @@ package com.gabru.Patrimonio.entities;
 import javax.persistence.*;
 
 @Entity
-//@Table(name = "Concepto")
+@Table(name = "tpatconceptos")
 public class Concepto{
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id  @Column(name = "nidconcepto") @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
+    @Column(name = "sconnombre")
     String nombre;
+    @Column(name = "bconingreso")
     boolean ingreso;
 
     public int getId() {
