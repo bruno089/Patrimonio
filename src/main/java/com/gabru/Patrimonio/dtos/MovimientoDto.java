@@ -1,6 +1,5 @@
 package com.gabru.Patrimonio.dtos;
 
-
 import com.gabru.Patrimonio.entities.Concepto;
 
 import javax.persistence.ManyToOne;
@@ -9,7 +8,7 @@ import java.time.LocalDate;
 public class MovimientoDto {
     Double importe;
     String observacion;
-    LocalDate fecha;
+    String fecha;
     int conceptoId;
 
     public Double getImporte() {
@@ -28,11 +27,11 @@ public class MovimientoDto {
         this.observacion = observacion;
     }
 
-    public LocalDate getFecha() {
+    public String getFecha() {
         return fecha;
     }
 
-    public void setFecha(LocalDate fecha) {
+    public void setFecha(String fecha) {
         this.fecha = fecha;
     }
 

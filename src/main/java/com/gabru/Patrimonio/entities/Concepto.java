@@ -1,6 +1,12 @@
 package com.gabru.Patrimonio.entities;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
+@Data @NoArgsConstructor @AllArgsConstructor @Builder
 @Entity
 @Table(name = "tpatconceptos")
 public class Concepto{
@@ -11,7 +17,7 @@ public class Concepto{
     @Column(name = "bconingreso")
     boolean ingreso;
 
-    public int getId() {
+  /*  public int getId() {
         return id;
     }
 
@@ -33,7 +39,7 @@ public class Concepto{
 
     public void setIngreso(boolean ingreso) {
         this.ingreso = ingreso;
-    }
+    }*/
 }
 
 
