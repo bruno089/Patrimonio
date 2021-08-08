@@ -41,4 +41,8 @@ public class MovimientoController {
         return movimientoRepository.save(movimiento);
        //Todo Para gabi Agregar un campo, que diga la fecha que se guarda el movimiento, cosa de luego poder hacer un analisis en que momento se cargan los movimientos
     }
+
+    public void borrar(int movimientoId) {
+        movimientoRepository.delete(movimientoRepository.getOne(movimientoId));
+    }
 }

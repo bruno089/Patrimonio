@@ -4,10 +4,7 @@ import com.gabru.Patrimonio.business_controllers.MovimientoController;
 import com.gabru.Patrimonio.dtos.MovimientoDto;
 import com.gabru.Patrimonio.entities.Movimiento;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -16,6 +13,7 @@ import javax.validation.Valid;
 
 public class MovimientoResource {
     public static final String MOVIMIENTOS_ENDPOINT = "/movimientos";
+    public static final String MOVIMIENTO_ID = "/{movimientoId}";
 
     @Autowired
     MovimientoController movimientoController;
@@ -24,4 +22,13 @@ public class MovimientoResource {
     public Movimiento agregar(@Valid @RequestBody MovimientoDto movimientoDto){
         return movimientoController.guardar(movimientoDto);
     }
+
+    //Todo en base que vamos a borrar un movimiento:
+    // cada movimiento deberia ser identificado inequivocamente.
+    // Para eso debemos devolver el identificador en la respuesta de cuando se guarda
+    @DeleteMapping(MOVIMIENTO_ID)
+    public void borrar(@PathVariable int movimientoId){
+        movimientoController.borrar(movimientoId);
+    }
+
 }
