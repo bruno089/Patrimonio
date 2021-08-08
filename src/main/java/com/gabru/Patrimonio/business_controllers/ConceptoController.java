@@ -35,13 +35,21 @@ public class ConceptoController {
         }
     }
 
-    public Concepto guardar(ConceptoDto conceptoDto){
+    public ConceptoDto guardar(ConceptoDto conceptoDto){
         //todo Bru: manejo de excepciones
         Concepto concepto = new Concepto();
         concepto.setNombre(conceptoDto.getNombre());
         concepto.setIngreso(conceptoDto.isIngreso());
 
-        return conceptoRepository.save(concepto);
+        Concepto conceptoGuardado = new Concepto();
+        conceptoGuardado = conceptoRepository.save(concepto);
+
+        ConceptoDto conceptoDtoSalida = new ConceptoDto();
+
+        conceptoDtoSalida.setNombre("El nombre es: " + conceptoGuardado.getNombre());
+        conceptoDtoSalida.setIngreso(conceptoGuardado.isIngreso());
+
+        return conceptoDtoSalida;
     }
 
     public void borrar(int id){
