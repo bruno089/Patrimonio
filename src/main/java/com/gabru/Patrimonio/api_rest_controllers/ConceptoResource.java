@@ -31,7 +31,7 @@ public class ConceptoResource {
     }
 
     @PostMapping
-    public Concepto agregar(@Valid @RequestBody ConceptoDto conceptoDto){
+    public ConceptoDto agregar(@Valid @RequestBody ConceptoDto conceptoDto){
         return conceptoController.guardar(conceptoDto);
     }
 
