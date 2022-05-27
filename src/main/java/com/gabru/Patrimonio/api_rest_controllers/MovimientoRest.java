@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping(MovimientoResource.MOVIMIENTOS_ENDPOINT)
+@RequestMapping(MovimientoRest.MOVIMIENTOS_ENDPOINT)
 
-public class MovimientoResource {
+public class MovimientoRest {
     public static final String MOVIMIENTOS_ENDPOINT = "/movimientos";
     public static final String MOVIMIENTO_ID = "/{movimientoId}";
 

@@ -38,7 +38,9 @@ public class MovimientoController {
         Concepto concepto = conceptoRepository.findById(movimientoDto.getConceptoId()).get();
         movimiento.setConcepto(concepto);*/
 
-        return movimientoRepository.save(movimiento);
+        Movimiento movimientoGuardado = movimientoRepository.save(movimiento);
+
+        return movimientoGuardado;
        //Todo Para gabi Agregar un campo, que diga la fecha que se guarda el movimiento, cosa de luego poder hacer un analisis en que momento se cargan los movimientos
     }
 

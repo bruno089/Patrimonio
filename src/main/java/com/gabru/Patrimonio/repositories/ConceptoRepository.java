@@ -2,6 +2,9 @@ package com.gabru.Patrimonio.repositories;
 
 import com.gabru.Patrimonio.entities.Concepto;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import java.util.Optional;
 
 public interface ConceptoRepository extends JpaRepository<Concepto,Integer> {
 /*
@@ -13,4 +16,6 @@ public interface ConceptoRepository extends JpaRepository<Concepto,Integer> {
     Concepto findByIdAndActivo(int id, boolean activo);
 
     //JPQL*/
+
+    Optional<Concepto> findByNombre(String nombre);
 }

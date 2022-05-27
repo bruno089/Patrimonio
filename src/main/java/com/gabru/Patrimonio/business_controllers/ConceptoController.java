@@ -13,8 +13,7 @@ import java.util.Optional;
 
 public class ConceptoController {
 
-    @Autowired
-    ConceptoRepository conceptoRepository;
+    @Autowired    ConceptoRepository conceptoRepository;
 
     public List<Concepto> buscarTodos(){
         List<Concepto> conceptosLis;
@@ -36,20 +35,25 @@ public class ConceptoController {
     }
 
     public ConceptoDto guardar(ConceptoDto conceptoDto){
-        //todo Bru: manejo de excepciones
-        Concepto concepto = new Concepto();
-        concepto.setNombre(conceptoDto.getNombre());
-        concepto.setIngreso(conceptoDto.isIngreso());
 
-        Concepto conceptoGuardado = new Concepto();
-        conceptoGuardado = conceptoRepository.save(concepto);
+        Optional<Concepto> optionalConcepto  = conceptoRepository.findByNombre(conceptoDto.getNombre());
+        if (optionalConcepto.isPresent()){
+            //rebota y que no continue el proceso de insercion
+            return null; //todo Bru: manejo de excepciones
+        }else{
+            Concepto concepto = new Concepto();
+            concepto.setNombre(conceptoDto.getNombre());
+            concepto.setIngreso(conceptoDto.isIngreso());
 
-        ConceptoDto conceptoDtoSalida = new ConceptoDto();
+            concepto = conceptoRepository.save(concepto);
 
-        conceptoDtoSalida.setNombre("El nombre es: " + conceptoGuardado.getNombre());
-        conceptoDtoSalida.setIngreso(conceptoGuardado.isIngreso());
+            ConceptoDto conceptoDtoSalida = new ConceptoDto();
+            conceptoDtoSalida.setNombre("El nombre es: " + concepto.getNombre());
+            conceptoDtoSalida.setIngreso(concepto.isIngreso());
 
-        return conceptoDtoSalida;
+            return conceptoDtoSalida;
+
+        }
     }
 
     public void borrar(int id){
