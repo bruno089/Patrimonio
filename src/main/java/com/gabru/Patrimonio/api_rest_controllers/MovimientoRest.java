@@ -14,15 +14,11 @@ import javax.validation.Valid;
 public class MovimientoRest {
     public static final String MOVIMIENTOS_ENDPOINT = "/movimientos";
     public static final String MOVIMIENTO_ID = "/{movimientoId}";
-
-    @Autowired
-    MovimientoController movimientoController;
-
+    @Autowired    MovimientoController movimientoController;
     @PostMapping
     public Movimiento agregar(@Valid @RequestBody MovimientoDto movimientoDto){
         return movimientoController.guardar(movimientoDto);
     }
-
     //Todo en base que vamos a borrar un movimiento:
     // cada movimiento deberia ser identificado inequivocamente.
     // Para eso debemos devolver el identificador en la respuesta de cuando se guarda
@@ -30,5 +26,7 @@ public class MovimientoRest {
     public void borrar(@PathVariable int movimientoId){
         movimientoController.borrar(movimientoId);
     }
+
+    //Todo Leer y registrar Movimientos a traves de un Excel?
 
 }
