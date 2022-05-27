@@ -17,8 +17,9 @@ import java.util.Optional;
 public class MovimientoController {
     @Autowired    MovimientoRepository movimientoRepository;
     @Autowired    ConceptoRepository conceptoRepository;
-    public Movimiento guardar(MovimientoDto movimientoDto) {
+    public MovimientoDto guardar(MovimientoDto movimientoDto) {
         LocalDate fecha = LocalDate.parse(movimientoDto.getFecha(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
         Movimiento movimiento = Movimiento.builder()
                 .observacion(movimientoDto.getObservacion())
                 .importe(movimientoDto.getImporte())
@@ -27,9 +28,10 @@ public class MovimientoController {
                 .concepto(conceptoRepository.findById(movimientoDto.getConceptoId()).get())
                 .build();
 
-        Movimiento movimientoGuardado = movimientoRepository.save(movimiento);
+        movimientoRepository.save(movimiento);
 
-        return movimientoGuardado;
+
+        return new MovimientoDto(movimiento);
        //Todo Para gabi Agregar un campo, que diga la fecha que se guarda el movimiento, cosa de luego poder hacer un analisis en que momento se cargan los movimientos
     }
 

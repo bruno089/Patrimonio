@@ -20,25 +20,24 @@ public class ConceptoRest {
     ConceptoController conceptoController;
 
     @GetMapping
-    public List<Concepto> buscarTodosConOtroNombre(){
+    public List<Concepto> buscarTodos(){
         return conceptoController.buscarTodos();
     }
 
     @GetMapping(CONCEPTO_ID)
     public Optional<Concepto> buscar(@PathVariable int id){
         return conceptoController.buscar(id);
-    }
+    } //Todo no debe devolver un optional tiene que ser un dto
 
     @PostMapping
     public ConceptoDto agregar(@Valid @RequestBody ConceptoDto conceptoDto){
-        //if longitud
         return conceptoController.guardar(conceptoDto);
     }
 
     @DeleteMapping(CONCEPTO_ID)
     public void borrar(@PathVariable int id){
         conceptoController.borrar(id);
-    }
+    } //Todo no permite borrar si ya tiene conceptos asociados¿?
 
     //todo Bru: Buscar por Filtros
 }
