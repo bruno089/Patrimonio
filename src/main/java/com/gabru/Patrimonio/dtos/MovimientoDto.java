@@ -1,15 +1,10 @@
 package com.gabru.Patrimonio.dtos;
 
-import com.gabru.Patrimonio.entities.Concepto;
-
-import javax.persistence.ManyToOne;
-import java.time.LocalDate;
-
 public class MovimientoDto {
     Double importe;
     String observacion;
     String fecha;
-    int conceptoId;
+    int idConcepto;
 
     public Double getImporte() {
         return importe;
@@ -35,11 +30,11 @@ public class MovimientoDto {
         this.fecha = fecha;
     }
 
-    public int getConceptoId() {
-        return conceptoId;
+    public int getIdConcepto() {
+        return idConcepto;
     }
 
-    public void setConceptoId(int conceptoId) {
-        this.conceptoId = conceptoId;
+    public void setIdConcepto(int idConcepto) {
+        this.idConcepto = idConcepto;
     }
 }

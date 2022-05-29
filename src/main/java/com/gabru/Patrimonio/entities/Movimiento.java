@@ -20,6 +20,6 @@ public class Movimiento {
     LocalDate fecha;
     @Column(columnDefinition = "smalldatetime")
     LocalDateTime alta;
-    @ManyToOne @JoinColumn(name = "nidConcepto")
+    @ManyToOne @JoinColumn(name = "idconcepto")
     Concepto concepto;
 }
