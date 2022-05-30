@@ -1,40 +1,26 @@
 package com.gabru.Patrimonio.dtos;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.gabru.Patrimonio.entities.Movimiento;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@Data @NoArgsConstructor @AllArgsConstructor @Builder
 public class MovimientoDto {
+    Integer id;
     Double importe;
     String observacion;
     String fecha;
-    int idConcepto;
+    Integer idConcepto;
+    String concepto;
 
-    public Double getImporte() {
-        return importe;
-    }
-
-    public void setImporte(Double importe) {
-        this.importe = importe;
-    }
-
-    public String getObservacion() {
-        return observacion;
-    }
-
-    public void setObservacion(String observacion) {
-        this.observacion = observacion;
-    }
-
-    public String getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(String fecha) {
-        this.fecha = fecha;
-    }
-
-    public int getIdConcepto() {
-        return idConcepto;
-    }
-
-    public void setIdConcepto(int idConcepto) {
-        this.idConcepto = idConcepto;
+    public MovimientoDto(Movimiento movimiento) {
+        this.id = movimiento.getId();
+        this.importe = movimiento.getImporte();
+        this.observacion = movimiento.getObservacion();
+        this.concepto = movimiento.getConcepto().getNombre();
     }
 }
