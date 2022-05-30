@@ -39,7 +39,9 @@ public class ApiExceptionHandler {
             org.springframework.dao.DuplicateKeyException.class,
             org.springframework.web.HttpRequestMethodNotSupportedException.class,
             org.springframework.web.bind.MethodArgumentNotValidException.class,
-            org.springframework.http.converter.HttpMessageNotReadableException.class
+            org.springframework.http.converter.HttpMessageNotReadableException.class,
+            java.time.format.DateTimeParseException.class
+
     })
     @ResponseBody
     public ErrorMessage badRequest(HttpServletRequest request, Exception exception) {
