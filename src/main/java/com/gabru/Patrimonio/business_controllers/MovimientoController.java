@@ -12,7 +12,10 @@ import org.springframework.stereotype.Controller;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
+
+import static com.gabru.Patrimonio.utils.FechaConverter.stringToLocalDateTimeSinHora;
 
 @Controller
 public class MovimientoController {
@@ -40,8 +43,15 @@ public class MovimientoController {
 
         return new MovimientoDto(movimiento);
     }
-
     public void borrar(int movimientoId) {
         movimientoRepository.delete(movimientoRepository.getOne(movimientoId));
     }
+    public List<Movimiento> buscarMovimientosPorFecha(String fechaInicial, String fechaFinal) {
+
+        LocalDateTime fechaIni = stringToLocalDateTimeSinHora(fechaInicial,"yyyy-MM-dd");
+        LocalDateTime fechaFin = stringToLocalDateTimeSinHora(fechaFinal,"yyyy-MM-dd");
+
+        return movimientoRepository.findAllByAltaBetween(fechaIni,fechaFin);
+    }
+
 }
