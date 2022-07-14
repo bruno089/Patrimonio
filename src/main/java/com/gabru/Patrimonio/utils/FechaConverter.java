@@ -5,6 +5,14 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
+/* Posibles patrones de entradas
+d/M/yyyy
+yyyyMMdd
+yyyy-MM-dd   --->  fecha Receta
+yyyy-MM-dd   --->  obt Prescripcion por fecha y DNI
+"2020-07-02T08:32:12"  DateTimeFormatter.ISO_LOCAL_DATE_TIME --- viene en peticion dispensa
+* */
+
 public class FechaConverter {
     public static LocalDate stringtoLocalDate(String fecha , String patronDeEntrada ){
         if (fecha == null) return null;

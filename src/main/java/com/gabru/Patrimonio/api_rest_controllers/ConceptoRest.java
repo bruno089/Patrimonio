@@ -20,6 +20,7 @@ public class ConceptoRest {
     ConceptoController conceptoController;
 
     @GetMapping
+
     public List<Concepto> buscarTodos(){
         return conceptoController.buscarTodos();
     }
