@@ -23,16 +23,10 @@ public class UsuarioService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(final String nombreUsuario) throws UsernameNotFoundException {
-       //Todo pendiente para cuando haya tabla
-       /* Usuario usuario = usuarioRepository.findByNombre(nombreUsuario)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado:  " + nombreUsuario));*/
 
-        Usuario usuario = Usuario.builder()
-                .nombre("patrimonio")
-                .clave("prueba1")
-                .activo(true)
-                .roles(new Role[]{Role.AUTHENTICATED})
-                .build();
+        Usuario usuario = usuarioRepository
+                .findByNombre(nombreUsuario)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado:  " + nombreUsuario));
 
         return this.userBuilder(usuario.getNombre(),usuario.getClave(),usuario.isActivo(),usuario.getRoles());
     }

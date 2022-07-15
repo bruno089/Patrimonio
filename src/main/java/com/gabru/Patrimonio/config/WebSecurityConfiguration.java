@@ -38,23 +38,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                     "/swagger.json",
                     "/swagger-ui.html",
                     "/swagger-ui/*",
-                    "/helpcheck/**"
-                    //,"/**/**"
+                    "/helpcheck/**",
+                    "/seguridad/**"
             };
-
-    //Todo se saca de spring la encriptacion que le pasamos , para que compare sin el encriptador
-
-    /*@Override
+    @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(usuarioService).passwordEncoder(passwordEncoder());
     }
-    */
-    //Todo para trabajar con JWT
-    /*
-    @Bean
-    public JwtAuthorizationFilter jwtAuthorizationFilter() throws Exception {
-        return new JwtAuthorizationFilter(this.authenticationManager());
-    }*/
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
@@ -66,7 +56,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                 //.and().addFilter(jwtAuthorizationFilter());
     }
-
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth){
         auth.authenticationProvider(new AuthenticationProvider() {
@@ -78,7 +67,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 if (userDetails != null && userDetails.getPassword().equals(password)) {
                     return new UsernamePasswordAuthenticationToken(username, password, userDetails.getAuthorities());
                 } else {
-                    throw new BadCredentialsException("Bad Credentials - Sancor Salud");
+                    throw new BadCredentialsException("Bad Credentials");
                 }
             }
 
@@ -88,7 +77,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             }
         });
     }
-
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -104,10 +92,15 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
-
-
-
     @Bean
     public PasswordEncoder passwordEncoder() {return new BCryptPasswordEncoder(); }
+
+    //Todo para trabajar con JWT
+    /*
+    @Bean
+    public JwtAuthorizationFilter jwtAuthorizationFilter() throws Exception {
+        return new JwtAuthorizationFilter(this.authenticationManager());
+    }*/
+
 }
 
