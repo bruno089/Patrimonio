@@ -16,9 +16,9 @@ public class Usuario {
     int id;
     @Column( unique = true, nullable = false, length = 50)
     String nombre;
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 500)
     String clave;
-    @Column(length = 800)
+    @Column(length = 100)
     String email;
     boolean activo;
     LocalDate registro;
