@@ -18,7 +18,7 @@ public class Usuario {
     String nombre;
     @Column(nullable = false, length = 50)
     String clave;
-    @Column(length = 50)
+    @Column(length = 800)
     String email;
     boolean activo;
     LocalDate registro;
