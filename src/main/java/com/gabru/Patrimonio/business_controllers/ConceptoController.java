@@ -7,6 +7,7 @@ import com.gabru.Patrimonio.repositories.ConceptoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,28 +26,42 @@ public class ConceptoController {
         }
         return con;
     }
-
-    public ConceptoDto guardar(ConceptoDto conceptoDto){
+    public ConceptoDto agregar(ConceptoDto conceptoDto){
 
         if (conceptoRepository.findByNombre(conceptoDto.getNombre()) .isPresent()){
             throw  new ConflictException("Concepto existente: " + conceptoDto.getNombre());
         }
 
-        Concepto concepto = new Concepto();
-        concepto.setNombre(conceptoDto.getNombre());
-        concepto.setIngreso(conceptoDto.isIngreso());
+        Concepto concepto =  Concepto.builder()
+                .nombre(conceptoDto.getNombre())
+                .ingreso(conceptoDto.isIngreso())
+                .build();
+
         conceptoRepository.save(concepto);
 
-        ConceptoDto conceptoDtoSalida = new ConceptoDto();
-        conceptoDtoSalida.setNombre("El nombre es: " + concepto.getNombre());
-        conceptoDtoSalida.setIngreso(concepto.isIngreso());
-
-        return conceptoDtoSalida;
+        return ConceptoDto.builder()
+                .nombre(concepto.getNombre())
+                .ingreso(concepto.isIngreso())
+                .build();
     }
-
     public void borrar(int id){
         if (conceptoRepository.findById(id).isPresent()){
             conceptoRepository.deleteById(id);
         }
+    }
+    public List<ConceptoDto> buscarPorNombre(String nombre){
+        List<Concepto> conceptos;
+        conceptos = conceptoRepository.findByNombreContaining(nombre);
+        List<ConceptoDto> conceptoDtos = new ArrayList<>();
+
+        conceptos.forEach( concepto -> { conceptoDtos.add(ConceptoDto.builder()
+                .nombre(concepto.getNombre())
+                .ingreso(concepto.isIngreso()).build());
+        });
+
+        if (conceptos.isEmpty()){
+            throw new ConflictException("No hay elementos con: " + nombre );
+        }
+        return conceptoDtos;
     }
 }

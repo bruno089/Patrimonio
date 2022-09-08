@@ -16,13 +16,16 @@ public class ConceptoRest {
     public static final String CONCEPTOS_ENDPOINT = "/conceptos";
     public static final String CONCEPTO_ID = "/{id}";
 
-    @Autowired
-    ConceptoController conceptoController;
+    @Autowired    ConceptoController conceptoController;
 
     @GetMapping
-
     public List<Concepto> buscarTodos(){
         return conceptoController.buscarTodos();
+    }
+
+    @GetMapping("nombre/{nombre}")
+    public List<ConceptoDto> buscarTodos(@PathVariable String nombre){
+        return conceptoController.buscarPorNombre(nombre);
     }
 
     @GetMapping(CONCEPTO_ID)
@@ -32,7 +35,7 @@ public class ConceptoRest {
 
     @PostMapping
     public ConceptoDto agregar(@Valid @RequestBody ConceptoDto conceptoDto){
-        return conceptoController.guardar(conceptoDto);
+        return conceptoController.agregar(conceptoDto);
     }
 
     @DeleteMapping(CONCEPTO_ID)
