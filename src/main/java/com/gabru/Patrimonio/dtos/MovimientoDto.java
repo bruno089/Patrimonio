@@ -12,15 +12,16 @@ import lombok.NoArgsConstructor;
 public class MovimientoDto {
     Integer id;
     Double importe;
-    String observacion;
-    String fecha;
+    String  observacion;
+    String  fecha;
     Integer idConcepto;
-    String concepto;
+    String  conceptoDescripcion;
+
 
     public MovimientoDto(Movimiento movimiento) {
         this.id = movimiento.getId();
         this.importe = movimiento.getImporte();
         this.observacion = movimiento.getObservacion();
-        this.concepto = movimiento.getConcepto().getNombre();
+        this.conceptoDescripcion = movimiento.getConcepto().getNombre();
     }
 }

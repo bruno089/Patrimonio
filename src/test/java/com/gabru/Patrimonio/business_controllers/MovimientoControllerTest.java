@@ -33,13 +33,12 @@ class MovimientoControllerTest {
 
         List<Movimiento> movimientos = new ArrayList<>();
         movimientos.add(Movimiento.builder().id(6).importe(100.00) .build());
-        Mockito.when(movimientoRepository.findAllByAltaBetween(Mockito.any(),Mockito.any())).thenReturn(movimientos);
+        Mockito.when(movimientoRepository.findAllByFechaBetween(Mockito.any(),Mockito.any())).thenReturn(movimientos);
 
         List<Movimiento> resultado = movimientoController.buscarMovimientosPorFecha(fechaInicial,fechaFinal);
 
         Assertions.assertNotNull(resultado);
     }
-
     @Test
     void buscarMovimientosPorFecha_fechaInvalida_Test() {
         String fechaInicial = "SinFormato";

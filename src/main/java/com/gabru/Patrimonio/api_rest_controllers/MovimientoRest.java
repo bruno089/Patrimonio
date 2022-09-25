@@ -5,6 +5,7 @@ import com.gabru.Patrimonio.dtos.MovimientoDto;
 import com.gabru.Patrimonio.entities.Movimiento;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -20,7 +21,7 @@ public class MovimientoRest {
     @Autowired MovimientoController movimientoController;
     @PostMapping
     public MovimientoDto agregar(@Valid @RequestBody MovimientoDto movimientoDto){
-        return movimientoController.guardar(movimientoDto);
+        return movimientoController.agregar(movimientoDto);
     }
     @DeleteMapping(MOVIMIENTO_ID)
     public void borrar(@PathVariable int movimientoId){
@@ -30,7 +31,10 @@ public class MovimientoRest {
     public List<Movimiento> buscarMovimientosPorFecha(String fechaInicial, String fechaFinal){
         return movimientoController.buscarMovimientosPorFecha(fechaInicial, fechaFinal);
     }
-
-    //Todo Leer y registrar Movimientos a traves de un Excel?
+    @PostMapping("/csv") //Todo como se nombra esto segun MIW UPM?
+    public void registrarCsv ( @RequestParam("archivo") MultipartFile archivo){
+        // Todo if ( No viene archivo entonces salta error de cliente  )
+        movimientoController.CsvAMovimientoDtoList(archivo);
+    }
 
 }

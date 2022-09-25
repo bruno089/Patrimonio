@@ -6,6 +6,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 /* Posibles patrones de entradas
+dd/MM/yy --> 30/06/22
 d/M/yyyy
 yyyyMMdd
 yyyy-MM-dd   --->  fecha Receta
