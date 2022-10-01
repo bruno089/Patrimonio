@@ -1,10 +1,13 @@
 package com.gabru.Patrimonio.business_controllers;
 
 import com.gabru.Patrimonio.dtos.MovimientoDto;
+import com.gabru.Patrimonio.dtos.MovimientosTotalesPorConceptoDto;
 import com.gabru.Patrimonio.entities.Concepto;
 import com.gabru.Patrimonio.entities.Movimiento;
 import com.gabru.Patrimonio.repositories.ConceptoRepository;
 import com.gabru.Patrimonio.repositories.MovimientoRepository;
+import com.gabru.Patrimonio.repositories.MovimientoRepositoryCustom;
+import com.gabru.Patrimonio.utils.FechaConverter;
 import com.gabru.Patrimonio.utils.GestorCSV;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -26,6 +29,7 @@ public class MovimientoController {
     @Autowired    MovimientoRepository movimientoRepository;
     @Autowired    ConceptoRepository conceptoRepository;
     @Autowired    GestorCSV gestorCSV;
+    @Autowired    MovimientoRepositoryCustom movimientoRepositoryCustom;
 
     public static final boolean CONCEPTO_TIPO_DEFAULT = false;
 
@@ -123,6 +127,15 @@ public class MovimientoController {
 
     //Todo Rehacer con softdelete
     public void borrar(int movimientoId) {movimientoRepository.delete(movimientoRepository.getOne(movimientoId));
+    }
+    public List<MovimientosTotalesPorConceptoDto>  totalizador( String fechaInicial, String fechaFinal){
+
+        LocalDate fechaIni = stringtoLocalDate(fechaInicial,"d/M/yyyy");
+        LocalDate fechaFin = stringtoLocalDate(fechaFinal,"d/M/yyyy");
+
+        List<MovimientosTotalesPorConceptoDto>  resultado = movimientoRepositoryCustom.findByFechasBetweenGroupByMonth(fechaIni,fechaFin);
+
+        return resultado;
     }
 
 }

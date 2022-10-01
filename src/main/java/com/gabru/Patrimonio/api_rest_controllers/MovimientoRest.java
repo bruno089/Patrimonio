@@ -2,6 +2,7 @@ package com.gabru.Patrimonio.api_rest_controllers;
 
 import com.gabru.Patrimonio.business_controllers.MovimientoController;
 import com.gabru.Patrimonio.dtos.MovimientoDto;
+import com.gabru.Patrimonio.dtos.MovimientosTotalesPorConceptoDto;
 import com.gabru.Patrimonio.entities.Movimiento;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +36,11 @@ public class MovimientoRest {
     public void registrarCsv ( @RequestParam("archivo") MultipartFile archivo){
         // Todo if ( No viene archivo entonces salta error de cliente  )
         movimientoController.CsvAMovimientoDtoList(archivo);
+    }
+    @GetMapping("/busqueda/totalizador")
+    public List<MovimientosTotalesPorConceptoDto> totalizador( String fechaInicial, String fechaFinal){
+
+        return movimientoController.totalizador(fechaInicial, fechaFinal);
     }
 
 }
