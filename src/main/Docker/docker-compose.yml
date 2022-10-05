@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  bd:
+    container_name: patrimonio-bd
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    restart: always
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=$SQL_PASSWORD
+    volumes:
+      - database-data:/var/lib/mssqlql/data
+    ports:
+      - 1432:1433
+  app:
+    container_name: patrimonio-api
+    image: minka/patrimonio
+    restart: always
+    environment:
+      JVM_ARGS: '-Xms1800m -Xmx1800m -XX:+UseG1GC -XX:+UseStringDeduplication'
+      SQL_URL: 'jdbc:sqlserver://bd:1433;DatabaseName=Patrimonio;encrypt=true;trustServerCertificate=true;'
+      SQL_USER: $SQL_USER
+      SQL_PASSWORD: $SQL_PASSWORD
+      spring_profiles_active: 'docker'
+    ports:
+      - "8080:8080"
+    depends_on:
+      - bd
+volumes:
+  database-data:
+networks:
+  default:
+    external:
+      name: npm
