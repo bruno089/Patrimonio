@@ -36,8 +36,7 @@ public class MovimientoController {
     //Todo Permitir que guarde una lista utilizar saveall()?
     public MovimientoDto agregar( MovimientoDto movimientoDto) { //Todo Try para manejar excepciones
 
-        //LocalDate fecha = LocalDate.parse(movimientoDto.getFecha(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        LocalDate fecha = LocalDate.parse(movimientoDto.getFecha(), DateTimeFormatter.ofPattern("dd/MM/yy"));
+        LocalDate fecha = LocalDate.parse(movimientoDto.getFecha(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
         Concepto newConcepto =  this.getConcepto(movimientoDto.getConceptoDescripcion());
 
