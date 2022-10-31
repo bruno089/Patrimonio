@@ -17,22 +17,32 @@ import java.util.List;
 @SecurityRequirement(name = "javainuseapi")
 public class ConceptoRest {
     public static final String CONCEPTOS_ENDPOINT = "/conceptos";
-    public static final String CONCEPTO_ID = "/{id}";
-    @Autowired ConceptoController conceptoController;
+    public static final String CONCEPTO_ID = "/id";
+    public static final String CONCEPTO_NOMBRE = "/nombre";
+    public static final String CONCEPTO_FILTRO = "/filtro/{filtro}";
+
+    @Autowired    ConceptoController conceptoController;
 
     @GetMapping
     @Operation(summary = "buscarTodos", security = @SecurityRequirement(name = "basicAuth"))
     public List<Concepto> buscarTodos(){
         return conceptoController.buscarTodos();
     }
-    @GetMapping("nombre/{nombre}")
-    public List<ConceptoDto> buscarTodos(@PathVariable String nombre){
-        return conceptoController.buscarPorNombre(nombre);
-    }
     @GetMapping(CONCEPTO_ID)
-    public ConceptoDto buscar(@PathVariable int id){
+    public  ConceptoDto buscar(@RequestParam int id){
         return conceptoController.buscar(id);
     }
+    @GetMapping(CONCEPTO_NOMBRE)
+    public List<ConceptoDto> buscarPorNombre(@RequestParam String nombre){
+        return conceptoController.buscarPorNombre(nombre);
+    }
+
+    /*
+    @GetMapping(CONCEPTO_FILTRO)
+    public List<Concepto> buscarLike(@PathVariable String filtro){
+        return conceptoController.buscarMiLike(filtro);
+    }*/
+
     @PostMapping
     public ConceptoDto agregar(@Valid @RequestBody ConceptoDto conceptoDto){
         return conceptoController.agregar(conceptoDto);
