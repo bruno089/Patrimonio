@@ -13,21 +13,28 @@ import java.util.Optional;
 
 @Controller
 public class ConceptoController {
-    @Autowired    ConceptoRepository conceptoRepository;
+    @Autowired ConceptoRepository conceptoRepository;
     public List<Concepto> buscarTodos(){
         List<Concepto> conceptosLis;
         conceptosLis = conceptoRepository.findAll();
         return conceptosLis;
     }
-    public Optional<Concepto> buscar(int id){
-        Optional<Concepto> con = conceptoRepository.findById(id);
-        if (! con.isPresent()){
-            throw new ConflictException("ConceptoId no existente: " + id ); // Cambiado  con manejo de excepciones
-        }
-        return con;
-    }
-    public ConceptoDto agregar(ConceptoDto conceptoDto){
 
+    public ConceptoDto buscar(int id){
+        Optional<Concepto> con = conceptoRepository.findById(id);
+
+        if (! con.isPresent()){
+            throw new ConflictException("ConceptoId no existente: " + id );
+        }
+
+        return ConceptoDto.builder()
+                            .id((con.get().getId()))
+                            .nombre(con.get().getNombre())
+                            .ingreso(con.get().isIngreso())
+                            .build();
+    }
+
+    public ConceptoDto agregar(ConceptoDto conceptoDto){
         if (conceptoRepository.findByNombre(conceptoDto.getNombre()) .isPresent()){
             throw  new ConflictException("Concepto existente: " + conceptoDto.getNombre());
         }
@@ -44,11 +51,13 @@ public class ConceptoController {
                 .ingreso(concepto.isIngreso())
                 .build();
     }
+
     public void borrar(int id){
         if (conceptoRepository.findById(id).isPresent()){
             conceptoRepository.deleteById(id);
         }
     }
+
     public List<ConceptoDto> buscarPorNombre(String nombre){
         List<Concepto> conceptos;
         conceptos = conceptoRepository.findByNombreContaining(nombre);
@@ -64,6 +73,4 @@ public class ConceptoController {
         }
         return conceptoDtos;
     }
-
-    //aqui lo resuleve
 }

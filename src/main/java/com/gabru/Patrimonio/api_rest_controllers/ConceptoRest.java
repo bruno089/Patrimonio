@@ -16,7 +16,7 @@ public class ConceptoRest {
     public static final String CONCEPTOS_ENDPOINT = "/conceptos";
     public static final String CONCEPTO_ID = "/{id}";
 
-    @Autowired    ConceptoController conceptoController;
+    @Autowired ConceptoController conceptoController;
 
     @GetMapping
     public List<Concepto> buscarTodos(){
@@ -29,9 +29,9 @@ public class ConceptoRest {
     }
 
     @GetMapping(CONCEPTO_ID)
-    public Optional<Concepto> buscar(@PathVariable int id){
+    public ConceptoDto buscar(@PathVariable int id){
         return conceptoController.buscar(id);
-    } //Todo no debe devolver un optional tiene que ser un dto
+    }
 
     @PostMapping
     public ConceptoDto agregar(@Valid @RequestBody ConceptoDto conceptoDto){
