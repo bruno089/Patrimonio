@@ -4,6 +4,7 @@ import com.gabru.Patrimonio.dtos.ConceptoDto;
 import com.gabru.Patrimonio.entities.Concepto;
 import com.gabru.Patrimonio.exceptions.ConflictException;
 import com.gabru.Patrimonio.repositories.ConceptoRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -12,8 +13,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
+@AllArgsConstructor
 public class ConceptoController {
-    @Autowired ConceptoRepository conceptoRepository;
+    ConceptoRepository conceptoRepository;
     public List<Concepto> buscarTodos(){
         List<Concepto> conceptosLis;
         conceptosLis = conceptoRepository.findAll();

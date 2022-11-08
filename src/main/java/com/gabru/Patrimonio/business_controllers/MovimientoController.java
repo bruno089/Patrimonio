@@ -9,6 +9,7 @@ import com.gabru.Patrimonio.repositories.MovimientoRepository;
 import com.gabru.Patrimonio.repositories.MovimientoRepositoryCustom;
 import com.gabru.Patrimonio.utils.FechaConverter;
 import com.gabru.Patrimonio.utils.GestorCSV;
+import lombok.AllArgsConstructor;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +26,12 @@ import java.util.*;
 import static com.gabru.Patrimonio.utils.FechaConverter.stringtoLocalDate;
 
 @Controller
+@AllArgsConstructor
 public class MovimientoController {
-    @Autowired    MovimientoRepository movimientoRepository;
-    @Autowired    ConceptoRepository conceptoRepository;
-    @Autowired    GestorCSV gestorCSV;
-    @Autowired    MovimientoRepositoryCustom movimientoRepositoryCustom;
-
+    MovimientoRepository movimientoRepository;
+    ConceptoRepository conceptoRepository;
+    GestorCSV gestorCSV;
+    MovimientoRepositoryCustom movimientoRepositoryCustom;
     public static final boolean CONCEPTO_TIPO_DEFAULT = false;
 
     //Todo Permitir que guarde una lista utilizar saveall()?

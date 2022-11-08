@@ -6,6 +6,7 @@ import com.gabru.Patrimonio.dtos.MovimientoDto;
 import com.gabru.Patrimonio.dtos.MovimientosTotalesPorConceptoDto;
 import com.gabru.Patrimonio.entities.Movimiento;
 import com.gabru.Patrimonio.exceptions.BadRequestException;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,13 +17,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping(MovimientoRest.MOVIMIENTOS_ENDPOINT)
-
+@AllArgsConstructor
 public class MovimientoRest {
     public static final String MOVIMIENTOS_ENDPOINT = "/movimientos";
     public static final String MOVIMIENTO_ID = "/{movimientoId}";
 
     public static final String BUSQUEDA = "/busqueda";
-    @Autowired MovimientoController movimientoController;
+    MovimientoController movimientoController;
     @PostMapping
     public MovimientoDto agregar(@Valid @RequestBody MovimientoDto movimientoDto){
         return movimientoController.agregar(movimientoDto);

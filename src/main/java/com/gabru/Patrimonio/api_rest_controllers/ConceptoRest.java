@@ -5,6 +5,7 @@ import com.gabru.Patrimonio.dtos.ConceptoDto;
 import com.gabru.Patrimonio.entities.Concepto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,13 +16,13 @@ import java.util.List;
 @RestController
 @RequestMapping(ConceptoRest.CONCEPTOS_ENDPOINT)
 @SecurityRequirement(name = "javainuseapi")
+@AllArgsConstructor
 public class ConceptoRest {
     public static final String CONCEPTOS_ENDPOINT = "/conceptos";
     public static final String CONCEPTO_ID = "/id";
     public static final String CONCEPTO_NOMBRE = "/nombre";
     public static final String CONCEPTO_FILTRO = "/filtro/{filtro}";
-
-    @Autowired    ConceptoController conceptoController;
+    ConceptoController conceptoController;
 
     @GetMapping
     @Operation(summary = "buscarTodos", security = @SecurityRequirement(name = "basicAuth"))
