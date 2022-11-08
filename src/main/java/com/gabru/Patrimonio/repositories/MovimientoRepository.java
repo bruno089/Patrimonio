@@ -1,5 +1,6 @@
 package com.gabru.Patrimonio.repositories;
 
+import com.gabru.Patrimonio.dtos.MovimientoDto;
 import com.gabru.Patrimonio.entities.Movimiento;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +15,5 @@ public interface MovimientoRepository extends JpaRepository<Movimiento,Integer> 
     List<Movimiento> findAllByAltaBetween_Jpql (LocalDateTime fechaInicial, LocalDateTime fechaFinal); //JPQL
     @Query(value = "select * from movimiento t where t.fecha between :fechaInicial and :fechaFinal ",nativeQuery = true )
     List<Movimiento> findAllByAltaBetween_Sql_Nativo (LocalDateTime fechaInicial, LocalDateTime fechaFinal); //Nativo
-    List<Movimiento> findAllByFechaBetween(LocalDate fechaInicial, LocalDate fechaFinal);
-
+    List<MovimientoDto> findAllByFechaBetween(LocalDate fechaInicial, LocalDate fechaFinal);
 }

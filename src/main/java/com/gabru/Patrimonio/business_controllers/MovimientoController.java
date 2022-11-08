@@ -35,7 +35,6 @@ public class MovimientoController {
 
     //Todo Permitir que guarde una lista utilizar saveall()?
     public MovimientoDto agregar( MovimientoDto movimientoDto) { //Todo Try para manejar excepciones
-
         LocalDate fecha = LocalDate.parse(movimientoDto.getFecha(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
         Concepto newConcepto =  this.getConcepto(movimientoDto.getConceptoDescripcion());
@@ -52,15 +51,15 @@ public class MovimientoController {
 
         return new MovimientoDto(movimiento);
     }
-    public List<Movimiento> buscarMovimientosPorFecha(String fechaInicial, String fechaFinal) {
 
+    public List<MovimientoDto> buscarMovimientosPorFecha(String fechaInicial, String fechaFinal) {
         LocalDate fechaIni = stringtoLocalDate(fechaInicial,"yyyy-MM-dd");
         LocalDate fechaFin = stringtoLocalDate(fechaFinal,"yyyy-MM-dd");
 
-        List<Movimiento> movimientos = movimientoRepository.findAllByFechaBetween(fechaIni,fechaFin);
-
+        List<MovimientoDto> movimientos = movimientoRepository.findAllByFechaBetween(fechaIni,fechaFin);
         return movimientos;
     }
+
     public void CsvAMovimientoDtoList ( MultipartFile archivo )  {
 
         List<MovimientoDto> movimientoDtos = new ArrayList<>();
@@ -75,15 +74,21 @@ public class MovimientoController {
 
         }catch (IOException e) { throw new RuntimeException(e); }
     }
-    private MovimientoDto nuevoMovimientoDto ( CSVRecord registro){ //Todo Faltan excepciones convirtiendo ?
 
+    private MovimientoDto nuevoMovimientoDto ( CSVRecord registro){ //Todo Faltan excepciones convirtiendo ?
         String fecha = registro.get(0);
         Double importe = Double.parseDouble(registro.get(1));
         String observacion = registro.get(2);
         String concepto  = registro.get(3);
 
-        return MovimientoDto.builder().fecha(fecha).importe(importe).observacion(observacion).conceptoDescripcion(concepto).build();
+        return MovimientoDto.builder()
+                            .fecha(fecha)
+                            .importe(importe)
+                            .observacion(observacion)
+                            .conceptoDescripcion(concepto)
+                            .build();
     }
+
     public Concepto getConcepto(String conceptoDescripcion){
 
         /** Concepto  - Servicio

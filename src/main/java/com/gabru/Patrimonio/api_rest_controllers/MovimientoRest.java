@@ -27,22 +27,24 @@ public class MovimientoRest {
     public MovimientoDto agregar(@Valid @RequestBody MovimientoDto movimientoDto){
         return movimientoController.agregar(movimientoDto);
     }
+
     @DeleteMapping(MOVIMIENTO_ID)
     public void borrar(@PathVariable int movimientoId){
         movimientoController.borrar(movimientoId);
     }
+
     @GetMapping("/busqueda/movimientoEntreFechas")
-    public List<Movimiento> buscarMovimientosPorFecha(String fechaInicial, String fechaFinal){
+    public List<MovimientoDto> buscarMovimientosPorFecha(String fechaInicial, String fechaFinal){
         return movimientoController.buscarMovimientosPorFecha(fechaInicial, fechaFinal);
     }
     @PostMapping("/csv")
     public void registrarCsv ( @Valid ArchivoDto archivoDto, @RequestHeader(required = false) String tipoImportacion ){
         movimientoController.CsvAMovimientoDtoList(archivoDto.getArchivo());
     }
+
     @GetMapping("/busqueda/totalizador")
     public List<MovimientosTotalesPorConceptoDto> totalizador( String fechaInicial, String fechaFinal){
 
         return movimientoController.totalizador(fechaInicial, fechaFinal);
     }
-
 }

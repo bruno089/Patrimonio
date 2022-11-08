@@ -7,21 +7,25 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.format.DateTimeFormatter;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
 public class MovimientoDto {
     Integer id;
     Double importe;
-    String  observacion;
-    String  fecha;
+    String observacion;
+    String fecha;
     Integer idConcepto;
-    String  conceptoDescripcion;
-
+    String conceptoDescripcion;
+    String alta;
 
     public MovimientoDto(Movimiento movimiento) {
         this.id = movimiento.getId();
         this.importe = movimiento.getImporte();
         this.observacion = movimiento.getObservacion();
+        this.fecha = movimiento.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         this.conceptoDescripcion = movimiento.getConcepto().getNombre();
+        this.alta = movimiento.getAlta().toString();
     }
 }
