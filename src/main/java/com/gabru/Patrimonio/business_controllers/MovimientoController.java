@@ -4,6 +4,7 @@ import com.gabru.Patrimonio.dtos.MovimientoDto;
 import com.gabru.Patrimonio.dtos.MovimientosTotalesPorConceptoDto;
 import com.gabru.Patrimonio.entities.Concepto;
 import com.gabru.Patrimonio.entities.Movimiento;
+import com.gabru.Patrimonio.exceptions.ConflictException;
 import com.gabru.Patrimonio.repositories.ConceptoRepository;
 import com.gabru.Patrimonio.repositories.MovimientoRepository;
 import com.gabru.Patrimonio.repositories.MovimientoRepositoryCustom;
@@ -14,6 +15,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -76,11 +78,22 @@ public class MovimientoController {
         }catch (IOException e) { throw new RuntimeException(e); }
     }
 
-    private MovimientoDto nuevoMovimientoDto ( CSVRecord registro){ //Todo Faltan excepciones convirtiendo ?
-        String fecha = registro.get(0);
-        Double importe = Double.parseDouble(registro.get(1));
-        String observacion = registro.get(2);
-        String concepto  = registro.get(3);
+    private MovimientoDto nuevoMovimientoDto ( CSVRecord registro){
+
+        String fecha;
+        Double importe;
+        String observacion;
+        String concepto;
+
+        try {
+            fecha = registro.get(0);
+            importe = Double.parseDouble(registro.get(1));
+            observacion = registro.get(2);
+            concepto  = registro.get(3);
+
+        }catch ( ConflictException e ){ throw new ConflictException("Error en conversion del Movimiento"); }
+
+
 
         return MovimientoDto.builder()
                             .fecha(fecha)
