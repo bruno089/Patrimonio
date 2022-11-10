@@ -39,7 +39,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                     "/swagger-ui.html",
                     "/swagger-ui/*",
                     "/helpcheck/**",
-                    "/seguridad/**"
+                    "/seguridad/**",
+                    "/usuarios/**"
             };
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {

@@ -15,6 +15,7 @@
 	<description>Proyecto de Finanzas</description>
 	<properties>
 		<java.version>1.8</java.version>
+		<jwt.version>3.4.1</jwt.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -71,7 +72,15 @@
 			<artifactId>springfox-boot-starter</artifactId>
 			<version>3.0.0</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+			<version>${jwt.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>
