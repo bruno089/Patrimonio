@@ -24,6 +24,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.gabru.Patrimonio.utils.FechaConverter.stringtoLocalDate;
 
@@ -59,7 +60,10 @@ public class MovimientoController {
         LocalDate fechaIni = stringtoLocalDate(fechaInicial,"yyyy-MM-dd");
         LocalDate fechaFin = stringtoLocalDate(fechaFinal,"yyyy-MM-dd");
 
-        List<MovimientoDto> movimientos = movimientoRepository.findAllByFechaBetween(fechaIni,fechaFin);
+        List<MovimientoDto> movimientos = movimientoRepository.findAllByFechaBetweenOrderByFecha(fechaIni,fechaFin);
+
+
+
         return movimientos;
     }
 

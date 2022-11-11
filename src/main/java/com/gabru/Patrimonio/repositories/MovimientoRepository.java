@@ -16,4 +16,5 @@ public interface MovimientoRepository extends JpaRepository<Movimiento,Integer> 
     @Query(value = "select * from movimiento t where t.fecha between :fechaInicial and :fechaFinal ",nativeQuery = true )
     List<Movimiento> findAllByAltaBetween_Sql_Nativo (LocalDateTime fechaInicial, LocalDateTime fechaFinal); //Nativo
     List<MovimientoDto> findAllByFechaBetween(LocalDate fechaInicial, LocalDate fechaFinal);
+    List<MovimientoDto> findAllByFechaBetweenOrderByFecha(LocalDate fechaInicial, LocalDate fechaFinal);
 }
