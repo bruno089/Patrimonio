@@ -5,6 +5,8 @@ import com.gabru.Patrimonio.dtos.UserDto;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(UsuarioRest.USERS)
 @AllArgsConstructor
@@ -14,7 +16,7 @@ public class UsuarioRest {
     UsuarioController usuarioController;
 
     @PostMapping()
-    public void registrar( @RequestBody UserDto userDto){
+    public void registrar(@Valid @RequestBody UserDto userDto){
         usuarioController.registrar(userDto);
     }
 
