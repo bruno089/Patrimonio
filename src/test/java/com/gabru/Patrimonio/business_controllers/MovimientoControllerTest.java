@@ -34,7 +34,7 @@ class MovimientoControllerTest {
 
         List<MovimientoDto> movimientos = new ArrayList<>();
         movimientos.add(MovimientoDto.builder().id(6).importe(100.00).observacion("pago de helado").build());
-        Mockito.when(movimientoRepository.findAllByFechaBetween(Mockito.any(),Mockito.any())).thenReturn(movimientos);
+        Mockito.when(movimientoRepository.findAllByFechaBetweenOrderByFecha(Mockito.any(),Mockito.any())).thenReturn(movimientos);
 
         List<MovimientoDto> resultado = movimientoController.buscarMovimientosPorFecha(fechaInicial,fechaFinal);
 
