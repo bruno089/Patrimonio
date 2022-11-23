@@ -40,7 +40,7 @@ public class MovimientoRest {
     }
     @PostMapping("/csv")
     public void registrarCsv ( @Valid ArchivoDto archivoDto, @RequestHeader(required = false) String tipoImportacion ){
-        movimientoController.CsvAMovimientoDtoList(archivoDto.getArchivo());
+        movimientoController.CsvAMovimientoDtoList(archivoDto.getArchivo(),tipoImportacion);
     }
 
     @GetMapping("/busqueda/totalizador")

@@ -1,30 +1,23 @@
 package com.gabru.Patrimonio.business_controllers;
 
+import com.gabru.Patrimonio.business_controllers.LecturaArchivos.LectorArchivosContext;
+import com.gabru.Patrimonio.business_controllers.LecturaArchivos.StrategyCsv;
 import com.gabru.Patrimonio.dtos.MovimientoDto;
 import com.gabru.Patrimonio.dtos.MovimientosTotalesPorConceptoDto;
 import com.gabru.Patrimonio.entities.Concepto;
 import com.gabru.Patrimonio.entities.Movimiento;
-import com.gabru.Patrimonio.exceptions.ConflictException;
 import com.gabru.Patrimonio.repositories.ConceptoRepository;
 import com.gabru.Patrimonio.repositories.MovimientoRepository;
 import com.gabru.Patrimonio.repositories.MovimientoRepositoryCustom;
-import com.gabru.Patrimonio.utils.FechaConverter;
 import com.gabru.Patrimonio.utils.GestorCSV;
 import lombok.AllArgsConstructor;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVRecord;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.gabru.Patrimonio.utils.FechaConverter.stringtoLocalDate;
 
@@ -62,51 +55,15 @@ public class MovimientoController {
 
         List<MovimientoDto> movimientos = movimientoRepository.findAllByFechaBetweenOrderByFecha(fechaIni,fechaFin);
 
-
-
         return movimientos;
     }
 
-    public void CsvAMovimientoDtoList ( MultipartFile archivo )  {
-
-        List<MovimientoDto> movimientoDtos = new ArrayList<>();
-
-        try {
-
-            List<CSVRecord> registros = gestorCSV.getRegistrosCsv(archivo, Charset.forName("Cp1252"), CSVFormat.newFormat(';').withFirstRecordAsHeader() );
-
-            registros.forEach( registro -> { movimientoDtos.add(this.nuevoMovimientoDto(registro)); } );
-
-            movimientoDtos.forEach( movimientoDto -> this.agregar( movimientoDto ));
-
-        }catch (IOException e) { throw new RuntimeException(e); }
+    public void CsvAMovimientoDtoList ( MultipartFile archivo, String tipoImportacion ){
+        tipoImportacion = "csv"; //Todo Factory Method
+        LectorArchivosContext lectorArchivosContext = new LectorArchivosContext(tipoImportacion);
+        List<MovimientoDto> movimientoDtos =  lectorArchivosContext.ejecutar(archivo);
+        movimientoDtos.forEach( movimientoDto -> this.agregar( movimientoDto));
     }
-
-    private MovimientoDto nuevoMovimientoDto ( CSVRecord registro){
-
-        String fecha;
-        Double importe;
-        String observacion;
-        String concepto;
-
-        try {
-            fecha = registro.get(0);
-            importe = Double.parseDouble(registro.get(1));
-            observacion = registro.get(2);
-            concepto  = registro.get(3);
-
-        }catch ( ConflictException e ){ throw new ConflictException("Error en conversion del Movimiento"); }
-
-
-
-        return MovimientoDto.builder()
-                            .fecha(fecha)
-                            .importe(importe)
-                            .observacion(observacion)
-                            .conceptoDescripcion(concepto)
-                            .build();
-    }
-
     public Concepto getConcepto(String conceptoDescripcion){
 
         /** Concepto  - Servicio
