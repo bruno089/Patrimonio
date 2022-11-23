@@ -18,6 +18,7 @@ public class MovimientoDto {
     String fecha;
     Integer idConcepto;
     String conceptoDescripcion;
+    Boolean conceptoIngreso;
     String alta;
 
     public MovimientoDto(Movimiento movimiento) {
@@ -26,6 +27,7 @@ public class MovimientoDto {
         this.observacion = movimiento.getObservacion();
         this.fecha = movimiento.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         this.conceptoDescripcion = movimiento.getConcepto().getNombre();
+        this.conceptoIngreso = movimiento.getConcepto().isIngreso();
         this.alta = movimiento.getAlta().toString();
     }
 }

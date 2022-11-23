@@ -1,5 +1,6 @@
 package com.gabru.Patrimonio.dtos;
 
+import com.gabru.Patrimonio.entities.Concepto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,4 +18,11 @@ public class ConceptoDto {
     String nombre;
     @NotNull
     boolean ingreso;
+
+    public ConceptoDto(Concepto concepto){
+        this.id = concepto.getId();
+        this.nombre = concepto.getNombre();
+        this.ingreso = concepto.isIngreso();
+    }
 }
+

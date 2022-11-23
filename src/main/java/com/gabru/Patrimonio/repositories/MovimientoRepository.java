@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface MovimientoRepository extends JpaRepository<Movimiento,Integer> {
     List<Movimiento> findAllByAltaBetween(LocalDateTime fechaInicial, LocalDateTime fechaFinal); //Nombrado.Implementa Spring por detras
@@ -17,4 +18,5 @@ public interface MovimientoRepository extends JpaRepository<Movimiento,Integer> 
     List<Movimiento> findAllByAltaBetween_Sql_Nativo (LocalDateTime fechaInicial, LocalDateTime fechaFinal); //Nativo
     List<MovimientoDto> findAllByFechaBetween(LocalDate fechaInicial, LocalDate fechaFinal);
     List<MovimientoDto> findAllByFechaBetweenOrderByFecha(LocalDate fechaInicial, LocalDate fechaFinal);
+    Optional<Movimiento> findById(int id);
 }

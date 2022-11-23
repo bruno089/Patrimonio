@@ -3,6 +3,7 @@ package com.gabru.Patrimonio.business_controllers;
 import com.gabru.Patrimonio.dtos.ConceptoDto;
 import com.gabru.Patrimonio.entities.Concepto;
 import com.gabru.Patrimonio.exceptions.ConflictException;
+import com.gabru.Patrimonio.exceptions.NotFoundException;
 import com.gabru.Patrimonio.repositories.ConceptoRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,7 @@ public class ConceptoController {
         List<ConceptoDto> conceptoDtos = new ArrayList<>();
 
         conceptos.forEach( concepto -> { conceptoDtos.add(ConceptoDto.builder()
+                .id(concepto.getId())
                 .nombre(concepto.getNombre())
                 .ingreso(concepto.isIngreso()).build());
         });
@@ -74,5 +76,15 @@ public class ConceptoController {
             throw new ConflictException("No hay elementos con: " + nombre );
         }
         return conceptoDtos;
+    }
+
+    public ConceptoDto actualizar(Integer conceptoId, ConceptoDto conceptoDto) {
+        Concepto concepto = conceptoRepository.findById(conceptoId).orElseThrow(() -> new NotFoundException("No se encontró el concepto."));
+
+        concepto.setNombre(conceptoDto.getNombre());
+        concepto.setIngreso(conceptoDto.isIngreso());
+        conceptoRepository.save(concepto);
+
+        return new ConceptoDto(concepto);
     }
 }

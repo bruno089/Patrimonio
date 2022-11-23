@@ -11,9 +11,7 @@ import javax.persistence.*;
 public class Concepto {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
-
     String nombre;
-
     boolean ingreso;
 }
 

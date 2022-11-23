@@ -45,7 +45,11 @@ public class MovimientoRest {
 
     @GetMapping("/busqueda/totalizador")
     public List<MovimientosTotalesPorConceptoDto> totalizador( String fechaInicial, String fechaFinal){
-
         return movimientoController.totalizador(fechaInicial, fechaFinal);
+    }
+
+    @PutMapping(MOVIMIENTO_ID)
+    public MovimientoDto actualizar(@PathVariable Integer movimientoId, @Valid @RequestBody MovimientoDto movimientoDto){
+        return  movimientoController.actualizar(movimientoId, movimientoDto);
     }
 }

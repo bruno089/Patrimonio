@@ -20,6 +20,7 @@ import java.util.List;
 public class ConceptoRest {
     public static final String CONCEPTOS_ENDPOINT = "/conceptos";
     public static final String CONCEPTO_ID = "/id";
+    public static final String CONCEPTO_ID_REQUEST_PARAM = "/{id}";
     public static final String CONCEPTO_NOMBRE = "/nombre";
     public static final String CONCEPTO_FILTRO = "/filtro/{filtro}";
     ConceptoController conceptoController;
@@ -33,21 +34,22 @@ public class ConceptoRest {
     public  ConceptoDto buscar(@RequestParam int id){
         return conceptoController.buscar(id);
     }
+
     @GetMapping(CONCEPTO_NOMBRE)
     public List<ConceptoDto> buscarPorNombre(@RequestParam String nombre){
         return conceptoController.buscarPorNombre(nombre);
     }
 
-    /*
-    @GetMapping(CONCEPTO_FILTRO)
-    public List<Concepto> buscarLike(@PathVariable String filtro){
-        return conceptoController.buscarMiLike(filtro);
-    }*/
-
     @PostMapping
     public ConceptoDto agregar(@Valid @RequestBody ConceptoDto conceptoDto){
         return conceptoController.agregar(conceptoDto);
     }
+
+    @PutMapping( CONCEPTO_ID_REQUEST_PARAM)
+    public ConceptoDto actualizar(@PathVariable Integer id, @Valid @RequestBody ConceptoDto conceptoDto){
+        return conceptoController.actualizar(id, conceptoDto);
+    }
+
     @DeleteMapping(CONCEPTO_ID)
     public void borrar(@PathVariable int id){
         conceptoController.borrar(id);

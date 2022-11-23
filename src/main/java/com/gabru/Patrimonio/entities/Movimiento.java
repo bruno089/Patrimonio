@@ -20,6 +20,10 @@ public class Movimiento {
     LocalDate fecha;
     @Column(columnDefinition = "smalldatetime")
     LocalDateTime alta;
+    @Column(columnDefinition = "smalldatetime")
+    LocalDateTime fechaBorrado;
     @ManyToOne @JoinColumn(name = "idconcepto")
     Concepto concepto;
+    @ManyToOne @JoinColumn(name = "conceptoIngreso")
+    Concepto conceptoIngreso;
 }

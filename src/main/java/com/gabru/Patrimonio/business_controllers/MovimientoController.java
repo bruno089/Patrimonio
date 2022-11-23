@@ -5,6 +5,7 @@ import com.gabru.Patrimonio.dtos.MovimientosTotalesPorConceptoDto;
 import com.gabru.Patrimonio.entities.Concepto;
 import com.gabru.Patrimonio.entities.Movimiento;
 import com.gabru.Patrimonio.exceptions.ConflictException;
+import com.gabru.Patrimonio.exceptions.NotFoundException;
 import com.gabru.Patrimonio.repositories.ConceptoRepository;
 import com.gabru.Patrimonio.repositories.MovimientoRepository;
 import com.gabru.Patrimonio.repositories.MovimientoRepositoryCustom;
@@ -62,28 +63,23 @@ public class MovimientoController {
 
         List<MovimientoDto> movimientos = movimientoRepository.findAllByFechaBetweenOrderByFecha(fechaIni,fechaFin);
 
-
-
         return movimientos;
     }
 
     public void CsvAMovimientoDtoList ( MultipartFile archivo )  {
-
         List<MovimientoDto> movimientoDtos = new ArrayList<>();
 
         try {
-
-            List<CSVRecord> registros = gestorCSV.getRegistrosCsv(archivo, Charset.forName("Cp1252"), CSVFormat.newFormat(';').withFirstRecordAsHeader() );
+            List<CSVRecord> registros = gestorCSV.getRegistrosCsv(archivo, Charset.forName("Cp1252"), CSVFormat.newFormat(';').withFirstRecordAsHeader());
 
             registros.forEach( registro -> { movimientoDtos.add(this.nuevoMovimientoDto(registro)); } );
 
             movimientoDtos.forEach( movimientoDto -> this.agregar( movimientoDto ));
-
-        }catch (IOException e) { throw new RuntimeException(e); }
+        }
+        catch (IOException e) { throw new RuntimeException(e); }
     }
 
     private MovimientoDto nuevoMovimientoDto ( CSVRecord registro){
-
         String fecha;
         Double importe;
         String observacion;
@@ -94,10 +90,8 @@ public class MovimientoController {
             importe = Double.parseDouble(registro.get(1));
             observacion = registro.get(2);
             concepto  = registro.get(3);
-
-        }catch ( ConflictException e ){ throw new ConflictException("Error en conversion del Movimiento"); }
-
-
+        }
+        catch ( ConflictException e ){ throw new ConflictException("Error en conversion del Movimiento"); }
 
         return MovimientoDto.builder()
                             .fecha(fecha)
@@ -108,7 +102,6 @@ public class MovimientoController {
     }
 
     public Concepto getConcepto(String conceptoDescripcion){
-
         /** Concepto  - Servicio
          *
          * El manejo de concepto tiene q estar nucleado en un solo lugar (Principio de Unica Responsabilidad)
@@ -121,29 +114,22 @@ public class MovimientoController {
          * - Con muchas llamadas a BD       --
          * *
          * */
-
         //Es caseSensitive?
-
         Concepto conceptoResultado;
 
         Map<String,Concepto> conceptosMap =  new HashMap<>(); //Tengo los conceptos existentes en BD
         conceptoRepository.findAll().forEach( concepto -> conceptosMap.put(concepto.getNombre(),concepto) );
 
         if ( conceptosMap.containsKey(conceptoDescripcion) ){
-
             conceptoResultado = conceptosMap.get(conceptoDescripcion);
-
         }else{ //guardo por que no existe
-
             conceptoResultado =  conceptoRepository.save(Concepto.builder().nombre(conceptoDescripcion).ingreso(CONCEPTO_TIPO_DEFAULT).build());
         }
-
         /*
         Optional<Concepto> concepto = conceptoRepository.findById(movimientoDto.getIdConcepto()); //  Todo Arreglar aqui
         if (!concepto.isPresent()){
             throw new ConflictException("idConcepto inexistente: "+  movimientoDto.getIdConcepto() );  //  Todo Arreglar aqui
         }*/
-
         return  conceptoResultado;
     }
 
@@ -160,4 +146,17 @@ public class MovimientoController {
         return resultado;
     }
 
+    public MovimientoDto actualizar(int id, MovimientoDto movimientoDto) {
+        Movimiento movimiento = movimientoRepository.findById(id).orElseThrow(()-> new NotFoundException("No se encuentra el movimiento con ID: " + id));
+
+        Concepto elConcepto =  this.getConcepto(movimientoDto.getConceptoDescripcion());
+
+        movimiento.setConcepto(elConcepto);
+        movimiento.setFecha(FechaConverter.stringtoLocalDate(movimientoDto.getFecha(), "dd/MM/yyyy"));
+        movimiento.setImporte(movimientoDto.getImporte());
+        movimiento.setObservacion(movimientoDto.getObservacion());
+        movimientoRepository.save(movimiento);
+
+        return new MovimientoDto(movimiento);
+    }
 }
