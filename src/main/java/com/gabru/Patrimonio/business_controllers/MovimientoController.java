@@ -1,6 +1,7 @@
 package com.gabru.Patrimonio.business_controllers;
 
 import com.gabru.Patrimonio.business_controllers.LecturaArchivos.LectorArchivosContext;
+import com.gabru.Patrimonio.business_controllers.LecturaArchivos.LectorTipo;
 import com.gabru.Patrimonio.business_controllers.LecturaArchivos.StrategyCsv;
 import com.gabru.Patrimonio.dtos.MovimientoDto;
 import com.gabru.Patrimonio.dtos.MovimientosTotalesPorConceptoDto;
@@ -20,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static com.gabru.Patrimonio.utils.FechaConverter.stringtoLocalDate;
+
 
 @Controller
 @AllArgsConstructor
@@ -59,9 +61,11 @@ public class MovimientoController {
     }
 
     public void CsvAMovimientoDtoList ( MultipartFile archivo, String tipoImportacion ){
-        tipoImportacion = "csv"; //Todo Factory Method
-        LectorArchivosContext lectorArchivosContext = new LectorArchivosContext(tipoImportacion);
+
+        LectorArchivosContext lectorArchivosContext = new LectorArchivosContext(LectorTipo.CSV );
+
         List<MovimientoDto> movimientoDtos =  lectorArchivosContext.ejecutar(archivo);
+
         movimientoDtos.forEach( movimientoDto -> this.agregar( movimientoDto));
     }
     public Concepto getConcepto(String conceptoDescripcion){
