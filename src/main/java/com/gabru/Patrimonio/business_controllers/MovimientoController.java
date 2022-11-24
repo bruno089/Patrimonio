@@ -132,10 +132,6 @@ public class MovimientoController {
         }*/
         return  conceptoResultado;
     }
-
-    //Todo Rehacer con softdelete
-    public void borrar(int movimientoId) {movimientoRepository.delete(movimientoRepository.getOne(movimientoId));
-    }
     public List<MovimientosTotalesPorConceptoDto>  totalizador( String fechaInicial, String fechaFinal){
 
         LocalDate fechaIni = stringtoLocalDate(fechaInicial,"d/M/yyyy");
@@ -158,5 +154,9 @@ public class MovimientoController {
         movimientoRepository.save(movimiento);
 
         return new MovimientoDto(movimiento);
+    }
+    public void borrar(int movimientoId) {
+        //Todo validaciones y manejo de excepeciones de borrado
+        movimientoRepository.delete(movimientoRepository.getOne(movimientoId));
     }
 }
