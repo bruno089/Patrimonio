@@ -98,28 +98,27 @@ public class MovimientoController {
          * El servicio se debe de encargar de devolver el concepto en base a su descripcion. Debe poder distinguir entre minusculas y mayusculas
          *          *  Ademas si el concepto no existe en BD se debe guardar este concepto
          * Cuidado:
-         * - Con los conceptos con espacios --
          * - Case sensitive                 --
          * - En plural y/o en singular      xx
          * - Con muchas llamadas a BD       --
          * *
          * */
-        //Es caseSensitive?
+
+        //Limpiezas del Concepto, que se vayan necesitando
+        conceptoDescripcion = conceptoDescripcion.trim();
+
         Concepto conceptoResultado;
 
-        Map<String,Concepto> conceptosMap =  new HashMap<>(); //Tengo los conceptos existentes en BD
-        conceptoRepository.findAll().forEach( concepto -> conceptosMap.put(concepto.getNombre(),concepto) );
+        Map<String,Concepto> conceptosEnBDMap =  new HashMap<>();
+        conceptoRepository.findAll().forEach( concepto -> conceptosEnBDMap.put(concepto.getNombre(),concepto) );
 
-        if ( conceptosMap.containsKey(conceptoDescripcion) ){
-            conceptoResultado = conceptosMap.get(conceptoDescripcion);
-        }else{ //guardo por que no existe
-            conceptoResultado =  conceptoRepository.save(Concepto.builder().nombre(conceptoDescripcion).ingreso(CONCEPTO_TIPO_DEFAULT).build());
+        if ( conceptosEnBDMap.containsKey(conceptoDescripcion) ){
+            conceptoResultado = conceptosEnBDMap.get(conceptoDescripcion);
+        }else{
+            conceptoResultado =  conceptoRepository.save(
+                    Concepto.builder().nombre(conceptoDescripcion).ingreso(CONCEPTO_TIPO_DEFAULT).build());
         }
-        /*
-        Optional<Concepto> concepto = conceptoRepository.findById(movimientoDto.getIdConcepto()); //  Todo Arreglar aqui
-        if (!concepto.isPresent()){
-            throw new ConflictException("idConcepto inexistente: "+  movimientoDto.getIdConcepto() );  //  Todo Arreglar aqui
-        }*/
+
         return  conceptoResultado;
     }
 
