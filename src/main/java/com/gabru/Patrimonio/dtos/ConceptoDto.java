@@ -1,5 +1,6 @@
 package com.gabru.Patrimonio.dtos;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.gabru.Patrimonio.entities.Concepto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 @Data @NoArgsConstructor
 @AllArgsConstructor @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ConceptoDto {
     int id;
     @NotNull @Size(min = 2, max = 100 , message = "El tamaño es entre 2 y 100") @NotBlank(message = "Nombre es obligatorio")

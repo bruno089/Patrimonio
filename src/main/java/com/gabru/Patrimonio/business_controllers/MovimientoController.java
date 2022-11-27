@@ -43,6 +43,7 @@ public class MovimientoController {
 
         movimientoDtos.forEach( movimientoDto -> this.agregar( movimientoDto));
     }
+
     public MovimientoDto agregar( MovimientoDto movimientoDto) { //Todo Try para manejar excepciones
         // Todo Permitir que guarde una lista utilizar saveall()?
         LocalDate fecha = LocalDate.parse(movimientoDto.getFecha(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));

@@ -17,25 +17,6 @@ import java.util.Optional;
 @AllArgsConstructor
 public class ConceptoController {
     ConceptoRepository conceptoRepository;
-    public List<Concepto> buscarTodos(){
-        List<Concepto> conceptosLis;
-        conceptosLis = conceptoRepository.findAll();
-        return conceptosLis;
-    }
-
-    public ConceptoDto buscar(int id){
-        Optional<Concepto> con = conceptoRepository.findById(id);
-
-        if (! con.isPresent()){
-            throw new ConflictException("ConceptoId no existente: " + id );
-        }
-
-        return ConceptoDto.builder()
-                            .id((con.get().getId()))
-                            .nombre(con.get().getNombre())
-                            .ingreso(con.get().isIngreso())
-                            .build();
-    }
 
     public ConceptoDto agregar(ConceptoDto conceptoDto){
         if (conceptoRepository.findByNombre(conceptoDto.getNombre()) .isPresent()){
@@ -48,19 +29,45 @@ public class ConceptoController {
                 .build();
 
         conceptoRepository.save(concepto);
-
-        return ConceptoDto.builder()
+        return new ConceptoDto(concepto);
+        /*return  ConceptoDto.builder()
                 .nombre(concepto.getNombre())
                 .ingreso(concepto.isIngreso())
-                .build();
+                .id(concepto.getId())
+                .build();*/
     }
-
     public void borrar(int id){
         if (conceptoRepository.findById(id).isPresent()){
             conceptoRepository.deleteById(id);
         }
     }
+    public ConceptoDto actualizar(Integer conceptoId, ConceptoDto conceptoDto) {
+        Concepto concepto = conceptoRepository.findById(conceptoId).orElseThrow(() -> new NotFoundException("No se encontró el concepto."));
 
+        concepto.setNombre(conceptoDto.getNombre());
+        concepto.setIngreso(conceptoDto.isIngreso());
+        conceptoRepository.save(concepto);
+
+        return new ConceptoDto(concepto);
+    }
+    public ConceptoDto buscar(int id){
+        Optional<Concepto> con = conceptoRepository.findById(id);
+
+        if (! con.isPresent()){
+            throw new ConflictException("ConceptoId no existente: " + id );
+        }
+
+        return ConceptoDto.builder()
+                .id((con.get().getId()))
+                .nombre(con.get().getNombre())
+                .ingreso(con.get().isIngreso())
+                .build();
+    }
+    public List<Concepto> buscarTodos(){
+        List<Concepto> conceptosLis;
+        conceptosLis = conceptoRepository.findAll();
+        return conceptosLis;
+    }
     public List<ConceptoDto> buscarPorNombre(String nombre){
         List<Concepto> conceptos;
         conceptos = conceptoRepository.findByNombreContaining(nombre);
@@ -78,13 +85,4 @@ public class ConceptoController {
         return conceptoDtos;
     }
 
-    public ConceptoDto actualizar(Integer conceptoId, ConceptoDto conceptoDto) {
-        Concepto concepto = conceptoRepository.findById(conceptoId).orElseThrow(() -> new NotFoundException("No se encontró el concepto."));
-
-        concepto.setNombre(conceptoDto.getNombre());
-        concepto.setIngreso(conceptoDto.isIngreso());
-        conceptoRepository.save(concepto);
-
-        return new ConceptoDto(concepto);
-    }
 }
