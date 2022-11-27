@@ -6,7 +6,6 @@ import com.gabru.Patrimonio.entities.Concepto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -15,43 +14,41 @@ import java.util.List;
 
 @RestController
 @RequestMapping(ConceptoRest.CONCEPTOS_ENDPOINT)
-@SecurityRequirement(name = "javainuseapi")
 @AllArgsConstructor
 public class ConceptoRest {
     public static final String CONCEPTOS_ENDPOINT = "/conceptos";
-    public static final String CONCEPTO_ID = "/id";
-    public static final String CONCEPTO_ID_REQUEST_PARAM = "/{id}";
+    public static final String ID = "/{id}";
     public static final String CONCEPTO_NOMBRE = "/nombre";
-    public static final String CONCEPTO_FILTRO = "/filtro/{filtro}";
     ConceptoController conceptoController;
-
-    @GetMapping
-    @Operation(summary = "buscarTodos", security = @SecurityRequirement(name = "basicAuth"))
-    public List<Concepto> buscarTodos(){
-        return conceptoController.buscarTodos();
-    }
-    @GetMapping(CONCEPTO_ID)
-    public  ConceptoDto buscar(@RequestParam int id){
-        return conceptoController.buscar(id);
-    }
-
-    @GetMapping(CONCEPTO_NOMBRE)
-    public List<ConceptoDto> buscarPorNombre(@RequestParam String nombre){
-        return conceptoController.buscarPorNombre(nombre);
-    }
 
     @PostMapping
     public ConceptoDto agregar(@Valid @RequestBody ConceptoDto conceptoDto){
         return conceptoController.agregar(conceptoDto);
     }
 
-    @PutMapping( CONCEPTO_ID_REQUEST_PARAM)
+    @PutMapping(ID)
     public ConceptoDto actualizar(@PathVariable Integer id, @Valid @RequestBody ConceptoDto conceptoDto){
         return conceptoController.actualizar(id, conceptoDto);
     }
-
-    @DeleteMapping(CONCEPTO_ID)
+    @DeleteMapping(ID)
     public void borrar(@PathVariable int id){
         conceptoController.borrar(id);
-    } //Todo no permite borrar si ya tiene conceptos asociados¿?
+    }
+    @GetMapping(ID)
+    public  ConceptoDto buscar(@PathVariable Integer id){
+        return conceptoController.buscar(id);
+    }
+
+    @GetMapping
+    @Operation(summary = "buscarTodos", security = @SecurityRequirement(name = "basicAuth"))
+    public List<Concepto> buscarTodos(){
+        return conceptoController.buscarTodos();
+    }
+
+    @GetMapping(CONCEPTO_NOMBRE) //Este tipo de busqueda la sintaxis no es la indicada
+    public List<ConceptoDto> buscarPorNombre(@RequestParam String nombre){
+        return conceptoController.buscarPorNombre(nombre);
+    }
+
+
 }
