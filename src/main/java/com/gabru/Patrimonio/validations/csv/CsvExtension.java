@@ -12,7 +12,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = CsvExtensionValidator.class)
 public @interface CsvExtension {
-    //Todo si agrego que sea de tipo txt puedo meter las presentacinoes asi como se bajan de la app de Farmacia
     String message () default "The file has no CSV extension.";
 
     Class<?>[] groups () default {};

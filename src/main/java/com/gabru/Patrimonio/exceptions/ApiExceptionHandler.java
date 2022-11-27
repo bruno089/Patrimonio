@@ -14,14 +14,13 @@ public class ApiExceptionHandler {
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler({
-            UnauthorizedException.class
-            //,org.springframework.security.access.AccessDeniedException.class //Todo Necesito la dependencia security
+            UnauthorizedException.class,
+            org.springframework.security.access.AccessDeniedException.class
     })
     @ResponseBody
-    //public ErrorMessage unauthorizedRequest(HttpServletRequest request, Exception exception){
-    public void unauthorizedRequest(HttpServletRequest request, Exception exception){
-        //exception.printStackTrace();
-       // return new ErrorMessage(exception, request.getRequestURI());
+    public ErrorMessage unauthorizedRequest(HttpServletRequest request, Exception exception){
+        exception.printStackTrace();
+        return new ErrorMessage(exception, request.getRequestURI());
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
