@@ -83,8 +83,8 @@ public class MovimientoController {
     }
 
     public List<MovimientoDto> buscarMovimientosPorFecha(String fechaInicial, String fechaFinal) {
-        LocalDate fechaIni = stringtoLocalDate(fechaInicial,"yyyy-MM-dd");
-        LocalDate fechaFin = stringtoLocalDate(fechaFinal,"yyyy-MM-dd");
+        LocalDate fechaIni = stringtoLocalDate(fechaInicial,"d/M/yyyy");
+        LocalDate fechaFin = stringtoLocalDate(fechaFinal,"d/M/yyyy");
 
         List<MovimientoDto> movimientos = movimientoRepository.findAllByFechaBetweenOrderByFecha(fechaIni,fechaFin);
 
@@ -119,11 +119,10 @@ public class MovimientoController {
                     Concepto.builder().nombre(conceptoDescripcion).ingreso(CONCEPTO_TIPO_DEFAULT).build());
         }
 
-        return  conceptoResultado;
+        return conceptoResultado;
     }
 
-    public List<MovimientosTotalesPorConceptoDto>  totalizador( String fechaInicial, String fechaFinal){
-
+    public List<MovimientosTotalesPorConceptoDto> totalizador( String fechaInicial, String fechaFinal){
         LocalDate fechaIni = stringtoLocalDate(fechaInicial,"d/M/yyyy");
         LocalDate fechaFin = stringtoLocalDate(fechaFinal,"d/M/yyyy");
 
@@ -131,5 +130,4 @@ public class MovimientoController {
 
         return resultado;
     }
-
 }

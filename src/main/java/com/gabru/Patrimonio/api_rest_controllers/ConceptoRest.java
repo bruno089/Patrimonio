@@ -49,6 +49,4 @@ public class ConceptoRest {
     public List<ConceptoDto> buscarPorNombre(@RequestParam String nombre){
         return conceptoController.buscarPorNombre(nombre);
     }
-
-
 }

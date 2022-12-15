@@ -49,10 +49,8 @@ public class MovimientoRest {
         return movimientoController.buscarMovimientosPorFecha(fechaInicial, fechaFinal);
     }
 
-
     @GetMapping("/busqueda/totalizador")
     public List<MovimientosTotalesPorConceptoDto> totalizador( String fechaInicial, String fechaFinal){
         return movimientoController.totalizador(fechaInicial, fechaFinal);
     }
-
 }

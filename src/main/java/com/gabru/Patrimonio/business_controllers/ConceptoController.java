@@ -20,7 +20,7 @@ public class ConceptoController {
 
     public ConceptoDto agregar(ConceptoDto conceptoDto){
         if (conceptoRepository.findByNombre(conceptoDto.getNombre()) .isPresent()){
-            throw  new ConflictException("Concepto existente: " + conceptoDto.getNombre());
+            throw new ConflictException("Concepto existente: " + conceptoDto.getNombre());
         }
 
         Concepto concepto =  Concepto.builder()
@@ -30,17 +30,14 @@ public class ConceptoController {
 
         conceptoRepository.save(concepto);
         return new ConceptoDto(concepto);
-        /*return  ConceptoDto.builder()
-                .nombre(concepto.getNombre())
-                .ingreso(concepto.isIngreso())
-                .id(concepto.getId())
-                .build();*/
     }
+
     public void borrar(int id){
         if (conceptoRepository.findById(id).isPresent()){
             conceptoRepository.deleteById(id);
         }
     }
+
     public ConceptoDto actualizar(Integer conceptoId, ConceptoDto conceptoDto) {
         Concepto concepto = conceptoRepository.findById(conceptoId).orElseThrow(() -> new NotFoundException("No se encontró el concepto."));
 
@@ -50,6 +47,7 @@ public class ConceptoController {
 
         return new ConceptoDto(concepto);
     }
+
     public ConceptoDto buscar(int id){
         Optional<Concepto> con = conceptoRepository.findById(id);
 
@@ -63,11 +61,13 @@ public class ConceptoController {
                 .ingreso(con.get().isIngreso())
                 .build();
     }
+
     public List<Concepto> buscarTodos(){
         List<Concepto> conceptosLis;
         conceptosLis = conceptoRepository.findAll();
         return conceptosLis;
     }
+
     public List<ConceptoDto> buscarPorNombre(String nombre){
         List<Concepto> conceptos;
         conceptos = conceptoRepository.findByNombreContaining(nombre);
@@ -79,10 +79,10 @@ public class ConceptoController {
                 .ingreso(concepto.isIngreso()).build());
         });
 
-        if (conceptos.isEmpty()){
-            throw new ConflictException("No hay elementos con: " + nombre );
-        }
+        //TODO PREGUNTAR SI SE PUEDE NO USAR ESTA FORMA
+        //if (conceptos.isEmpty()){
+         //   throw new ConflictException("No hay elementos con: " + nombre );
+        //}
         return conceptoDtos;
     }
-
 }
