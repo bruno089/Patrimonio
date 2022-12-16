@@ -29,8 +29,8 @@ class MovimientoControllerTest {
 
     @Test
     void buscarMovimientosPorFecha_OK_Test() {
-        String fechaInicial = "2022-01-01";
-        String fechaFinal = "2022-06-01";
+        String fechaInicial = "01/01/2022";
+        String fechaFinal = "06/01/2022";
 
         List<MovimientoDto> movimientos = new ArrayList<>();
         movimientos.add(MovimientoDto.builder().id(6).importe(100.00).observacion("pago de helado").build());
@@ -45,7 +45,7 @@ class MovimientoControllerTest {
     @Test
     void buscarMovimientosPorFecha_fechaInvalida_Test() {
         String fechaInicial = "SinFormato";
-        String fechaFinal = "2022-06-01";
+        String fechaFinal = "06/01/2022";
 
         assertThrows( DateTimeParseException.class, () -> { movimientoController.buscarMovimientosPorFecha(fechaInicial,fechaFinal); });
     }
