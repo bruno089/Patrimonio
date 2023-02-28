@@ -1,10 +1,13 @@
 package com.gabru.Patrimonio.business_controllers;
 
 import com.gabru.Patrimonio.dtos.MovimientoDto;
+import com.gabru.Patrimonio.entities.Concepto;
 import com.gabru.Patrimonio.entities.Movimiento;
+import com.gabru.Patrimonio.repositories.ConceptoRepository;
 import com.gabru.Patrimonio.repositories.MovimientoRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,13 +23,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 class MovimientoControllerTest {
     @Mock           MovimientoRepository movimientoRepository;
-    @InjectMocks    MovimientoController movimientoController;
 
+    @InjectMocks    MovimientoController movimientoController;
     @Test
     void buscarMovimientosPorFecha_OK_Test() {
         String fechaInicial = "01/01/2022";
@@ -49,4 +52,5 @@ class MovimientoControllerTest {
 
         assertThrows( DateTimeParseException.class, () -> { movimientoController.buscarMovimientosPorFecha(fechaInicial,fechaFinal); });
     }
+
 }

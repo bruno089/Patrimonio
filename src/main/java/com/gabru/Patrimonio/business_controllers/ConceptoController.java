@@ -5,6 +5,7 @@ import com.gabru.Patrimonio.entities.Concepto;
 import com.gabru.Patrimonio.exceptions.ConflictException;
 import com.gabru.Patrimonio.exceptions.NotFoundException;
 import com.gabru.Patrimonio.repositories.ConceptoRepository;
+import com.gabru.Patrimonio.service.ConceptoService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class ConceptoController {
     ConceptoRepository conceptoRepository;
+    ConceptoService conceptoService;
 
     public ConceptoDto agregar(ConceptoDto conceptoDto){
         if (conceptoRepository.findByNombre(conceptoDto.getNombre()) .isPresent()){

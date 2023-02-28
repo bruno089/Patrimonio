@@ -14,6 +14,7 @@ import com.gabru.Patrimonio.exceptions.NotFoundException;
 import com.gabru.Patrimonio.repositories.ConceptoRepository;
 import com.gabru.Patrimonio.repositories.MovimientoRepository;
 import com.gabru.Patrimonio.repositories.MovimientoRepositoryCustom;
+import com.gabru.Patrimonio.service.ConceptoService;
 import com.gabru.Patrimonio.utils.FechaConverter;
 import com.gabru.Patrimonio.utils.GestorCSV;
 import lombok.AllArgsConstructor;
@@ -31,10 +32,8 @@ import static com.gabru.Patrimonio.utils.FechaConverter.stringtoLocalDate;
 @AllArgsConstructor
 public class MovimientoController {
     MovimientoRepository movimientoRepository;
-    ConceptoRepository conceptoRepository;
     MovimientoRepositoryCustom movimientoRepositoryCustom;
-    public static final boolean CONCEPTO_TIPO_DEFAULT = false;
-
+    ConceptoService conceptoService;
     public void CsvAMovimientoDtoList ( MultipartFile archivo, String tipoImportacion ){
 
         LectorArchivosContext lectorArchivosContext = new LectorArchivosContext(LectorTipo.CSV );
@@ -48,7 +47,7 @@ public class MovimientoController {
         // Todo Permitir que guarde una lista utilizar saveall()?
         LocalDate fecha = LocalDate.parse(movimientoDto.getFecha(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
-        Concepto newConcepto =  this.getConcepto(movimientoDto.getConceptoDescripcion());
+        Concepto newConcepto =  conceptoService.getConcepto(movimientoDto.getConceptoDescripcion());
 
         Movimiento movimiento = Movimiento.builder()
                 .observacion(movimientoDto.getObservacion())
@@ -71,7 +70,7 @@ public class MovimientoController {
     public MovimientoDto actualizar(int id, MovimientoDto movimientoDto) {
         Movimiento movimiento = movimientoRepository.findById(id).orElseThrow(()-> new NotFoundException("No se encuentra el movimiento con ID: " + id));
 
-        Concepto elConcepto =  this.getConcepto(movimientoDto.getConceptoDescripcion());
+        Concepto elConcepto =  conceptoService.getConcepto(movimientoDto.getConceptoDescripcion());
 
         movimiento.setConcepto(elConcepto);
         movimiento.setFecha(FechaConverter.stringtoLocalDate(movimientoDto.getFecha(), "dd/MM/yyyy"));
@@ -91,37 +90,6 @@ public class MovimientoController {
         return movimientos;
     }
 
-    public Concepto getConcepto(String conceptoDescripcion){
-        /** Concepto  - Servicio
-         *
-         * El manejo de concepto tiene q estar nucleado en un solo lugar (Principio de Unica Responsabilidad)
-         * El servicio se debe de encargar de devolver el concepto en base a su descripcion. Debe poder distinguir entre minusculas y mayusculas
-         *          *  Ademas si el concepto no existe en BD se debe guardar este concepto
-         * Cuidado:
-         * - Case sensitive                 --
-         * - En plural y/o en singular      xx
-         * - Con muchas llamadas a BD       --
-         * *
-         * */
-
-        //Limpiezas del Concepto, que se vayan necesitando
-        conceptoDescripcion = conceptoDescripcion.trim();
-
-        Concepto conceptoResultado;
-
-        Map<String,Concepto> conceptosEnBDMap =  new HashMap<>();
-        conceptoRepository.findAll().forEach( concepto -> conceptosEnBDMap.put(concepto.getNombre(),concepto) );
-
-        if ( conceptosEnBDMap.containsKey(conceptoDescripcion) ){
-            conceptoResultado = conceptosEnBDMap.get(conceptoDescripcion);
-        }else{
-            conceptoResultado =  conceptoRepository.save(
-                    Concepto.builder().nombre(conceptoDescripcion).ingreso(CONCEPTO_TIPO_DEFAULT).build());
-        }
-
-        return conceptoResultado;
-    }
-
     public List<MovimientosTotalesPorConceptoDto> totalizador( String fechaInicial, String fechaFinal){
         LocalDate fechaIni = stringtoLocalDate(fechaInicial,"d/M/yyyy");
         LocalDate fechaFin = stringtoLocalDate(fechaFinal,"d/M/yyyy");
@@ -130,4 +98,5 @@ public class MovimientoController {
 
         return resultado;
     }
+
 }
