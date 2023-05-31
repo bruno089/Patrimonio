@@ -1,10 +1,9 @@
 package com.gabru.Patrimonio.business_controllers.LecturaArchivos;
 
-import com.gabru.Patrimonio.business_controllers.LecturaArchivos.LectorArchivosStrategy;
 import com.gabru.Patrimonio.dtos.MovimientoDto;
 import com.gabru.Patrimonio.exceptions.ConflictException;
-import com.gabru.Patrimonio.utils.GestorCSV;
 import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,12 +12,11 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 public class StrategyCsv implements LectorArchivosStrategy {
-    GestorCSV gestorCSV = new GestorCSV();
     List<MovimientoDto> movimientoDtos = new ArrayList<>();
     @Override
     public List<MovimientoDto> leerArchivoConvertirMovimientos ( MultipartFile archivo ) {
         try {
-            List<CSVRecord> registros = gestorCSV.getRegistrosCsv(archivo, Charset.forName("Cp1252"), CSVFormat.newFormat(';').withFirstRecordAsHeader() );
+            List<CSVRecord> registros = this.getRegistrosCsv(archivo, Charset.forName("Cp1252"), CSVFormat.newFormat(';').withFirstRecordAsHeader() );
 
             registros.forEach( registro -> { movimientoDtos.add(this.nuevoMovimientoDto(registro)); } );
         }catch (IOException e) { throw new RuntimeException(e); }
@@ -45,6 +43,18 @@ public class StrategyCsv implements LectorArchivosStrategy {
                 .observacion(observacion)
                 .conceptoDescripcion(concepto)
                 .build();
+    }
+
+    // GestorCSV Class
+    public List<CSVRecord> getRegistrosCsv (MultipartFile file, Charset charset, CSVFormat format) throws IOException {
+        List<CSVRecord> registros = new ArrayList<>();
+        try {
+            CSVParser parser = CSVParser.parse(file.getInputStream(), charset,format);
+            registros = parser.getRecords();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return registros;
     }
 
 }

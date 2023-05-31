@@ -2,7 +2,6 @@ package com.gabru.Patrimonio.business_controllers;
 
 import com.gabru.Patrimonio.business_controllers.LecturaArchivos.LectorArchivosContext;
 import com.gabru.Patrimonio.business_controllers.LecturaArchivos.LectorTipo;
-import com.gabru.Patrimonio.business_controllers.LecturaArchivos.StrategyCsv;
 import com.gabru.Patrimonio.dtos.MovimientoDto;
 import com.gabru.Patrimonio.dtos.MovimientosTotalesPorConceptoDto;
 import com.gabru.Patrimonio.entities.Concepto;
@@ -11,12 +10,10 @@ import com.gabru.Patrimonio.entities.Movimiento;
 
 import com.gabru.Patrimonio.exceptions.NotFoundException;
 
-import com.gabru.Patrimonio.repositories.ConceptoRepository;
 import com.gabru.Patrimonio.repositories.MovimientoRepository;
 import com.gabru.Patrimonio.repositories.MovimientoRepositoryCustom;
 import com.gabru.Patrimonio.service.ConceptoService;
-import com.gabru.Patrimonio.utils.FechaConverter;
-import com.gabru.Patrimonio.utils.GestorCSV;
+import com.gabru.Patrimonio.business_services.FechaConverterService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,7 +23,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static com.gabru.Patrimonio.utils.FechaConverter.stringtoLocalDate;
+import static com.gabru.Patrimonio.business_services.FechaConverterService.stringtoLocalDate;
 
 @Controller
 @AllArgsConstructor
@@ -73,7 +70,7 @@ public class MovimientoController {
         Concepto elConcepto =  conceptoService.getConcepto(movimientoDto.getConceptoDescripcion());
 
         movimiento.setConcepto(elConcepto);
-        movimiento.setFecha(FechaConverter.stringtoLocalDate(movimientoDto.getFecha(), "dd/MM/yyyy"));
+        movimiento.setFecha(FechaConverterService.stringtoLocalDate(movimientoDto.getFecha(), "dd/MM/yyyy"));
         movimiento.setImporte(movimientoDto.getImporte());
         movimiento.setObservacion(movimientoDto.getObservacion());
         movimientoRepository.save(movimiento);

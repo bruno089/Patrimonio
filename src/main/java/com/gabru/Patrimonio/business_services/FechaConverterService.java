@@ -1,4 +1,4 @@
-package com.gabru.Patrimonio.utils;
+package com.gabru.Patrimonio.business_services;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,7 +14,7 @@ yyyy-MM-dd   --->  obt Prescripcion por fecha y DNI
 "2020-07-02T08:32:12"  DateTimeFormatter.ISO_LOCAL_DATE_TIME --- viene en peticion dispensa
 * */
 
-public class FechaConverter {
+public class FechaConverterService {
     public static LocalDate stringtoLocalDate(String fecha , String patronDeEntrada ){
         if (fecha == null) return null;
 
