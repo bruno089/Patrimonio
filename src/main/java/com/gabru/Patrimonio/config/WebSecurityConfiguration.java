@@ -52,11 +52,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .httpBasic()
                 .authenticationEntryPoint(authEntryPoint)
                 .and()
+                .addFilterBefore(corsFilter(), BasicAuthenticationFilter.class)
                 .authorizeRequests().antMatchers(AUTH_WHITELIST).permitAll()
                 .anyRequest().authenticated()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                 //.and().addFilter(jwtAuthorizationFilter());
     }
+
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth){
         auth.authenticationProvider(new AuthenticationProvider() {
@@ -83,7 +85,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("*");
+        config.addAllowedOrigin("http://localhost:4200");
         config.addAllowedHeader("*");
         config.addAllowedMethod("OPTIONS");
         config.addAllowedMethod("GET");
