@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.gabru.Patrimonio.business_services.FechaConverterService.stringtoLocalDate;
 
@@ -96,4 +97,19 @@ public class MovimientoController {
         return resultado;
     }
 
+    public List<MovimientoDto> buscarTodos(){ //Todo hacer esto como en PERSONAS API, con paginado y sorting
+        List<Movimiento> movimientos = movimientoRepository.findTop10ByOrderByIdDesc();
+        return movimientos.stream()
+                .map(MovimientoDto::new)
+                .collect(Collectors.toList());
+    }
+
+    public MovimientoDto buscar ( Integer movimientoId ) {
+
+        Movimiento movimiento = movimientoRepository
+                .findById(movimientoId)
+                .orElseThrow(() -> new NotFoundException("No encontrado id:"+ movimientoId));
+
+        return  new MovimientoDto(movimiento);
+    }
 }

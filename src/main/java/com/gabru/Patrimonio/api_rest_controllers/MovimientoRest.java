@@ -29,26 +29,33 @@ public class MovimientoRest {
         movimientoController.CsvAMovimientoDtoList(archivoDto.getArchivo(),tipoImportacion);
     }
 
+    /** CRUD **/
     @PostMapping
     public MovimientoDto agregar(@Valid @RequestBody MovimientoDto movimientoDto){
         return movimientoController.agregar(movimientoDto);
     }
-
+    @GetMapping(MOVIMIENTO_ID)
+    public MovimientoDto buscar(@PathVariable Integer movimientoId){
+        return movimientoController.buscar(movimientoId);
+    }
+    @PutMapping(MOVIMIENTO_ID)
+    public MovimientoDto actualizar(@PathVariable Integer movimientoId, @Valid @RequestBody MovimientoDto movimientoDto){
+        return  movimientoController.actualizar(movimientoId, movimientoDto);
+    }
     @DeleteMapping(MOVIMIENTO_ID)
     public void borrar(@PathVariable int movimientoId){
         movimientoController.borrar(movimientoId);
     }
 
-    @PutMapping(MOVIMIENTO_ID)
-    public MovimientoDto actualizar(@PathVariable Integer movimientoId, @Valid @RequestBody MovimientoDto movimientoDto){
-        return  movimientoController.actualizar(movimientoId, movimientoDto);
+    /** Searchs **/
+    @GetMapping()
+    public List<MovimientoDto> buscarTodos(){
+        return movimientoController.buscarTodos();
     }
-
     @GetMapping("/busqueda/movimientoEntreFechas")
     public List<MovimientoDto> buscarMovimientosPorFecha(String fechaInicial, String fechaFinal){
         return movimientoController.buscarMovimientosPorFecha(fechaInicial, fechaFinal);
     }
-
     @GetMapping("/busqueda/totalizador")
     public List<MovimientosTotalesPorConceptoDto> totalizador( String fechaInicial, String fechaFinal){
         return movimientoController.totalizador(fechaInicial, fechaFinal);
