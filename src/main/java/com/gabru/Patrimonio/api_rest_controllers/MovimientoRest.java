@@ -8,13 +8,14 @@ import com.gabru.Patrimonio.entities.Movimiento;
 import com.gabru.Patrimonio.exceptions.BadRequestException;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-
+@PreAuthorize("hasRole('ADMIN') or hasRole('OPERATOR')")
 @RestController
 @RequestMapping(MovimientoRest.MOVIMIENTOS_ENDPOINT)
 @AllArgsConstructor

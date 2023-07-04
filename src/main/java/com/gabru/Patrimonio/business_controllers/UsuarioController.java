@@ -1,6 +1,8 @@
 package com.gabru.Patrimonio.business_controllers;
 
+import com.gabru.Patrimonio.business_services.JwtService;
 import com.gabru.Patrimonio.business_services.MailService;
+import com.gabru.Patrimonio.dtos.TokenOutputDto;
 import com.gabru.Patrimonio.dtos.UserDto;
 import com.gabru.Patrimonio.entities.ConfirmationCode;
 import com.gabru.Patrimonio.entities.Role;
@@ -11,12 +13,14 @@ import com.gabru.Patrimonio.exceptions.NotFoundException;
 import com.gabru.Patrimonio.repositories.ConfirmationCodeRepository;
 import com.gabru.Patrimonio.repositories.UsuarioRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 @Controller
 @AllArgsConstructor
@@ -24,6 +28,7 @@ public class UsuarioController {
     UsuarioRepository usuarioRepository;
     ConfirmationCodeRepository confirmationCodeRepository;
     MailService mailService;
+    JwtService jwtService;
     @Transactional
     public void registrar(UserDto userDto) {
 
@@ -67,5 +72,16 @@ public class UsuarioController {
                 .orElseThrow(()-> new NotFoundException("Not found user email"));
         user.setActivo(true);
         usuarioRepository.save(user);
+    }
+
+    public TokenOutputDto login ( String username ) {
+
+        Usuario user = usuarioRepository
+                .findByNombreIgnoreCase(username)
+                .orElseThrow(() -> new NotFoundException("Username not found: " + username));
+
+        String[] roles = Arrays.stream(user.getRoles()).map(Role::name).toArray(String[]::new);
+
+        return new TokenOutputDto(jwtService.createToken(user.getNombre(), user.getNombre(),roles));
     }
 }

@@ -6,12 +6,13 @@ import com.gabru.Patrimonio.entities.Concepto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
-
+@PreAuthorize("hasRole('ADMIN') or hasRole('OPERATOR')")
 @RestController
 @RequestMapping(ConceptoRest.CONCEPTOS_ENDPOINT)
 @AllArgsConstructor

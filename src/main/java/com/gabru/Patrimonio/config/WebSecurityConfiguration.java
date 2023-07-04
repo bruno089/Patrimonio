@@ -51,12 +51,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .httpBasic()
                 .authenticationEntryPoint(authEntryPoint)
-                .and()
-                .addFilterBefore(corsFilter(), BasicAuthenticationFilter.class)
-                .authorizeRequests().antMatchers(AUTH_WHITELIST).permitAll()
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+             //   .and().addFilterBefore(corsFilter(), BasicAuthenticationFilter.class)
+                .and().authorizeRequests().antMatchers(AUTH_WHITELIST).permitAll()
                 .anyRequest().authenticated()
-                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-                //.and().addFilter(jwtAuthorizationFilter());
+                .and().addFilter(jwtAuthorizationFilter());
     }
 
     @Autowired
@@ -97,13 +96,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
     @Bean
     public PasswordEncoder passwordEncoder() {return new BCryptPasswordEncoder(); }
-
-    //Todo para trabajar con JWT
-    /*
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter() throws Exception {
         return new JwtAuthorizationFilter(this.authenticationManager());
-    }*/
+    }
 
 }
 

@@ -1,5 +1,6 @@
 package com.gabru.Patrimonio.business_controllers;
 
+import com.gabru.Patrimonio.business_services.JwtService;
 import com.gabru.Patrimonio.business_services.MailService;
 import com.gabru.Patrimonio.dtos.UserDto;
 import com.gabru.Patrimonio.entities.ConfirmationCode;
@@ -28,11 +29,13 @@ class UsuarioControllerTest {
     @Mock   UsuarioRepository usuarioRepository;
     @Mock   ConfirmationCodeRepository confirmationCodeRepository;
     @Mock   MailService mailService;
+
+    @Mock   JwtService jwtService;
     @InjectMocks    UsuarioController usuarioController;
     @BeforeEach
     void setUp(){
         MockitoAnnotations.openMocks(this);
-        usuarioController =new UsuarioController (usuarioRepository,confirmationCodeRepository,mailService);
+        usuarioController =new UsuarioController (usuarioRepository,confirmationCodeRepository,mailService,jwtService);
     }
     @Test
     void notNullTest(){
