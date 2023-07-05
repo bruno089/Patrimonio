@@ -52,8 +52,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .httpBasic()
                 .authenticationEntryPoint(authEntryPoint)
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-             //   .and().addFilterBefore(corsFilter(), BasicAuthenticationFilter.class)
-                .and().authorizeRequests().antMatchers(AUTH_WHITELIST).permitAll()
+                .and().addFilterBefore(corsFilter(), BasicAuthenticationFilter.class)
+                .authorizeRequests().antMatchers(AUTH_WHITELIST).permitAll()
                 .anyRequest().authenticated()
                 .and().addFilter(jwtAuthorizationFilter());
     }

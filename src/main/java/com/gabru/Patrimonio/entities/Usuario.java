@@ -24,5 +24,5 @@ public class Usuario {
     LocalDate registro;
 
     @Transient
-    Role[] roles = new Role[]{Role.AUTHENTICATED};
+    Role[] roles = new Role[]{Role.ADMIN}; //Todo Role Management
 }
