@@ -15,6 +15,7 @@ import com.gabru.Patrimonio.repositories.MovimientoRepositoryCustom;
 import com.gabru.Patrimonio.service.ConceptoService;
 import com.gabru.Patrimonio.business_services.FechaConverterService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -97,8 +98,11 @@ public class MovimientoController {
         return resultado;
     }
 
-    public List<MovimientoDto> buscarTodos(){ //Todo hacer esto como en PERSONAS API, con paginado y sorting
-        List<Movimiento> movimientos = movimientoRepository.findTop10ByOrderByIdDesc();
+    public List<MovimientoDto> buscarTodos(){ //Todo Paginado and Sorting: hacer esto como en PERSONAS API.
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "fecha");
+
+        List<Movimiento> movimientos = movimientoRepository.findAll(sort);
         return movimientos.stream()
                 .map(MovimientoDto::new)
                 .collect(Collectors.toList());
