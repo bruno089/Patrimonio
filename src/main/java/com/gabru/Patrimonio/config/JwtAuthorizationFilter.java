@@ -48,6 +48,8 @@ public class JwtAuthorizationFilter  extends BasicAuthenticationFilter {
                 LogManager.getLogger(this.getClass().getName()).debug(">>> FILTER JWT UNAUTHORIZED ..."
                         + req.getHeader(AUTHORIZATION) + e.getMessage());
                 res.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+
+                throw new JwtException("Invalid token or unauthorized request");
             }
         }
         chain.doFilter(req, res);
