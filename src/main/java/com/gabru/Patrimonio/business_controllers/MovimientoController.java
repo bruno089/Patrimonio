@@ -100,7 +100,7 @@ public class MovimientoController {
 
     public List<MovimientoDto> buscarTodos(){ //Todo Paginado and Sorting: hacer esto como en PERSONAS API.
 
-        Sort sort = Sort.by(Sort.Direction.DESC, "fecha");
+        Sort sort = Sort.by(Sort.Direction.DESC, "fecha","id");
 
         List<Movimiento> movimientos = movimientoRepository.findAll(sort);
         return movimientos.stream()
