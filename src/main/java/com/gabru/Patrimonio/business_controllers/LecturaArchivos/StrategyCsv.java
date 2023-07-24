@@ -35,7 +35,12 @@ public class StrategyCsv implements LectorArchivosStrategy {
             observacion = registro.get(2);
             concepto  = registro.get(3);
 
-        }catch ( ConflictException e ){ throw new ConflictException("Error en conversion del Movimiento"); }
+        }catch ( ConflictException e ){
+            throw new ConflictException("Error en conversion del Movimiento");
+        }
+        catch ( Exception e ){
+            throw new RuntimeException("StrategyCsv.leerArchivoConvertirMovimientos: Error en conversion " + registro.toString() + e.getMessage());
+        }
 
         return MovimientoDto.builder()
                 .fecha(fecha)
