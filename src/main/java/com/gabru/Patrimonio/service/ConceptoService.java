@@ -14,7 +14,7 @@ public class ConceptoService {
 
     public static final boolean CONCEPTO_TIPO_DEFAULT = false;
     ConceptoRepository conceptoRepository;
-    public Concepto getConcepto( String conceptoDescripcion){
+    public Concepto getConcepto( String conceptoDescripcion){ //Todo try catch?
         /** Concepto  - Servicio
          *
          * El manejo de concepto tiene q estar nucleado en un solo lugar (Principio de Unica Responsabilidad)

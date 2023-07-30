@@ -30,6 +30,9 @@ public class Movimiento {
     @ManyToOne @JoinColumn(name = "idconcepto")
     Concepto concepto;
 
+    @ManyToOne @JoinColumn(nullable = false, name = "id_usuario")
+    Usuario usuario;
+
 
     /** Esto es para cuando se necesita consultar el estado borrado  en el mismo flujo del algoritmo.
     Ya que no se actualizo el valor borrado de este.

@@ -39,14 +39,19 @@ public class UsuarioService implements UserDetailsService {
         return new User(username,clave,activo,true,true,true,authorities);
     }
 
-    Usuario getUsuarioPorNombre(String nombreUsuario){
+    Usuario getUsuarioPorNombre(String nombreUsuario){ //Va a la BD
         Usuario usuario = usuarioRepository.findByNombre(nombreUsuario)
                 .orElseThrow(()-> new NotFoundException("Usuario: " + nombreUsuario + " no encontrado."));
         return usuario;
     }
 
-    public Usuario getUsuarioAutenticado(){
-        String nombreUsuario = SecurityContextHolder.getContext().getAuthentication().getName();
-        return this.getUsuarioPorNombre(nombreUsuario);
+    public Usuario getUsuarioAutenticado (){
+        return this.getUsuarioPorNombre(this.getNombreUsuarioAuthJWToken());
     }
+
+    public String getNombreUsuarioAuthJWToken () {
+        String nombreUsuario = SecurityContextHolder.getContext().getAuthentication().getName();
+        return  nombreUsuario;
+    }
+
 }

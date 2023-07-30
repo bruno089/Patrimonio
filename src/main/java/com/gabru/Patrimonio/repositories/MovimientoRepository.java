@@ -2,6 +2,8 @@ package com.gabru.Patrimonio.repositories;
 
 import com.gabru.Patrimonio.dtos.MovimientoDto;
 import com.gabru.Patrimonio.entities.Movimiento;
+import com.gabru.Patrimonio.entities.Usuario;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -18,7 +20,9 @@ public interface MovimientoRepository extends JpaRepository<Movimiento,Integer> 
     List<Movimiento> findAllByAltaBetween_Sql_Nativo (LocalDateTime fechaInicial, LocalDateTime fechaFinal); //Nativo
     List<MovimientoDto> findAllByFechaBetween(LocalDate fechaInicial, LocalDate fechaFinal);
     List<MovimientoDto> findAllByFechaBetweenOrderByFecha(LocalDate fechaInicial, LocalDate fechaFinal);
+    List<MovimientoDto> findAllByFechaBetweenAndUsuarioOrderByFecha( LocalDate fechaInicial, LocalDate fechaFinal, Usuario usuario );
     Optional<Movimiento> findById(int id);
+    Optional<Movimiento> findByIdAndUsuario(Integer id,Usuario usuario);
 
-    List<Movimiento> findTop10ByOrderByIdDesc();
+    List<Movimiento> findAllByUsuario( Usuario  usuario, Sort sort );
 }
