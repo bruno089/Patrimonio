@@ -28,14 +28,14 @@ public class UsuarioService implements UserDetailsService {
                 .findByNombre(nombreUsuario)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado:  " + nombreUsuario));
 
-        return this.userBuilder(usuario.getNombre(),usuario.getClave(),usuario.isActivo(),usuario.getRoles());
+        return this.userBuilder(usuario.getNombre(),usuario.getClave(),usuario.isActivo(),usuario.getRole());
     }
 
-    private User userBuilder(String username, String clave, boolean activo, Role[] roles){
+    private User userBuilder(String username, String clave, boolean activo, Role role){
         List<GrantedAuthority> authorities = new ArrayList<>();
-        for (Role role : roles) {
+
             authorities.add(new SimpleGrantedAuthority(role.roleName()));
-        }
+
         return new User(username,clave,activo,true,true,true,authorities);
     }
 

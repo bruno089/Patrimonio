@@ -1,7 +1,7 @@
 package com.gabru.Patrimonio.entities;
 
 public enum Role {
-    ADMIN,MANAGER,OPERATOR,CUSTOMER,AUTHENTICATED;
+    ADMIN,MANAGER,OPERATOR,CUSTOMER;
     public String roleName() { return "ROLE_" + this.toString(); }
 
     public boolean isRole() {

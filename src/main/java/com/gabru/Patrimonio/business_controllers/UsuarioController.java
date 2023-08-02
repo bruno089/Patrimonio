@@ -45,14 +45,26 @@ public class UsuarioController {
                 .email(userDto.getEmail())
                 .activo(false)
                 .registro(LocalDate.now())
-                .roles(new Role[]{Role.AUTHENTICATED})
+                .roles(new Role[]{Role.CUSTOMER})
+                .role(Role.CUSTOMER)
                 .build();
+
          usuarioRepository.save(usuario);
 
         ConfirmationCode confirmationCode = confirmationCodeRepository.save(new ConfirmationCode(usuario));
 
-        mailService.sendMail(userDto.getEmail(),"Registration Code","Your activation code is: " + confirmationCode.getCode());
+        String host = "https://finanzasui.brunolopezcross.com/"; //Todo poner el host segun entorno?
+        String localhost = "http://127.0.0.1:8080/";
+        String endPointConfirmationCode = "usuarios/codigo-confirmacion?confirmationCode=";
+        String urlCodeActivation = host + endPointConfirmationCode + confirmationCode.getCode();
+
+        String message = "Welcome to Our App " + userDto.getNombre() +
+                         " Please click the following link to activate your account: " + urlCodeActivation;
+
+        mailService.sendMail(userDto.getEmail(), "Registration Code", message);
     }
+
+    //Todo recuperarClave(String email)
     public void confirmacionCuenta ( String code ) {
 
         if(code == null) {
@@ -73,7 +85,6 @@ public class UsuarioController {
         user.setActivo(true);
         usuarioRepository.save(user);
     }
-
     public TokenOutputDto login ( String username ) {
 
         Usuario user = usuarioRepository
@@ -84,4 +95,5 @@ public class UsuarioController {
 
         return new TokenOutputDto(jwtService.createToken(user.getNombre(), user.getNombre(),roles));
     }
+
 }

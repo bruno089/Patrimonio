@@ -26,5 +26,6 @@ public class Usuario {
     @Transient
     Role[] roles = new Role[]{Role.ADMIN}; //Todo Role Management
 
-    // @Enumerated(EnumType.STRING) private Role role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }
