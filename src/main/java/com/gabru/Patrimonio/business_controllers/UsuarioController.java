@@ -53,12 +53,9 @@ public class UsuarioController {
 
         ConfirmationCode confirmationCode = confirmationCodeRepository.save(new ConfirmationCode(usuario));
 
-
-
-        String activeProfile = System.getProperty("spring.config.activate.on-profile");
-
         String host = "https://finanzas.brunolopezcross.com/";
-        if (! "docker".equals(activeProfile)) { host = "http://127.0.0.1:8080/"; }
+        // String activeProfile = System.getProperty("spring.config.activate.on-profile");
+        //if (! "docker".equals(activeProfile)) { host = "http://127.0.0.1:8080/"; }
 
         String endPointConfirmationCode = "usuarios/codigo-confirmacion?confirmationCode=";
         String urlCodeActivation = host + endPointConfirmationCode + confirmationCode.getCode();
