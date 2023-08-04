@@ -1,7 +1,7 @@
-package com.gabru.Patrimonio.api.file.dtos;
+package com.gabru.Patrimonio.api.dtos;
 
-import com.gabru.Patrimonio.validations.NotEmptyFile;
-import com.gabru.Patrimonio.validations.csv.CsvExtension;
+import com.gabru.Patrimonio.utils.validations.NotEmptyFile;
+import com.gabru.Patrimonio.utils.validations.csv.CsvExtension;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -1,8 +1,7 @@
-package com.gabru.Patrimonio.repositories;
+package com.gabru.Patrimonio.data.repositories;
 
-import com.gabru.Patrimonio.entities.Usuario;
+import com.gabru.Patrimonio.data.entities.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 

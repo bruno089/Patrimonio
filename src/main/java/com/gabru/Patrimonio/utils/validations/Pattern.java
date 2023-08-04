@@ -1,4 +1,4 @@
-package com.gabru.Patrimonio.validations;
+package com.gabru.Patrimonio.utils.validations;
 
 public final class Pattern {
     public static final String NINE_DIGITS = "\\d{9}";

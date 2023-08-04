@@ -1,4 +1,4 @@
-package com.gabru.Patrimonio.api.rest;
+package com.gabru.Patrimonio.api.resources;
 
 import com.gabru.Patrimonio.api.dtos.TokenOutputDto;
 import com.gabru.Patrimonio.api.dtos.UserDto;

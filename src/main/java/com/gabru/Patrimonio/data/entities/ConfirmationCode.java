@@ -1,9 +1,8 @@
-package com.gabru.Patrimonio.entities;
+package com.gabru.Patrimonio.data.entities;
 
-import com.gabru.Patrimonio.business_services.RandomGeneratorService;
+import com.gabru.Patrimonio.utils.business_services.RandomGeneratorService;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.userdetails.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-public interface MovimientoRepository extends JpaRepository<Transaction,Integer> {
+public interface TransactionRepository extends JpaRepository<Transaction,Integer> {
     List<Transaction> findAllByAltaBetween( LocalDateTime fechaInicial, LocalDateTime fechaFinal); //Nombrado.Implementa Spring por detras
     @Query("SELECT m FROM Transaction AS m WHERE m.alta BETWEEN :fechaInicial and :fechaFinal" )
     List<Transaction> findAllByAltaBetween_Jpql ( LocalDateTime fechaInicial, LocalDateTime fechaFinal); //JPQL

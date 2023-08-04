@@ -1,4 +1,4 @@
-package com.gabru.Patrimonio.exceptions;
+package com.gabru.Patrimonio.domain.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

@@ -12,8 +12,8 @@ import com.gabru.Patrimonio.data.entities.Usuario;
 import com.gabru.Patrimonio.domain.exceptions.ConflictException;
 import com.gabru.Patrimonio.domain.exceptions.NotFoundException;
 
-import com.gabru.Patrimonio.data.repositories.MovimientoRepository;
-import com.gabru.Patrimonio.data.repositories.MovimientoRepositoryCustom;
+import com.gabru.Patrimonio.data.repositories.TransactionRepository;
+import com.gabru.Patrimonio.data.repositories.TransactionRepositoryCustom;
 import com.gabru.Patrimonio.domain.service.ConceptoService;
 import com.gabru.Patrimonio.utils.business_services.FechaConverterService;
 import com.gabru.Patrimonio.domain.service.UsuarioService;
@@ -33,9 +33,9 @@ import static com.gabru.Patrimonio.utils.business_services.FechaConverterService
 
 @Controller
 @AllArgsConstructor
-public class MovimientoController {
-    MovimientoRepository movimientoRepository;
-    MovimientoRepositoryCustom movimientoRepositoryCustom;
+public class TransactionService {
+    TransactionRepository transactionRepository;
+    TransactionRepositoryCustom transactionRepositoryCustom;
     ConceptoService conceptoService;
     UsuarioService usuarioService;
     public void CsvAMovimientoDtoList ( MultipartFile archivo, String tipoImportacion ){
@@ -63,7 +63,7 @@ public class MovimientoController {
                 .usuario(usuarioService.getUsuarioAutenticado())
                 .build();
 
-        movimientoRepository.save(transaction);
+        transactionRepository.save(transaction);
 
         return new TransactionDto(transaction);
     }
@@ -98,7 +98,7 @@ public class MovimientoController {
             }
 
             // Guardo todos los nuevos movimientos en la base de datos
-            movimientoRepository.saveAll(nuevosTransactions);
+            transactionRepository.saveAll(nuevosTransactions);
 
             // Retorno el primer MovimientoDto creado, podrías ajustar esto según tus necesidades
             return new TransactionDto(nuevosTransactions.get(0));
@@ -118,14 +118,14 @@ public class MovimientoController {
     }
     public void borrar(int movimientoId) {
 
-        Transaction transaction = movimientoRepository
+        Transaction transaction = transactionRepository
                 .findByIdAndUsuario(movimientoId,usuarioService.getUsuarioAutenticado())
                 .orElseThrow(()-> new NotFoundException("No encontrado movimiento: " + movimientoId ));
 
-        movimientoRepository.delete(transaction);
+        transactionRepository.delete(transaction);
     }
     public TransactionDto actualizar( int id, TransactionDto transactionDto ) {
-        Transaction transaction = movimientoRepository.findById(id).orElseThrow(()-> new NotFoundException("No se encuentra el movimiento con ID: " + id));
+        Transaction transaction = transactionRepository.findById(id).orElseThrow(()-> new NotFoundException("No se encuentra el movimiento con ID: " + id));
 
         Concepto elConcepto =  conceptoService.getConcepto(transactionDto.getConceptoDescripcion());
 
@@ -133,7 +133,7 @@ public class MovimientoController {
         transaction.setFecha(FechaConverterService.stringtoLocalDate(transactionDto.getFecha(), "dd/MM/yyyy"));
         transaction.setImporte(transactionDto.getImporte());
         transaction.setObservacion(transactionDto.getObservacion());
-        movimientoRepository.save(transaction);
+        transactionRepository.save(transaction);
 
         return new TransactionDto(transaction);
     }
@@ -141,7 +141,7 @@ public class MovimientoController {
         LocalDate fechaIni = stringtoLocalDate(fechaInicial,"d/M/yyyy");
         LocalDate fechaFin = stringtoLocalDate(fechaFinal,"d/M/yyyy");
 
-        List<TransactionDto> movimientos = movimientoRepository.findAllByFechaBetweenOrderByFecha(fechaIni,fechaFin);
+        List<TransactionDto> movimientos = transactionRepository.findAllByFechaBetweenOrderByFecha(fechaIni,fechaFin);
        // List<MovimientoDto> movimientos = movimientoRepository.findAllByFechaBetweenAndUsuarioOrderByFecha(fechaIni,fechaFin,usuarioService.getUsuarioAutenticado());
 
         return movimientos;
@@ -150,7 +150,7 @@ public class MovimientoController {
         LocalDate fechaIni = stringtoLocalDate(fechaInicial,"d/M/yyyy");
         LocalDate fechaFin = stringtoLocalDate(fechaFinal,"d/M/yyyy");
 
-        List<MovimientosTotalesPorConceptoDto>  resultado = movimientoRepositoryCustom.findByFechasBetweenGroupByMonth(fechaIni,fechaFin);
+        List<MovimientosTotalesPorConceptoDto>  resultado = transactionRepositoryCustom.findByFechasBetweenGroupByMonth(fechaIni,fechaFin);
 
         return resultado;
     }
@@ -158,7 +158,7 @@ public class MovimientoController {
 
         Sort sort = Sort.by(Sort.Direction.DESC, "fecha","id");
 
-        List<Transaction> transactions = movimientoRepository.findAllByUsuario(usuarioService.getUsuarioAutenticado(),sort);
+        List<Transaction> transactions = transactionRepository.findAllByUsuario(usuarioService.getUsuarioAutenticado(),sort);
 
         return transactions.stream()
                 .map(TransactionDto::new)
@@ -166,7 +166,7 @@ public class MovimientoController {
     }
     public TransactionDto buscar ( Integer movimientoId ) {
 
-        Transaction transaction = movimientoRepository
+        Transaction transaction = transactionRepository
                 .findById(movimientoId)
                 .orElseThrow(() -> new NotFoundException("No encontrado id:"+ movimientoId));
 

@@ -1,6 +1,6 @@
 package com.gabru.Patrimonio.config;
 
-import com.gabru.Patrimonio.service.UsuarioService;
+import com.gabru.Patrimonio.domain.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package com.gabru.Patrimonio.validations.csv;
+package com.gabru.Patrimonio.utils.validations.csv;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintValidator;

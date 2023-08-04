@@ -1,4 +1,4 @@
-package com.gabru.Patrimonio.business_controllers;
+package com.gabru.Patrimonio.domain.business_controllers;
 
 import com.gabru.Patrimonio.api.dtos.ConceptoDto;
 import com.gabru.Patrimonio.data.entities.Concepto;

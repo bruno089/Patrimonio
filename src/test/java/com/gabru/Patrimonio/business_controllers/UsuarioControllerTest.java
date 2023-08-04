@@ -1,13 +1,14 @@
 package com.gabru.Patrimonio.business_controllers;
 
-import com.gabru.Patrimonio.business_services.JwtService;
-import com.gabru.Patrimonio.business_services.MailService;
-import com.gabru.Patrimonio.dtos.UserDto;
-import com.gabru.Patrimonio.entities.ConfirmationCode;
-import com.gabru.Patrimonio.entities.Usuario;
-import com.gabru.Patrimonio.exceptions.AlreadyExistException;
-import com.gabru.Patrimonio.repositories.ConfirmationCodeRepository;
-import com.gabru.Patrimonio.repositories.UsuarioRepository;
+import com.gabru.Patrimonio.utils.business_services.JwtService;
+import com.gabru.Patrimonio.utils.business_services.MailService;
+import com.gabru.Patrimonio.api.dtos.UserDto;
+import com.gabru.Patrimonio.data.entities.ConfirmationCode;
+import com.gabru.Patrimonio.data.entities.Usuario;
+import com.gabru.Patrimonio.domain.business_controllers.UsuarioController;
+import com.gabru.Patrimonio.domain.exceptions.AlreadyExistException;
+import com.gabru.Patrimonio.data.repositories.ConfirmationCodeRepository;
+import com.gabru.Patrimonio.data.repositories.UsuarioRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -18,7 +19,6 @@ import org.mockito.MockitoAnnotations;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -31,7 +31,8 @@ class UsuarioControllerTest {
     @Mock   MailService mailService;
 
     @Mock   JwtService jwtService;
-    @InjectMocks    UsuarioController usuarioController;
+    @InjectMocks
+    UsuarioController usuarioController;
     @BeforeEach
     void setUp(){
         MockitoAnnotations.openMocks(this);

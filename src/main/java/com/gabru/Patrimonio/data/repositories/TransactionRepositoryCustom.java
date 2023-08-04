@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
-public class MovimientoRepositoryCustom {
+public class TransactionRepositoryCustom {
     @Autowired EntityManager entityManager;
 
     public List<MovimientosTotalesPorConceptoDto> findByFechasBetweenGroupByMonth( LocalDate fechaInicial, LocalDate fechaFinal){

@@ -1,4 +1,4 @@
-package com.gabru.Patrimonio.business_services;
+package com.gabru.Patrimonio.utils.business_services;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

@@ -1,4 +1,4 @@
-package com.gabru.Patrimonio.business_controllers.LecturaArchivos;
+package com.gabru.Patrimonio.domain.business_controllers.LecturaArchivos;
 
 import java.util.function.Supplier;
 public enum LectorTipo {

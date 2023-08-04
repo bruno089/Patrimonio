@@ -1,4 +1,4 @@
-package com.gabru.Patrimonio.api.file.dtos;
+package com.gabru.Patrimonio.api.dtos;
 
 import lombok.Builder;
 import lombok.Data;

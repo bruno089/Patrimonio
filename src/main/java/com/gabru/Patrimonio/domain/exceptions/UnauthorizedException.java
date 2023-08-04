@@ -1,4 +1,4 @@
-package com.gabru.Patrimonio.exceptions;
+package com.gabru.Patrimonio.domain.exceptions;
 
 public class UnauthorizedException extends RuntimeException {
     private static final String DESCRIPTION = "Unauthorized Exception (401)";

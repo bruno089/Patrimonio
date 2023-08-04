@@ -1,8 +1,8 @@
-package com.gabru.Patrimonio.service;
+package com.gabru.Patrimonio.domain.service;
 
 import com.gabru.Patrimonio.data.entities.Role;
 import com.gabru.Patrimonio.data.entities.Usuario;
-import com.gabru.Patrimonio.exceptions.NotFoundException;
+import com.gabru.Patrimonio.domain.exceptions.NotFoundException;
 import com.gabru.Patrimonio.data.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;

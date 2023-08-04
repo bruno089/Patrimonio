@@ -1,4 +1,4 @@
-package com.gabru.Patrimonio.validations.csv;
+package com.gabru.Patrimonio.utils.validations.csv;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.ElementType;

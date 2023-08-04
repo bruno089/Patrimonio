@@ -1,4 +1,4 @@
-package com.gabru.Patrimonio.api.rest;
+package com.gabru.Patrimonio.api.resources;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

@@ -1,4 +1,4 @@
-package com.gabru.Patrimonio.exceptions;
+package com.gabru.Patrimonio.domain.exceptions;
 
 public class ForbiddenException extends RuntimeException {
     private static final String DESCRIPTION = "Forbidden Exception (403)";

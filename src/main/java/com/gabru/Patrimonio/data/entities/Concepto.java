@@ -1,4 +1,4 @@
-package com.gabru.Patrimonio.entities;
+package com.gabru.Patrimonio.data.entities;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

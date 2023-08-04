@@ -1,8 +1,8 @@
 package com.gabru.Patrimonio.config;
 
-import com.gabru.Patrimonio.business_services.JwtService;
-import com.gabru.Patrimonio.entities.Role;
-import com.gabru.Patrimonio.exceptions.JwtException;
+import com.gabru.Patrimonio.utils.business_services.JwtService;
+import com.gabru.Patrimonio.data.entities.Role;
+import com.gabru.Patrimonio.domain.exceptions.JwtException;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;

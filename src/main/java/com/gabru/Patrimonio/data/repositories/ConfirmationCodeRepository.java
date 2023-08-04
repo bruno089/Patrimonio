@@ -1,6 +1,6 @@
-package com.gabru.Patrimonio.repositories;
+package com.gabru.Patrimonio.data.repositories;
 
-import com.gabru.Patrimonio.entities.ConfirmationCode;
+import com.gabru.Patrimonio.data.entities.ConfirmationCode;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

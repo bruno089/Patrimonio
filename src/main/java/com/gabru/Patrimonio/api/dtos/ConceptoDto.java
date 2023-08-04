@@ -1,4 +1,4 @@
-package com.gabru.Patrimonio.api.file.dtos;
+package com.gabru.Patrimonio.api.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.gabru.Patrimonio.data.entities.Concepto;

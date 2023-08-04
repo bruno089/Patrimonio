@@ -1,4 +1,4 @@
-package com.gabru.Patrimonio.validations;
+package com.gabru.Patrimonio.utils.validations;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

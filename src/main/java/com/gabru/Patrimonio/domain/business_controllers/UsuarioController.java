@@ -1,7 +1,7 @@
-package com.gabru.Patrimonio.business_controllers;
+package com.gabru.Patrimonio.domain.business_controllers;
 
-import com.gabru.Patrimonio.business_services.JwtService;
-import com.gabru.Patrimonio.business_services.MailService;
+import com.gabru.Patrimonio.utils.business_services.JwtService;
+import com.gabru.Patrimonio.utils.business_services.MailService;
 import com.gabru.Patrimonio.api.dtos.TokenOutputDto;
 import com.gabru.Patrimonio.api.dtos.UserDto;
 import com.gabru.Patrimonio.data.entities.ConfirmationCode;

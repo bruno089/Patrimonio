@@ -1,4 +1,4 @@
-package com.gabru.Patrimonio.business_services;
+package com.gabru.Patrimonio.utils.business_services;
 
 import com.gabru.Patrimonio.domain.exceptions.MailException;
 import org.springframework.beans.factory.annotation.Autowired;

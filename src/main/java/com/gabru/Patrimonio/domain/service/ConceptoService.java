@@ -1,4 +1,4 @@
-package com.gabru.Patrimonio.service;
+package com.gabru.Patrimonio.domain.service;
 
 import com.gabru.Patrimonio.data.entities.Concepto;
 import com.gabru.Patrimonio.data.repositories.ConceptoRepository;

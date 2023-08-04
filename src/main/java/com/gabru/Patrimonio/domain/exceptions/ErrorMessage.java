@@ -1,4 +1,4 @@
-package com.gabru.Patrimonio.exceptions;
+package com.gabru.Patrimonio.domain.exceptions;
 
 public class ErrorMessage {
 
