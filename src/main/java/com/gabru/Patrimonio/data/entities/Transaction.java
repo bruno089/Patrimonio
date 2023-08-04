@@ -13,7 +13,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
-@Entity
+@Entity()
+@Table(name = "Movimiento")
 @SQLDelete(sql = "UPDATE Movimiento  SET borrado = CURRENT_TIMESTAMP  where id = ?" , check = ResultCheckStyle.COUNT)
 @Where(clause = "borrado IS NULL")
 public class Transaction {
