@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class TransactionResource {
     public static final String TRANSACTION = "/movimientos";
-    public static final String TRANSACTION_ID = "/{movimientoId}";
+    public static final String TRANSACTION_ID = "/{transactionId}";
 
     public static final String SEARCH = "/busqueda";
     TransactionService transactionService;

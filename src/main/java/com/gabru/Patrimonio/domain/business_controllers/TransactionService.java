@@ -127,7 +127,7 @@ public class TransactionService {
     public TransactionDto actualizar( int id, TransactionDto transactionDto ) {
         Transaction transaction = transactionRepository.findById(id).orElseThrow(()-> new NotFoundException("No se encuentra el movimiento con ID: " + id));
 
-        Concepto elConcepto =  conceptoService.getConcepto(transactionDto.getConceptoDescripcion());
+        Concepto elConcepto =  conceptoService.getConcepto(transactionDto.getConceptoDescripcion()); //Todo Fix Break when is null
 
         transaction.setConcepto(elConcepto);
         transaction.setFecha(FechaConverterService.stringtoLocalDate(transactionDto.getFecha(), "dd/MM/yyyy"));
