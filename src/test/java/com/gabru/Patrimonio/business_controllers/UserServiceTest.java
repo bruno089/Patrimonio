@@ -5,7 +5,7 @@ import com.gabru.Patrimonio.utils.business_services.MailService;
 import com.gabru.Patrimonio.api.dtos.UserDto;
 import com.gabru.Patrimonio.data.entities.ConfirmationCode;
 import com.gabru.Patrimonio.data.entities.Usuario;
-import com.gabru.Patrimonio.domain.business_controllers.UsuarioController;
+import com.gabru.Patrimonio.domain.services.UserService;
 import com.gabru.Patrimonio.domain.exceptions.AlreadyExistException;
 import com.gabru.Patrimonio.data.repositories.ConfirmationCodeRepository;
 import com.gabru.Patrimonio.data.repositories.UsuarioRepository;
@@ -25,25 +25,25 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-class UsuarioControllerTest {
+class UserServiceTest {
     @Mock   UsuarioRepository usuarioRepository;
     @Mock   ConfirmationCodeRepository confirmationCodeRepository;
     @Mock   MailService mailService;
 
     @Mock   JwtService jwtService;
     @InjectMocks
-    UsuarioController usuarioController;
+    UserService userService;
     @BeforeEach
     void setUp(){
         MockitoAnnotations.openMocks(this);
-        usuarioController =new UsuarioController (usuarioRepository,confirmationCodeRepository,mailService,jwtService);
+        userService =new UserService(usuarioRepository,confirmationCodeRepository,mailService,jwtService);
     }
     @Test
     void notNullTest(){
         assertThat(usuarioRepository).isNotNull();
         assertThat(confirmationCodeRepository).isNotNull();
         assertThat(mailService).isNotNull();
-        assertThat(usuarioController).isNotNull();
+        assertThat(userService).isNotNull();
 
     }
     @Test
@@ -62,7 +62,7 @@ class UsuarioControllerTest {
         Mockito .when(usuarioRepository.findByEmailIgnoreCase(email))
                 .thenReturn(usuarioMock);
 
-        assertThrows(AlreadyExistException.class, ()-> usuarioController.registrar(userDto));
+        assertThrows(AlreadyExistException.class, ()-> userService.registrar(userDto));
     }
     @Test
     void registerNombreExistExcepcionTest () {
@@ -77,7 +77,7 @@ class UsuarioControllerTest {
         Mockito .when(usuarioRepository.findByNombreIgnoreCase(Mockito.anyString()))
                 .thenReturn(usuarioMock);
 
-        assertThrows(AlreadyExistException.class, ()-> usuarioController.registrar(userDto));
+        assertThrows(AlreadyExistException.class, ()-> userService.registrar(userDto));
     }
     @Test
     void registerOK (){
@@ -94,7 +94,7 @@ class UsuarioControllerTest {
                     .when(confirmationCodeRepository.save(any()))
                     .thenReturn(confirmationCode);
 
-        usuarioController.registrar(userDto);
+        userService.registrar(userDto);
 
         //2 verify ways. With and without "times"
         verify(usuarioRepository,times(1)).save(any());

@@ -1,4 +1,4 @@
-package com.gabru.Patrimonio.domain.business_controllers;
+package com.gabru.Patrimonio.domain.services;
 
 import com.gabru.Patrimonio.utils.business_services.JwtService;
 import com.gabru.Patrimonio.utils.business_services.MailService;
@@ -23,7 +23,7 @@ import java.util.Arrays;
 
 @Controller
 @AllArgsConstructor
-public class UsuarioController {
+public class UserService {
     UsuarioRepository usuarioRepository;
     ConfirmationCodeRepository confirmationCodeRepository;
     MailService mailService;

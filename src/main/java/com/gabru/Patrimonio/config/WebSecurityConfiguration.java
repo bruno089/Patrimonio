@@ -1,6 +1,6 @@
 package com.gabru.Patrimonio.config;
 
-import com.gabru.Patrimonio.domain.service.UsuarioService;
+import com.gabru.Patrimonio.domain.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +27,8 @@ import org.springframework.web.filter.CorsFilter;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Autowired UsuarioService usuarioService;
+    @Autowired
+    UserDetailsServiceImpl userDetailsServiceImpl;
     @Autowired AuthenticationEntryPoint authEntryPoint;
 
     private static final String[] AUTH_WHITELIST =
@@ -44,7 +45,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             };
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(usuarioService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder());
     }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -65,7 +66,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             public Authentication authenticate(Authentication authentication) throws AuthenticationException {
                 String username = authentication.getName();
                 String password = authentication.getCredentials().toString();
-                UserDetails userDetails = usuarioService.loadUserByUsername(username);
+                UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(username);
                 if (userDetails != null && userDetails.getPassword().equals(password)) {
                     return new UsernamePasswordAuthenticationToken(username, password, userDetails.getAuthorities());
                 } else {

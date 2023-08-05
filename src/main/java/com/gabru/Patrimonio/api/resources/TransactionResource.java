@@ -2,7 +2,7 @@ package com.gabru.Patrimonio.api.resources;
 
 import com.gabru.Patrimonio.api.dtos.ArchivoDto;
 import com.gabru.Patrimonio.api.dtos.TransactionDto;
-import com.gabru.Patrimonio.domain.business_controllers.TransactionService;
+import com.gabru.Patrimonio.domain.services.TransactionService;
 import com.gabru.Patrimonio.api.dtos.MovimientosTotalesPorConceptoDto;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-@PreAuthorize("hasRole('ADMIN') or hasRole('OPERATOR')")
+@PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
 @RestController
 @RequestMapping(TransactionResource.TRANSACTION)
 @AllArgsConstructor
@@ -27,20 +27,20 @@ public class TransactionResource {
 
     /** CRUD **/
     @PostMapping
-    public TransactionDto agregar( @Valid @RequestBody TransactionDto transactionDto ){
-        return transactionService.agregar(transactionDto);
+    public TransactionDto create ( @Valid @RequestBody TransactionDto transactionDto ){
+        return transactionService.create(transactionDto);
     }
     @GetMapping(TRANSACTION_ID)
-    public TransactionDto buscar( @PathVariable Integer transactionId){
-        return transactionService.buscar(transactionId);
+    public TransactionDto read ( @PathVariable Integer transactionId){
+        return transactionService.read(transactionId);
     }
     @PutMapping(TRANSACTION_ID)
-    public TransactionDto actualizar( @PathVariable Integer transactionId, @Valid @RequestBody TransactionDto transactionDto ){
-        return  transactionService.actualizar(transactionId, transactionDto);
+    public TransactionDto update ( @PathVariable Integer transactionId, @Valid @RequestBody TransactionDto transactionDto ){
+        return  transactionService.update(transactionId, transactionDto);
     }
     @DeleteMapping(TRANSACTION_ID)
-    public void borrar(@PathVariable int transactionId){
-        transactionService.borrar(transactionId);
+    public void delete ( @PathVariable int transactionId){
+        transactionService.delete(transactionId);
     }
 
     /** Searchs **/

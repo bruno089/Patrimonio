@@ -2,7 +2,7 @@ package com.gabru.Patrimonio.service;
 
 import com.gabru.Patrimonio.data.entities.Concepto;
 import com.gabru.Patrimonio.data.repositories.ConceptoRepository;
-import com.gabru.Patrimonio.domain.service.ConceptoService;
+import com.gabru.Patrimonio.domain.services.ConceptoService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,8 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class ConceptoServiceTest {
     @Mock           ConceptoRepository conceptoRepository;
-    @InjectMocks
-    ConceptoService conceptoService;
+    @InjectMocks    ConceptoService conceptoService;
 
     @DisplayName("Get OK concepto ")
     @Test

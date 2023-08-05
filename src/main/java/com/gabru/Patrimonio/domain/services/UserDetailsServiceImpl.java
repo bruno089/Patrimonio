@@ -1,4 +1,4 @@
-package com.gabru.Patrimonio.domain.service;
+package com.gabru.Patrimonio.domain.services;
 
 import com.gabru.Patrimonio.data.entities.Role;
 import com.gabru.Patrimonio.data.entities.Usuario;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class UsuarioService implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired    UsuarioRepository usuarioRepository;
 
     @Override

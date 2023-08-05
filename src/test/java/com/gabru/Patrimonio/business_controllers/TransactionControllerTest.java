@@ -2,7 +2,7 @@ package com.gabru.Patrimonio.business_controllers;
 
 import com.gabru.Patrimonio.api.dtos.TransactionDto;
 import com.gabru.Patrimonio.data.repositories.TransactionRepository;
-import com.gabru.Patrimonio.domain.business_controllers.TransactionService;
+import com.gabru.Patrimonio.domain.services.TransactionService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,6 +1,6 @@
 package com.gabru.Patrimonio.api.resources;
 
-import com.gabru.Patrimonio.domain.business_controllers.ConceptoController;
+import com.gabru.Patrimonio.domain.services.ConceptoService;
 import com.gabru.Patrimonio.api.dtos.ConceptoDto;
 import com.gabru.Patrimonio.data.entities.Concepto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,34 +20,34 @@ public class ConceptoRest {
     public static final String CONCEPTOS_ENDPOINT = "/conceptos";
     public static final String ID = "/{id}";
     public static final String CONCEPTO_NOMBRE = "/nombre";
-    ConceptoController conceptoController;
+    ConceptoService conceptoService;
 
     @PostMapping
     public ConceptoDto agregar(@Valid @RequestBody ConceptoDto conceptoDto){
-        return conceptoController.agregar(conceptoDto);
+        return conceptoService.agregar(conceptoDto);
     }
 
     @PutMapping(ID)
     public ConceptoDto actualizar(@PathVariable Integer id, @Valid @RequestBody ConceptoDto conceptoDto){
-        return conceptoController.actualizar(id, conceptoDto);
+        return conceptoService.actualizar(id, conceptoDto);
     }
     @DeleteMapping(ID)
     public void borrar(@PathVariable int id){
-        conceptoController.borrar(id);
+        conceptoService.borrar(id);
     }
     @GetMapping(ID)
     public  ConceptoDto buscar(@PathVariable Integer id){
-        return conceptoController.buscar(id);
+        return conceptoService.buscar(id);
     }
 
     @GetMapping
     @Operation(summary = "buscarTodos", security = @SecurityRequirement(name = "basicAuth"))
     public List<Concepto> buscarTodos(){
-        return conceptoController.buscarTodos();
+        return conceptoService.buscarTodos();
     }
 
     @GetMapping(CONCEPTO_NOMBRE) //Este tipo de busqueda la sintaxis no es la indicada
     public List<ConceptoDto> buscarPorNombre(@RequestParam String nombre){
-        return conceptoController.buscarPorNombre(nombre);
+        return conceptoService.buscarPorNombre(nombre);
     }
 }

@@ -1,6 +1,7 @@
-package com.gabru.Patrimonio.domain.exceptions;
+package com.gabru.Patrimonio.api.http_errors;
 
 
+import com.gabru.Patrimonio.domain.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

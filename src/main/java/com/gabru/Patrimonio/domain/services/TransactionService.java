@@ -1,7 +1,7 @@
-package com.gabru.Patrimonio.domain.business_controllers;
+package com.gabru.Patrimonio.domain.services;
 
-import com.gabru.Patrimonio.domain.business_controllers.LecturaArchivos.LectorArchivosContext;
-import com.gabru.Patrimonio.domain.business_controllers.LecturaArchivos.LectorTipo;
+import com.gabru.Patrimonio.domain.services.LecturaArchivos.LectorArchivosContext;
+import com.gabru.Patrimonio.domain.services.LecturaArchivos.LectorTipo;
 import com.gabru.Patrimonio.api.dtos.TransactionDto;
 import com.gabru.Patrimonio.api.dtos.MovimientosTotalesPorConceptoDto;
 import com.gabru.Patrimonio.data.entities.Concepto;
@@ -14,9 +14,7 @@ import com.gabru.Patrimonio.domain.exceptions.NotFoundException;
 
 import com.gabru.Patrimonio.data.repositories.TransactionRepository;
 import com.gabru.Patrimonio.data.repositories.TransactionRepositoryCustom;
-import com.gabru.Patrimonio.domain.service.ConceptoService;
 import com.gabru.Patrimonio.utils.business_services.FechaConverterService;
-import com.gabru.Patrimonio.domain.service.UsuarioService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
@@ -37,7 +35,7 @@ public class TransactionService {
     TransactionRepository transactionRepository;
     TransactionRepositoryCustom transactionRepositoryCustom;
     ConceptoService conceptoService;
-    UsuarioService usuarioService;
+    UserDetailsServiceImpl userDetailsServiceImpl;
     public void CsvAMovimientoDtoList ( MultipartFile archivo, String tipoImportacion ){
 
         LectorArchivosContext lectorArchivosContext = new LectorArchivosContext(LectorTipo.CSV );
@@ -46,9 +44,9 @@ public class TransactionService {
 
         //this.agregar(movimientoDtos); //Todo check this
 
-        transactionDtos.forEach(movimientoDto -> this.agregar( movimientoDto));
+        transactionDtos.forEach(movimientoDto -> this.create( movimientoDto));
     }
-    public TransactionDto agregar( TransactionDto transactionDto ) {
+    public TransactionDto create ( TransactionDto transactionDto ) {
 
         LocalDate fecha = LocalDate.parse(transactionDto.getFecha(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
@@ -60,17 +58,17 @@ public class TransactionService {
                 .fecha(fecha)
                 .alta(LocalDateTime.now())
                 .concepto(newConcepto)
-                .usuario(usuarioService.getUsuarioAutenticado())
+                .usuario(userDetailsServiceImpl.getUsuarioAutenticado())
                 .build();
 
         transactionRepository.save(transaction);
 
         return new TransactionDto(transaction);
     }
-    public TransactionDto agregar( List<TransactionDto> transactionDtoList ) {
+    public TransactionDto create ( List<TransactionDto> transactionDtoList ) {
         try {
             // Obtengo el usuario autenticado
-            Usuario usuarioAutenticado = usuarioService.getUsuarioAutenticado();
+            Usuario usuarioAutenticado = userDetailsServiceImpl.getUsuarioAutenticado();
 
             // Lista para almacenar los nuevos movimientos creados
             List<Transaction> nuevosTransactions = new ArrayList<>();
@@ -116,15 +114,15 @@ public class TransactionService {
             throw new RuntimeException("Error al agregar los movimientos: " + e.getMessage());
         }
     }
-    public void borrar(int movimientoId) {
+    public void delete ( int movimientoId) {
 
         Transaction transaction = transactionRepository
-                .findByIdAndUsuario(movimientoId,usuarioService.getUsuarioAutenticado())
+                .findByIdAndUsuario(movimientoId, userDetailsServiceImpl.getUsuarioAutenticado())
                 .orElseThrow(()-> new NotFoundException("No encontrado movimiento: " + movimientoId ));
 
         transactionRepository.delete(transaction);
     }
-    public TransactionDto actualizar( int id, TransactionDto transactionDto ) {
+    public TransactionDto update ( int id, TransactionDto transactionDto ) {
         Transaction transaction = transactionRepository.findById(id).orElseThrow(()-> new NotFoundException("No se encuentra el movimiento con ID: " + id));
 
         Concepto elConcepto =  conceptoService.getConcepto(transactionDto.getConceptoDescripcion()); //Todo Fix Break when is null
@@ -158,13 +156,13 @@ public class TransactionService {
 
         Sort sort = Sort.by(Sort.Direction.DESC, "fecha","id");
 
-        List<Transaction> transactions = transactionRepository.findAllByUsuario(usuarioService.getUsuarioAutenticado(),sort);
+        List<Transaction> transactions = transactionRepository.findAllByUsuario(userDetailsServiceImpl.getUsuarioAutenticado(),sort);
 
         return transactions.stream()
                 .map(TransactionDto::new)
                 .collect(Collectors.toList());
     }
-    public TransactionDto buscar ( Integer movimientoId ) {
+    public TransactionDto read ( Integer movimientoId ) {
 
         Transaction transaction = transactionRepository
                 .findById(movimientoId)

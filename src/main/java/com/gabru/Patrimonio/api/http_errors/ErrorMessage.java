@@ -1,4 +1,4 @@
-package com.gabru.Patrimonio.domain.exceptions;
+package com.gabru.Patrimonio.api.http_errors;
 
 public class ErrorMessage {
 

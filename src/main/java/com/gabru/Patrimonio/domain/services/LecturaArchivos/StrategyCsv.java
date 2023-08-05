@@ -1,4 +1,4 @@
-package com.gabru.Patrimonio.domain.business_controllers.LecturaArchivos;
+package com.gabru.Patrimonio.domain.services.LecturaArchivos;
 
 import com.gabru.Patrimonio.api.dtos.TransactionDto;
 import com.gabru.Patrimonio.domain.exceptions.ConflictException;
