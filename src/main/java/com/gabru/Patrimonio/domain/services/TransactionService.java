@@ -34,23 +34,15 @@ import static com.gabru.Patrimonio.utils.business_services.FechaConverterService
 public class TransactionService {
     TransactionRepository transactionRepository;
     TransactionRepositoryCustom transactionRepositoryCustom;
-    ConceptoService conceptoService;
+    CategoryService categoryService;
     UserDetailsServiceImpl userDetailsServiceImpl;
-    public void CsvAMovimientoDtoList ( MultipartFile archivo, String tipoImportacion ){
 
-        LectorArchivosContext lectorArchivosContext = new LectorArchivosContext(LectorTipo.CSV );
-
-        List<TransactionDto> transactionDtos =  lectorArchivosContext.ejecutar(archivo);
-
-        //this.agregar(movimientoDtos); //Todo check this
-
-        transactionDtos.forEach(movimientoDto -> this.create( movimientoDto));
-    }
+    /** CRUD **/
     public TransactionDto create ( TransactionDto transactionDto ) {
 
         LocalDate fecha = LocalDate.parse(transactionDto.getFecha(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
-        Concepto newConcepto =  conceptoService.getConcepto(transactionDto.getConceptoDescripcion());
+        Concepto newConcepto =  categoryService.getConcepto(transactionDto.getConceptoDescripcion());
 
         Transaction transaction = Transaction.builder()
                 .observacion(transactionDto.getObservacion())
@@ -79,7 +71,7 @@ public class TransactionService {
                 LocalDate fecha = LocalDate.parse(transactionDto.getFecha(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
                 // Obtengo el Concepto correspondiente
-                Concepto concepto = conceptoService.getConcepto(transactionDto.getConceptoDescripcion());
+                Concepto concepto = categoryService.getConcepto(transactionDto.getConceptoDescripcion());
 
                 // Creo el nuevo Movimiento
                 Transaction transaction = Transaction.builder()
@@ -114,18 +106,18 @@ public class TransactionService {
             throw new RuntimeException("Error al agregar los movimientos: " + e.getMessage());
         }
     }
-    public void delete ( int movimientoId) {
+    public TransactionDto read ( Integer movimientoId ) {
 
         Transaction transaction = transactionRepository
-                .findByIdAndUsuario(movimientoId, userDetailsServiceImpl.getUsuarioAutenticado())
-                .orElseThrow(()-> new NotFoundException("No encontrado movimiento: " + movimientoId ));
+                .findById(movimientoId)
+                .orElseThrow(() -> new NotFoundException("No encontrado id: "+ movimientoId));
 
-        transactionRepository.delete(transaction);
+        return  new TransactionDto(transaction);
     }
     public TransactionDto update ( int id, TransactionDto transactionDto ) {
         Transaction transaction = transactionRepository.findById(id).orElseThrow(()-> new NotFoundException("No se encuentra el movimiento con ID: " + id));
 
-        Concepto elConcepto =  conceptoService.getConcepto(transactionDto.getConceptoDescripcion()); //Todo Fix Break when is null
+        Concepto elConcepto =  categoryService.getConcepto(transactionDto.getConceptoDescripcion()); //Todo Fix Break when is null
 
         transaction.setConcepto(elConcepto);
         transaction.setFecha(FechaConverterService.stringtoLocalDate(transactionDto.getFecha(), "dd/MM/yyyy"));
@@ -135,6 +127,25 @@ public class TransactionService {
 
         return new TransactionDto(transaction);
     }
+    public void delete ( int movimientoId) {
+
+        Transaction transaction = transactionRepository
+                .findByIdAndUsuario(movimientoId, userDetailsServiceImpl.getUsuarioAutenticado())
+                .orElseThrow(()-> new NotFoundException("No encontrado movimiento: " + movimientoId ));
+
+        transactionRepository.delete(transaction);
+    }
+    public void CsvAMovimientoDtoList ( MultipartFile archivo, String tipoImportacion ){
+
+        LectorArchivosContext lectorArchivosContext = new LectorArchivosContext(LectorTipo.CSV );
+
+        List<TransactionDto> transactionDtos =  lectorArchivosContext.ejecutar(archivo);
+
+        //this.agregar(movimientoDtos); //Todo check this
+
+        transactionDtos.forEach(movimientoDto -> this.create( movimientoDto));
+    }
+
     public List<TransactionDto> buscarMovimientosPorFecha( String fechaInicial, String fechaFinal) {
         LocalDate fechaIni = stringtoLocalDate(fechaInicial,"d/M/yyyy");
         LocalDate fechaFin = stringtoLocalDate(fechaFinal,"d/M/yyyy");
@@ -162,12 +173,5 @@ public class TransactionService {
                 .map(TransactionDto::new)
                 .collect(Collectors.toList());
     }
-    public TransactionDto read ( Integer movimientoId ) {
 
-        Transaction transaction = transactionRepository
-                .findById(movimientoId)
-                .orElseThrow(() -> new NotFoundException("No encontrado id:"+ movimientoId));
-
-        return  new TransactionDto(transaction);
-    }
 }

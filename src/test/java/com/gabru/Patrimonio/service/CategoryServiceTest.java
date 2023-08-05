@@ -1,8 +1,8 @@
 package com.gabru.Patrimonio.service;
 
 import com.gabru.Patrimonio.data.entities.Concepto;
-import com.gabru.Patrimonio.data.repositories.ConceptoRepository;
-import com.gabru.Patrimonio.domain.services.ConceptoService;
+import com.gabru.Patrimonio.data.repositories.CategoryRepository;
+import com.gabru.Patrimonio.domain.services.CategoryService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,9 +16,11 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
-class ConceptoServiceTest {
-    @Mock           ConceptoRepository conceptoRepository;
-    @InjectMocks    ConceptoService conceptoService;
+class CategoryServiceTest {
+    @Mock
+    CategoryRepository categoryRepository;
+    @InjectMocks
+    CategoryService categoryService;
 
     @DisplayName("Get OK concepto ")
     @Test
@@ -32,9 +34,9 @@ class ConceptoServiceTest {
         conceptoMock.setNombre("Comida");
         conceptosMock.add(conceptoMock);
 
-        Mockito.when(conceptoRepository.findAll()).thenReturn(conceptosMock);
+        Mockito.when(categoryRepository.findAll()).thenReturn(conceptosMock);
 
-        Concepto concepto = conceptoService.getConcepto(conceptoEntrante);
+        Concepto concepto = categoryService.getConcepto(conceptoEntrante);
 
         assertEquals(4,concepto.getId());
 
@@ -51,9 +53,9 @@ class ConceptoServiceTest {
         conceptoMock.setId(4);
         conceptoMock.setNombre("Comida");
         conceptosMock.add(conceptoMock);
-        Mockito.when(conceptoRepository.findAll()).thenReturn(conceptosMock);
+        Mockito.when(categoryRepository.findAll()).thenReturn(conceptosMock);
         //Proceso
-        Concepto concepto = conceptoService.getConcepto(conceptoEntranteConEspacios);
+        Concepto concepto = categoryService.getConcepto(conceptoEntranteConEspacios);
         //Aseveracion
         assertEquals(4,concepto.getId());
     }

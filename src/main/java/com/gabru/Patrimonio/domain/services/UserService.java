@@ -11,7 +11,7 @@ import com.gabru.Patrimonio.domain.exceptions.AlreadyExistException;
 import com.gabru.Patrimonio.domain.exceptions.ConfirmationUserException;
 import com.gabru.Patrimonio.domain.exceptions.NotFoundException;
 import com.gabru.Patrimonio.data.repositories.ConfirmationCodeRepository;
-import com.gabru.Patrimonio.data.repositories.UsuarioRepository;
+import com.gabru.Patrimonio.data.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -24,17 +24,17 @@ import java.util.Arrays;
 @Controller
 @AllArgsConstructor
 public class UserService {
-    UsuarioRepository usuarioRepository;
+    UserRepository userRepository;
     ConfirmationCodeRepository confirmationCodeRepository;
     MailService mailService;
     JwtService jwtService;
     @Transactional
     public void registrar(UserDto userDto) {
 
-        if( usuarioRepository.findByEmailIgnoreCase(userDto.getEmail()).isPresent() ) {
+        if( userRepository.findByEmailIgnoreCase(userDto.getEmail()).isPresent() ) {
             throw  new AlreadyExistException("The email: " + userDto.getEmail() + " Exist in app.");
         }
-        if( usuarioRepository.findByNombreIgnoreCase(userDto.getNombre()).isPresent() ) {
+        if( userRepository.findByNombreIgnoreCase(userDto.getNombre()).isPresent() ) {
             throw  new AlreadyExistException("The username: " + userDto.getNombre() + " Exist in app.");
         }
 
@@ -48,7 +48,7 @@ public class UserService {
                 .role(Role.CUSTOMER)
                 .build();
 
-         usuarioRepository.save(usuario);
+         userRepository.save(usuario);
 
         ConfirmationCode confirmationCode = confirmationCodeRepository.save(new ConfirmationCode(usuario));
 
@@ -67,7 +67,7 @@ public class UserService {
 
     //Todo recuperarClave(String email)
     public void confirmacionCuenta ( String code ) {
-
+        //Todo si el codigo  ya fue usado el codigo sacarlo o borrarlo?
         if(code == null) {
             throw new ConfirmationUserException("Code confirmation null");
         }
@@ -80,15 +80,19 @@ public class UserService {
             throw new ConfirmationUserException("Code confirmation expired: " + confirmationCode.getExpiredDataToken());
         }
 
-        Usuario user = usuarioRepository
+        Usuario user = userRepository
                 .findByEmailIgnoreCase(confirmationCode.getUsuario().getEmail())
                 .orElseThrow(()-> new NotFoundException("Not found user email"));
         user.setActivo(true);
-        usuarioRepository.save(user);
+        userRepository.save(user);
+
+        //Todo devolver un mensaje y que permita redigirigirte a la web.
+        // puedo agregar el HOST en dos archivos properties y que dependiente del eprfil se mande uno u otro
+        // return "Usuario confirmado. Puedes ingresar a: " + "host" ;
     }
     public TokenOutputDto login ( String username ) {
 
-        Usuario user = usuarioRepository
+        Usuario user = userRepository
                 .findByNombreIgnoreCase(username)
                 .orElseThrow(() -> new NotFoundException("Username not found: " + username));
 

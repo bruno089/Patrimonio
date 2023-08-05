@@ -8,7 +8,7 @@ import com.gabru.Patrimonio.data.entities.Usuario;
 import com.gabru.Patrimonio.domain.services.UserService;
 import com.gabru.Patrimonio.domain.exceptions.AlreadyExistException;
 import com.gabru.Patrimonio.data.repositories.ConfirmationCodeRepository;
-import com.gabru.Patrimonio.data.repositories.UsuarioRepository;
+import com.gabru.Patrimonio.data.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -26,7 +26,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 class UserServiceTest {
-    @Mock   UsuarioRepository usuarioRepository;
+    @Mock
+    UserRepository userRepository;
     @Mock   ConfirmationCodeRepository confirmationCodeRepository;
     @Mock   MailService mailService;
 
@@ -36,11 +37,11 @@ class UserServiceTest {
     @BeforeEach
     void setUp(){
         MockitoAnnotations.openMocks(this);
-        userService =new UserService(usuarioRepository,confirmationCodeRepository,mailService,jwtService);
+        userService =new UserService(userRepository,confirmationCodeRepository,mailService,jwtService);
     }
     @Test
     void notNullTest(){
-        assertThat(usuarioRepository).isNotNull();
+        assertThat(userRepository).isNotNull();
         assertThat(confirmationCodeRepository).isNotNull();
         assertThat(mailService).isNotNull();
         assertThat(userService).isNotNull();
@@ -59,7 +60,7 @@ class UserServiceTest {
                .nombre("Jhon")
                .email(email).build());
 
-        Mockito .when(usuarioRepository.findByEmailIgnoreCase(email))
+        Mockito .when(userRepository.findByEmailIgnoreCase(email))
                 .thenReturn(usuarioMock);
 
         assertThrows(AlreadyExistException.class, ()-> userService.registrar(userDto));
@@ -74,7 +75,7 @@ class UserServiceTest {
 
         Optional<Usuario> usuarioMock = Optional.of ( Usuario.builder().nombre(nombre).email(email).build() );
 
-        Mockito .when(usuarioRepository.findByNombreIgnoreCase(Mockito.anyString()))
+        Mockito .when(userRepository.findByNombreIgnoreCase(Mockito.anyString()))
                 .thenReturn(usuarioMock);
 
         assertThrows(AlreadyExistException.class, ()-> userService.registrar(userDto));
@@ -97,7 +98,7 @@ class UserServiceTest {
         userService.registrar(userDto);
 
         //2 verify ways. With and without "times"
-        verify(usuarioRepository,times(1)).save(any());
+        verify(userRepository,times(1)).save(any());
         verify(confirmationCodeRepository).save(any());
         verify(mailService).sendMail(anyString(),anyString(),anyString());
     }

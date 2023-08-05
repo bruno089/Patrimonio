@@ -3,7 +3,7 @@ package com.gabru.Patrimonio.domain.services;
 import com.gabru.Patrimonio.data.entities.Role;
 import com.gabru.Patrimonio.data.entities.Usuario;
 import com.gabru.Patrimonio.domain.exceptions.NotFoundException;
-import com.gabru.Patrimonio.data.repositories.UsuarioRepository;
+import com.gabru.Patrimonio.data.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,12 +19,13 @@ import java.util.List;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-    @Autowired    UsuarioRepository usuarioRepository;
+    @Autowired
+    UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(final String nombreUsuario) throws UsernameNotFoundException {
 
-        Usuario usuario = usuarioRepository
+        Usuario usuario = userRepository
                 .findByNombre(nombreUsuario)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado:  " + nombreUsuario));
 
@@ -40,7 +41,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     Usuario getUsuarioPorNombre(String nombreUsuario){ //Va a la BD
-        Usuario usuario = usuarioRepository.findByNombre(nombreUsuario)
+        Usuario usuario = userRepository.findByNombre(nombreUsuario)
                 .orElseThrow(()-> new NotFoundException("Usuario: " + nombreUsuario + " no encontrado."));
         return usuario;
     }

@@ -1,4 +1,4 @@
-package com.gabru.Patrimonio.api.resources;
+package com.gabru.Patrimonio.api.rest;
 
 import com.gabru.Patrimonio.api.dtos.TokenOutputDto;
 import com.gabru.Patrimonio.api.dtos.UserDto;
@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping(UsuarioRest.USERS)
+@RequestMapping(UserRest.USERS)
 @AllArgsConstructor
-public class UsuarioRest {
+public class UserRest {
     public static final String USERS = "/usuarios";
     public static final String LOGIN = "/login";
     public static final String CONFIRM_REGISTER = "/codigo-confirmacion";

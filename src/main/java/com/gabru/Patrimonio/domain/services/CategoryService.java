@@ -1,10 +1,10 @@
 package com.gabru.Patrimonio.domain.services;
 
-import com.gabru.Patrimonio.api.dtos.ConceptoDto;
+import com.gabru.Patrimonio.api.dtos.CategoryDto;
 import com.gabru.Patrimonio.data.entities.Concepto;
 import com.gabru.Patrimonio.domain.exceptions.ConflictException;
 import com.gabru.Patrimonio.domain.exceptions.NotFoundException;
-import com.gabru.Patrimonio.data.repositories.ConceptoRepository;
+import com.gabru.Patrimonio.data.repositories.CategoryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,66 +12,62 @@ import java.util.*;
 
 @Service
 @AllArgsConstructor
-public class ConceptoService {
+public class CategoryService {
     public static final boolean CONCEPTO_TIPO_DEFAULT = false;
-    ConceptoRepository conceptoRepository;
-
-    public ConceptoDto agregar(ConceptoDto conceptoDto){
-        if (conceptoRepository.findByNombre(conceptoDto.getNombre()) .isPresent()){
-            throw new ConflictException("Concepto existente: " + conceptoDto.getNombre());
+    CategoryRepository categoryRepository;
+    public CategoryDto create ( CategoryDto categoryDto ){
+        if ( categoryRepository.findByNombre(categoryDto.getNombre()) .isPresent()){
+            throw new ConflictException("Concepto existente: " + categoryDto.getNombre());
         }
 
         Concepto concepto =  Concepto.builder()
-                .nombre(conceptoDto.getNombre())
-                .ingreso(conceptoDto.isIngreso())
+                .nombre(categoryDto.getNombre())
+                .ingreso(categoryDto.isIngreso())
                 .build();
 
-        conceptoRepository.save(concepto);
-        return new ConceptoDto(concepto);
+        categoryRepository.save(concepto);
+        return new CategoryDto(concepto);
     }
-
-    public void borrar(int id){
-        if (conceptoRepository.findById(id).isPresent()){
-            conceptoRepository.deleteById(id);
-        }
-    }
-
-    public ConceptoDto actualizar(Integer conceptoId, ConceptoDto conceptoDto) {
-        Concepto concepto = conceptoRepository.findById(conceptoId).orElseThrow(() -> new NotFoundException("No se encontró el concepto."));
-
-        concepto.setNombre(conceptoDto.getNombre());
-        concepto.setIngreso(conceptoDto.isIngreso());
-        conceptoRepository.save(concepto);
-
-        return new ConceptoDto(concepto);
-    }
-
-    public ConceptoDto buscar(int id){
-        Optional<Concepto> con = conceptoRepository.findById(id);
+    public CategoryDto read ( int id){
+        Optional<Concepto> con = categoryRepository.findById(id);
 
         if (! con.isPresent()){
             throw new ConflictException("ConceptoId no existente: " + id );
         }
 
-        return ConceptoDto.builder()
+        return CategoryDto.builder()
                 .id((con.get().getId()))
                 .nombre(con.get().getNombre())
                 .ingreso(con.get().isIngreso())
                 .build();
     }
+    public CategoryDto update ( Integer conceptoId, CategoryDto categoryDto ) {
+        Concepto concepto = categoryRepository.findById(conceptoId).orElseThrow(() -> new NotFoundException("No se encontró el concepto."));
 
-    public List<Concepto> buscarTodos(){
-        List<Concepto> conceptosLis;
-        conceptosLis = conceptoRepository.findAll();
-        return conceptosLis;
+        concepto.setNombre(categoryDto.getNombre());
+        concepto.setIngreso(categoryDto.isIngreso());
+        categoryRepository.save(concepto);
+
+        return new CategoryDto(concepto);
+    }
+    public void delete ( int id){
+        if ( categoryRepository.findById(id).isPresent()){
+            categoryRepository.deleteById(id);
+        }
     }
 
-    public List<ConceptoDto> buscarPorNombre(String nombre){
+    //Search Section
+    public List<Concepto> buscarTodos(){
+        List<Concepto> conceptosLis;
+        conceptosLis = categoryRepository.findAll();
+        return conceptosLis;
+    }
+    public List<CategoryDto> buscarPorNombre( String nombre){
         List<Concepto> conceptos;
-        conceptos = conceptoRepository.findByNombreContaining(nombre);
-        List<ConceptoDto> conceptoDtos = new ArrayList<>();
+        conceptos = categoryRepository.findByNombreContaining(nombre);
+        List<CategoryDto> categoryDtos = new ArrayList<>();
 
-        conceptos.forEach( concepto -> { conceptoDtos.add(ConceptoDto.builder()
+        conceptos.forEach( concepto -> { categoryDtos.add(CategoryDto.builder()
                 .id(concepto.getId())
                 .nombre(concepto.getNombre())
                 .ingreso(concepto.isIngreso()).build());
@@ -81,7 +77,7 @@ public class ConceptoService {
         //if (conceptos.isEmpty()){
          //   throw new ConflictException("No hay elementos con: " + nombre );
         //}
-        return conceptoDtos;
+        return categoryDtos;
     }
     public Concepto getConcepto( String conceptoDescripcion){ //Todo try catch?
         /** Concepto  - Servicio
@@ -101,7 +97,7 @@ public class ConceptoService {
         String conceptoDescripcionUpper = conceptoDescripcion.toUpperCase();
 
         Map<String,Concepto> conceptosEnBDMap =  new HashMap<>();
-        conceptoRepository
+        categoryRepository
                 .findAll()
                 .forEach( concepto -> conceptosEnBDMap.put(concepto.getNombre().toUpperCase(),concepto) );
 
@@ -110,11 +106,10 @@ public class ConceptoService {
         if ( conceptosEnBDMap.containsKey(conceptoDescripcionUpper) ){
             conceptoResultado = conceptosEnBDMap.get(conceptoDescripcionUpper);
         }else{
-            conceptoResultado =  conceptoRepository.save(
+            conceptoResultado =  categoryRepository.save(
                     Concepto.builder().nombre(conceptoDescripcion).ingreso(CONCEPTO_TIPO_DEFAULT).build());
         }
 
         return conceptoResultado;
     }
-
 }

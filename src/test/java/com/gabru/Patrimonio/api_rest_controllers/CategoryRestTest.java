@@ -1,6 +1,6 @@
 package com.gabru.Patrimonio.api_rest_controllers;
 
-import com.gabru.Patrimonio.api.resources.ConceptoRest;
+import com.gabru.Patrimonio.api.rest.CategoryRest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -13,16 +13,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class ConceptoRestTest {
+class CategoryRestTest {
     @Mock
-    ConceptoRest conceptoRest;
+    CategoryRest categoryRest;
     MockMvc mockMvc;
 
 
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(conceptoRest).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(categoryRest).build();
     }
 
     @Test

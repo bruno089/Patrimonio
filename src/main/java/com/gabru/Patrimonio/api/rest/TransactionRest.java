@@ -1,4 +1,4 @@
-package com.gabru.Patrimonio.api.resources;
+package com.gabru.Patrimonio.api.rest;
 
 import com.gabru.Patrimonio.api.dtos.ArchivoDto;
 import com.gabru.Patrimonio.api.dtos.TransactionDto;
@@ -12,18 +12,14 @@ import javax.validation.Valid;
 import java.util.List;
 @PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
 @RestController
-@RequestMapping(TransactionResource.TRANSACTION)
+@RequestMapping(TransactionRest.TRANSACTION)
 @AllArgsConstructor
-public class TransactionResource {
+public class TransactionRest {
     public static final String TRANSACTION = "/movimientos";
     public static final String TRANSACTION_ID = "/{transactionId}";
 
     public static final String SEARCH = "/busqueda";
     TransactionService transactionService;
-    @PostMapping("/csv")
-    public void registrarCsv ( @Valid ArchivoDto archivoDto, @RequestHeader(required = false) String tipoImportacion ){
-        transactionService.CsvAMovimientoDtoList(archivoDto.getArchivo(),tipoImportacion);
-    }
 
     /** CRUD **/
     @PostMapping
@@ -41,6 +37,12 @@ public class TransactionResource {
     @DeleteMapping(TRANSACTION_ID)
     public void delete ( @PathVariable int transactionId){
         transactionService.delete(transactionId);
+    }
+
+
+    @PostMapping("/csv")
+    public void registrarCsv ( @Valid ArchivoDto archivoDto, @RequestHeader(required = false) String tipoImportacion ){
+        transactionService.CsvAMovimientoDtoList(archivoDto.getArchivo(),tipoImportacion);
     }
 
     /** Searchs **/
