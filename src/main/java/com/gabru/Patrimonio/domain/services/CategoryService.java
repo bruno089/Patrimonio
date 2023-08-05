@@ -1,7 +1,7 @@
 package com.gabru.Patrimonio.domain.services;
 
 import com.gabru.Patrimonio.api.dtos.CategoryDto;
-import com.gabru.Patrimonio.data.entities.Concepto;
+import com.gabru.Patrimonio.data.entities.Category;
 import com.gabru.Patrimonio.domain.exceptions.ConflictException;
 import com.gabru.Patrimonio.domain.exceptions.NotFoundException;
 import com.gabru.Patrimonio.data.repositories.CategoryRepository;
@@ -20,16 +20,16 @@ public class CategoryService {
             throw new ConflictException("Concepto existente: " + categoryDto.getNombre());
         }
 
-        Concepto concepto =  Concepto.builder()
+        Category category =  Category.builder()
                 .nombre(categoryDto.getNombre())
                 .ingreso(categoryDto.isIngreso())
                 .build();
 
-        categoryRepository.save(concepto);
-        return new CategoryDto(concepto);
+        categoryRepository.save(category);
+        return new CategoryDto(category);
     }
     public CategoryDto read ( int id){
-        Optional<Concepto> con = categoryRepository.findById(id);
+        Optional<Category> con = categoryRepository.findById(id);
 
         if (! con.isPresent()){
             throw new ConflictException("ConceptoId no existente: " + id );
@@ -42,13 +42,13 @@ public class CategoryService {
                 .build();
     }
     public CategoryDto update ( Integer conceptoId, CategoryDto categoryDto ) {
-        Concepto concepto = categoryRepository.findById(conceptoId).orElseThrow(() -> new NotFoundException("No se encontró el concepto."));
+        Category category = categoryRepository.findById(conceptoId).orElseThrow(() -> new NotFoundException("No se encontró el concepto."));
 
-        concepto.setNombre(categoryDto.getNombre());
-        concepto.setIngreso(categoryDto.isIngreso());
-        categoryRepository.save(concepto);
+        category.setNombre(categoryDto.getNombre());
+        category.setIngreso(categoryDto.isIngreso());
+        categoryRepository.save(category);
 
-        return new CategoryDto(concepto);
+        return new CategoryDto(category);
     }
     public void delete ( int id){
         if ( categoryRepository.findById(id).isPresent()){
@@ -57,17 +57,17 @@ public class CategoryService {
     }
 
     //Search Section
-    public List<Concepto> buscarTodos(){
-        List<Concepto> conceptosLis;
-        conceptosLis = categoryRepository.findAll();
-        return conceptosLis;
+    public List<Category> buscarTodos(){
+        List<Category> categories; //Refactor for CategoryDto[] using mapstruct
+        categories = categoryRepository.findAll();
+        return categories;
     }
     public List<CategoryDto> buscarPorNombre( String nombre){
-        List<Concepto> conceptos;
-        conceptos = categoryRepository.findByNombreContaining(nombre);
+        List<Category> categories;
+        categories = categoryRepository.findByNombreContaining(nombre);
         List<CategoryDto> categoryDtos = new ArrayList<>();
 
-        conceptos.forEach( concepto -> { categoryDtos.add(CategoryDto.builder()
+        categories.forEach(concepto -> { categoryDtos.add(CategoryDto.builder()
                 .id(concepto.getId())
                 .nombre(concepto.getNombre())
                 .ingreso(concepto.isIngreso()).build());
@@ -79,7 +79,7 @@ public class CategoryService {
         //}
         return categoryDtos;
     }
-    public Concepto getConcepto( String conceptoDescripcion){ //Todo try catch?
+    public Category getConcepto( String conceptoDescripcion){ //Todo try catch?
         /** Concepto  - Servicio
          *
          * El manejo de concepto tiene q estar nucleado en un solo lugar (Principio de Unica Responsabilidad)
@@ -96,20 +96,20 @@ public class CategoryService {
         conceptoDescripcion = conceptoDescripcion.trim();
         String conceptoDescripcionUpper = conceptoDescripcion.toUpperCase();
 
-        Map<String,Concepto> conceptosEnBDMap =  new HashMap<>();
+        Map<String, Category> conceptosEnBDMap =  new HashMap<>();
         categoryRepository
                 .findAll()
                 .forEach( concepto -> conceptosEnBDMap.put(concepto.getNombre().toUpperCase(),concepto) );
 
-        Concepto conceptoResultado;
+        Category categoryResultado;
 
         if ( conceptosEnBDMap.containsKey(conceptoDescripcionUpper) ){
-            conceptoResultado = conceptosEnBDMap.get(conceptoDescripcionUpper);
+            categoryResultado = conceptosEnBDMap.get(conceptoDescripcionUpper);
         }else{
-            conceptoResultado =  categoryRepository.save(
-                    Concepto.builder().nombre(conceptoDescripcion).ingreso(CONCEPTO_TIPO_DEFAULT).build());
+            categoryResultado =  categoryRepository.save(
+                    Category.builder().nombre(conceptoDescripcion).ingreso(CONCEPTO_TIPO_DEFAULT).build());
         }
 
-        return conceptoResultado;
+        return categoryResultado;
     }
 }

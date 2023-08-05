@@ -1,10 +1,10 @@
 package com.gabru.Patrimonio.domain.services;
 
+import com.gabru.Patrimonio.data.entities.Category;
 import com.gabru.Patrimonio.domain.services.LecturaArchivos.LectorArchivosContext;
 import com.gabru.Patrimonio.domain.services.LecturaArchivos.LectorTipo;
 import com.gabru.Patrimonio.api.dtos.TransactionDto;
 import com.gabru.Patrimonio.api.dtos.MovimientosTotalesPorConceptoDto;
-import com.gabru.Patrimonio.data.entities.Concepto;
 import com.gabru.Patrimonio.data.entities.Transaction;
 
 
@@ -42,14 +42,14 @@ public class TransactionService {
 
         LocalDate fecha = LocalDate.parse(transactionDto.getFecha(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
-        Concepto newConcepto =  categoryService.getConcepto(transactionDto.getConceptoDescripcion());
+        Category newCategory =  categoryService.getConcepto(transactionDto.getConceptoDescripcion());
 
         Transaction transaction = Transaction.builder()
                 .observacion(transactionDto.getObservacion())
                 .importe(transactionDto.getImporte())
                 .fecha(fecha)
                 .alta(LocalDateTime.now())
-                .concepto(newConcepto)
+                .category(newCategory)
                 .usuario(userDetailsServiceImpl.getUsuarioAutenticado())
                 .build();
 
@@ -71,7 +71,7 @@ public class TransactionService {
                 LocalDate fecha = LocalDate.parse(transactionDto.getFecha(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
                 // Obtengo el Concepto correspondiente
-                Concepto concepto = categoryService.getConcepto(transactionDto.getConceptoDescripcion());
+                Category category = categoryService.getConcepto(transactionDto.getConceptoDescripcion());
 
                 // Creo el nuevo Movimiento
                 Transaction transaction = Transaction.builder()
@@ -79,7 +79,7 @@ public class TransactionService {
                         .importe(transactionDto.getImporte())
                         .fecha(fecha)
                         .alta(LocalDateTime.now())
-                        .concepto(concepto)
+                        .category(category)
                         .usuario(usuarioAutenticado)
                         .build();
 
@@ -117,9 +117,9 @@ public class TransactionService {
     public TransactionDto update ( int id, TransactionDto transactionDto ) {
         Transaction transaction = transactionRepository.findById(id).orElseThrow(()-> new NotFoundException("No se encuentra el movimiento con ID: " + id));
 
-        Concepto elConcepto =  categoryService.getConcepto(transactionDto.getConceptoDescripcion()); //Todo Fix Break when is null
+        Category elCategory =  categoryService.getConcepto(transactionDto.getConceptoDescripcion()); //Todo Fix Break when is null
 
-        transaction.setConcepto(elConcepto);
+        transaction.setCategory(elCategory);
         transaction.setFecha(FechaConverterService.stringtoLocalDate(transactionDto.getFecha(), "dd/MM/yyyy"));
         transaction.setImporte(transactionDto.getImporte());
         transaction.setObservacion(transactionDto.getObservacion());

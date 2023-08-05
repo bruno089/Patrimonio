@@ -12,9 +12,10 @@ import java.time.LocalDateTime;
 
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
 @Entity
+@Table(name = "Concepto")
 @SQLDelete(sql = "UPDATE Concepto SET borrado = CURRENT_TIMESTAMP  where id = ?" , check = ResultCheckStyle.COUNT)
 @Where(clause = "borrado IS NULL")
-public class Concepto {
+public class Category {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
     String nombre;

@@ -1,8 +1,8 @@
 package com.gabru.Patrimonio.api.rest;
 
+import com.gabru.Patrimonio.data.entities.Category;
 import com.gabru.Patrimonio.domain.services.CategoryService;
 import com.gabru.Patrimonio.api.dtos.CategoryDto;
-import com.gabru.Patrimonio.data.entities.Concepto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
@@ -43,7 +43,7 @@ public class CategoryRest {
     /** Searchs **/
 
     @GetMapping    @Operation(summary = "buscarTodos", security = @SecurityRequirement(name = "JWT Token"))
-    public List<Concepto> buscarTodos(){
+    public List<Category> buscarTodos(){
         return categoryService.buscarTodos();
     }
     @GetMapping(CONCEPTO_NOMBRE) //Este tipo de busqueda la sintaxis no es la indicada

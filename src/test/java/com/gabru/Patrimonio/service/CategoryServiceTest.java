@@ -1,6 +1,6 @@
 package com.gabru.Patrimonio.service;
 
-import com.gabru.Patrimonio.data.entities.Concepto;
+import com.gabru.Patrimonio.data.entities.Category;
 import com.gabru.Patrimonio.data.repositories.CategoryRepository;
 import com.gabru.Patrimonio.domain.services.CategoryService;
 import org.junit.jupiter.api.DisplayName;
@@ -28,17 +28,17 @@ class CategoryServiceTest {
         String conceptoEntrante = "Comida";
 
 
-        List<Concepto> conceptosMock = new ArrayList<>();
-        Concepto conceptoMock =  new Concepto();
-        conceptoMock.setId(4);
-        conceptoMock.setNombre("Comida");
-        conceptosMock.add(conceptoMock);
+        List<Category> conceptosMock = new ArrayList<>();
+        Category categoryMock =  new Category();
+        categoryMock.setId(4);
+        categoryMock.setNombre("Comida");
+        conceptosMock.add(categoryMock);
 
         Mockito.when(categoryRepository.findAll()).thenReturn(conceptosMock);
 
-        Concepto concepto = categoryService.getConcepto(conceptoEntrante);
+        Category category = categoryService.getConcepto(conceptoEntrante);
 
-        assertEquals(4,concepto.getId());
+        assertEquals(4, category.getId());
 
     }
 
@@ -48,16 +48,16 @@ class CategoryServiceTest {
         //Entrada
         String conceptoEntranteConEspacios = "   Comida     ";
         //Mocks
-        List<Concepto> conceptosMock = new ArrayList<>();
-        Concepto conceptoMock =  new Concepto();
-        conceptoMock.setId(4);
-        conceptoMock.setNombre("Comida");
-        conceptosMock.add(conceptoMock);
+        List<Category> conceptosMock = new ArrayList<>();
+        Category categoryMock =  new Category();
+        categoryMock.setId(4);
+        categoryMock.setNombre("Comida");
+        conceptosMock.add(categoryMock);
         Mockito.when(categoryRepository.findAll()).thenReturn(conceptosMock);
         //Proceso
-        Concepto concepto = categoryService.getConcepto(conceptoEntranteConEspacios);
+        Category category = categoryService.getConcepto(conceptoEntranteConEspacios);
         //Aseveracion
-        assertEquals(4,concepto.getId());
+        assertEquals(4, category.getId());
     }
 
 }

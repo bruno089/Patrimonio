@@ -1,7 +1,7 @@
 package com.gabru.Patrimonio.api.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.gabru.Patrimonio.data.entities.Concepto;
+import com.gabru.Patrimonio.data.entities.Category;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,10 +20,10 @@ public class CategoryDto {
     @NotNull
     boolean ingreso;
 
-    public CategoryDto ( Concepto concepto){
-        this.id = concepto.getId();
-        this.nombre = concepto.getNombre();
-        this.ingreso = concepto.isIngreso();
+    public CategoryDto ( Category category ){
+        this.id = category.getId();
+        this.nombre = category.getNombre();
+        this.ingreso = category.isIngreso();
     }
 }
 

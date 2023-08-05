@@ -1,4 +1,4 @@
-SET IDENTITY_INSERT [dbo].[concepto] ON
+SET IDENTITY_INSERT [dbo].[category] ON
 INSERT [dbo].[Concepto] ([id], [nombre], [ingreso]) VALUES (1, N'Sueldo', 1)
 INSERT [dbo].[Concepto] ([id], [nombre], [ingreso]) VALUES (2, N'Devolucion', 1)
 INSERT [dbo].[Concepto] ([id], [nombre], [ingreso]) VALUES (3, N'Venta', 1)
@@ -16,7 +16,7 @@ INSERT [dbo].[Concepto] ([id], [nombre], [ingreso]) VALUES (14, N'Compra Dolares
 INSERT [dbo].[Concepto] ([id], [nombre], [ingreso]) VALUES (15, N'Prestamo', 0)
 INSERT [dbo].[Concepto] ([id], [nombre], [ingreso]) VALUES (16, N'Auto', 0)
 INSERT [dbo].[Concepto] ([id], [nombre], [ingreso]) VALUES (17, N'Gimnasio', 0)
-SET IDENTITY_INSERT [dbo].[concepto] OFF
+SET IDENTITY_INSERT [dbo].[category] OFF
 
 
 SET IDENTITY_INSERT [dbo].[usuario] ON
