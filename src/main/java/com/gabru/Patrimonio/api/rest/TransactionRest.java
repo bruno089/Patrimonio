@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-@PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
+@PreAuthorize("hasRole('CUSTOMER')")
 @RestController
 @RequestMapping(TransactionRest.TRANSACTION)
 @AllArgsConstructor
@@ -38,7 +38,6 @@ public class TransactionRest {
     public void delete ( @PathVariable int transactionId){
         transactionService.delete(transactionId);
     }
-
 
     @PostMapping("/csv")
     public void registrarCsv ( @Valid ArchivoDto archivoDto, @RequestHeader(required = false) String tipoImportacion ){

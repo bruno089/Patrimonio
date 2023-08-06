@@ -29,7 +29,7 @@ public class UserService {
     MailService mailService;
     JwtService jwtService;
     @Transactional
-    public void registrar(UserDto userDto) {
+    public void register ( UserDto userDto) {
 
         if( userRepository.findByEmailIgnoreCase(userDto.getEmail()).isPresent() ) {
             throw  new AlreadyExistException("The email: " + userDto.getEmail() + " Exist in app.");
@@ -44,7 +44,6 @@ public class UserService {
                 .email(userDto.getEmail())
                 .activo(false)
                 .registro(LocalDate.now())
-                .roles(new Role[]{Role.CUSTOMER})
                 .role(Role.CUSTOMER)
                 .build();
 
@@ -52,9 +51,7 @@ public class UserService {
 
         ConfirmationCode confirmationCode = confirmationCodeRepository.save(new ConfirmationCode(usuario));
 
-        String host = "https://finanzas.brunolopezcross.com/";
-        // String activeProfile = System.getProperty("spring.config.activate.on-profile");
-        //if (! "docker".equals(activeProfile)) { host = "http://127.0.0.1:8080/"; }
+        String host = getEnvironmentHost();
 
         String endPointConfirmationCode = "usuarios/codigo-confirmacion?confirmationCode=";
         String urlCodeActivation = host + endPointConfirmationCode + confirmationCode.getCode();
@@ -64,10 +61,8 @@ public class UserService {
 
         mailService.sendMail(userDto.getEmail(), "Registration Code", message);
     }
+    public String userConfirmation ( String code ) { //Todo si el codigo  ya fue usado el codigo sacarlo o borrarlo?
 
-    //Todo recuperarClave(String email)
-    public void confirmacionCuenta ( String code ) {
-        //Todo si el codigo  ya fue usado el codigo sacarlo o borrarlo?
         if(code == null) {
             throw new ConfirmationUserException("Code confirmation null");
         }
@@ -86,9 +81,7 @@ public class UserService {
         user.setActivo(true);
         userRepository.save(user);
 
-        //Todo devolver un mensaje y que permita redigirigirte a la web.
-        // puedo agregar el HOST en dos archivos properties y que dependiente del eprfil se mande uno u otro
-        // return "Usuario confirmado. Puedes ingresar a: " + "host" ;
+        return "Account activated successfully, please login in the app.";
     }
     public TokenOutputDto login ( String username ) {
 
@@ -96,9 +89,26 @@ public class UserService {
                 .findByNombreIgnoreCase(username)
                 .orElseThrow(() -> new NotFoundException("Username not found: " + username));
 
-        String[] roles = Arrays.stream(user.getRoles()).map(Role::name).toArray(String[]::new);
+        String role = user.getRole().toString();
+        String[] roles = {role};
 
         return new TokenOutputDto(jwtService.createToken(user.getNombre(), user.getNombre(),roles));
     }
+    String getEnvironmentHost() {
+        String host = "https://finanzas.brunolopezcross.com/";
+        String profile = System.getProperty("spring.config.activate.on-profile");
+        if(profile == null || ! profile.equals("docker")) {
+            host = "http://localhost:8080/";
+        }
+        return host;
+    }
 
+    /*void recuperarClave(String email) { //Todo recuperarClave(String email)
+        //Todo generar un codigo de recuperacion de clave
+        //Todo enviar un correo con el codigo de recuperacion de clave
+
+    }
+    //Todo recuperarClave(String email, String codigo)
+    //Todo cambiarClave(String email, String clave)
+    //Todo cambiarClave(String email, String codigo, String clave)*/
 }

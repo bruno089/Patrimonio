@@ -1,8 +1,10 @@
 package com.gabru.Patrimonio.service;
 
 import com.gabru.Patrimonio.data.entities.Category;
+import com.gabru.Patrimonio.data.entities.Usuario;
 import com.gabru.Patrimonio.data.repositories.CategoryRepository;
 import com.gabru.Patrimonio.domain.services.CategoryService;
+import com.gabru.Patrimonio.domain.services.UserDetailsServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +24,8 @@ class CategoryServiceTest {
     @InjectMocks
     CategoryService categoryService;
 
+    @Mock    UserDetailsServiceImpl userDetailsService;
+
     @DisplayName("Get OK concepto ")
     @Test
     void getConcepto () {
@@ -34,7 +38,7 @@ class CategoryServiceTest {
         categoryMock.setNombre("Comida");
         conceptosMock.add(categoryMock);
 
-        Mockito.when(categoryRepository.findAll()).thenReturn(conceptosMock);
+        Mockito.when(categoryRepository.findAllByUsuario(Mockito.any())).thenReturn(conceptosMock);
 
         Category category = categoryService.getConcepto(conceptoEntrante);
 
@@ -45,15 +49,20 @@ class CategoryServiceTest {
     @DisplayName("Get concepto a traves de concepto entrante con espacios  ")
     @Test
     void getConcepto_test2 () {
+
         //Entrada
         String conceptoEntranteConEspacios = "   Comida     ";
+
         //Mocks
+        Usuario user = new Usuario();
+        user.setNombre("Jhon");
         List<Category> conceptosMock = new ArrayList<>();
         Category categoryMock =  new Category();
         categoryMock.setId(4);
         categoryMock.setNombre("Comida");
+        categoryMock.setUsuario(user);
         conceptosMock.add(categoryMock);
-        Mockito.when(categoryRepository.findAll()).thenReturn(conceptosMock);
+        Mockito.when(categoryRepository.findAllByUsuario(Mockito.any())).thenReturn(conceptosMock);
         //Proceso
         Category category = categoryService.getConcepto(conceptoEntranteConEspacios);
         //Aseveracion

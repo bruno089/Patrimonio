@@ -63,7 +63,7 @@ class UserServiceTest {
         Mockito .when(userRepository.findByEmailIgnoreCase(email))
                 .thenReturn(usuarioMock);
 
-        assertThrows(AlreadyExistException.class, ()-> userService.registrar(userDto));
+        assertThrows(AlreadyExistException.class, ()-> userService.register(userDto));
     }
     @Test
     void registerNombreExistExcepcionTest () {
@@ -78,7 +78,7 @@ class UserServiceTest {
         Mockito .when(userRepository.findByNombreIgnoreCase(Mockito.anyString()))
                 .thenReturn(usuarioMock);
 
-        assertThrows(AlreadyExistException.class, ()-> userService.registrar(userDto));
+        assertThrows(AlreadyExistException.class, ()-> userService.register(userDto));
     }
     @Test
     void registerOK (){
@@ -95,7 +95,7 @@ class UserServiceTest {
                     .when(confirmationCodeRepository.save(any()))
                     .thenReturn(confirmationCode);
 
-        userService.registrar(userDto);
+        userService.register(userDto);
 
         //2 verify ways. With and without "times"
         verify(userRepository,times(1)).save(any());

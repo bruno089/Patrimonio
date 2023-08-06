@@ -12,17 +12,16 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@PreAuthorize("hasRole('ADMIN') or hasRole('OPERATOR')")
+@PreAuthorize("hasRole('CUSTOMER')")
 @RestController
 @RequestMapping(CategoryRest.CATEGORIES)
 @AllArgsConstructor
 public class CategoryRest {
     public static final String CATEGORIES = "/conceptos";
     public static final String ID = "/{id}";
+
     public static final String CONCEPTO_NOMBRE = "/nombre";
     CategoryService categoryService;
-
-    /** CRUD **/
     @PostMapping
     public CategoryDto create ( @Valid @RequestBody CategoryDto categoryDto ){
         return categoryService.create(categoryDto);
@@ -39,16 +38,12 @@ public class CategoryRest {
     public void delete ( @PathVariable int id){
         categoryService.delete(id);
     }
-
-    /** Searchs **/
-
     @GetMapping    @Operation(summary = "buscarTodos", security = @SecurityRequirement(name = "JWT Token"))
     public List<Category> buscarTodos(){
         return categoryService.buscarTodos();
     }
-    @GetMapping(CONCEPTO_NOMBRE) //Este tipo de busqueda la sintaxis no es la indicada
+    @GetMapping(CONCEPTO_NOMBRE) // Este tipo de busqueda la sintaxis CREO no es la indicada averiguar y arreglar
     public List<CategoryDto> buscarPorNombre( @RequestParam String nombre){
         return categoryService.buscarPorNombre(nombre);
     }
-
 }

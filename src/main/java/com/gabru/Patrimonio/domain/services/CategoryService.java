@@ -2,6 +2,7 @@ package com.gabru.Patrimonio.domain.services;
 
 import com.gabru.Patrimonio.api.dtos.CategoryDto;
 import com.gabru.Patrimonio.data.entities.Category;
+import com.gabru.Patrimonio.data.entities.Usuario;
 import com.gabru.Patrimonio.domain.exceptions.ConflictException;
 import com.gabru.Patrimonio.domain.exceptions.NotFoundException;
 import com.gabru.Patrimonio.data.repositories.CategoryRepository;
@@ -15,34 +16,40 @@ import java.util.*;
 public class CategoryService {
     public static final boolean CONCEPTO_TIPO_DEFAULT = false;
     CategoryRepository categoryRepository;
+    UserDetailsServiceImpl userDetailsServiceImpl;
     public CategoryDto create ( CategoryDto categoryDto ){
-        if ( categoryRepository.findByNombre(categoryDto.getNombre()) .isPresent()){
-            throw new ConflictException("Concepto existente: " + categoryDto.getNombre());
+
+        if ( categoryRepository.findByNombreAndUsuario(categoryDto.getNombre(),userDetailsServiceImpl.getUsuarioAutenticado()).isPresent()){
+            throw new ConflictException("Already exist Category: " + categoryDto.getNombre());
         }
 
         Category category =  Category.builder()
                 .nombre(categoryDto.getNombre())
                 .ingreso(categoryDto.isIngreso())
+                .usuario(userDetailsServiceImpl.getUsuarioAutenticado())
                 .build();
 
         categoryRepository.save(category);
         return new CategoryDto(category);
     }
     public CategoryDto read ( int id){
-        Optional<Category> con = categoryRepository.findById(id);
+        Optional<Category> categoryOptional = categoryRepository.findByIdAndUsuario(id,userDetailsServiceImpl.getUsuarioAutenticado());
 
-        if (! con.isPresent()){
-            throw new ConflictException("ConceptoId no existente: " + id );
+        if (! categoryOptional.isPresent()){
+            throw new NotFoundException("Not found category ID: " + id );
         }
 
         return CategoryDto.builder()
-                .id((con.get().getId()))
-                .nombre(con.get().getNombre())
-                .ingreso(con.get().isIngreso())
+                .id((categoryOptional.get().getId()))
+                .nombre(categoryOptional.get().getNombre())
+                .ingreso(categoryOptional.get().isIngreso())
                 .build();
     }
-    public CategoryDto update ( Integer conceptoId, CategoryDto categoryDto ) {
-        Category category = categoryRepository.findById(conceptoId).orElseThrow(() -> new NotFoundException("No se encontró el concepto."));
+    public CategoryDto update ( Integer id, CategoryDto categoryDto ) {
+
+        Category category = categoryRepository
+                .findByIdAndUsuario(id,userDetailsServiceImpl.getUsuarioAutenticado())
+                .orElseThrow(() -> new NotFoundException("Not found category ID: : " + id ));
 
         category.setNombre(categoryDto.getNombre());
         category.setIngreso(categoryDto.isIngreso());
@@ -51,7 +58,7 @@ public class CategoryService {
         return new CategoryDto(category);
     }
     public void delete ( int id){
-        if ( categoryRepository.findById(id).isPresent()){
+        if ( categoryRepository.findByIdAndUsuario(id, userDetailsServiceImpl.getUsuarioAutenticado()).isPresent()){
             categoryRepository.deleteById(id);
         }
     }
@@ -59,12 +66,12 @@ public class CategoryService {
     //Search Section
     public List<Category> buscarTodos(){
         List<Category> categories; //Refactor for CategoryDto[] using mapstruct
-        categories = categoryRepository.findAll();
+        categories = categoryRepository.findAllByUsuario(userDetailsServiceImpl.getUsuarioAutenticado());
         return categories;
     }
     public List<CategoryDto> buscarPorNombre( String nombre){
         List<Category> categories;
-        categories = categoryRepository.findByNombreContaining(nombre);
+        categories = categoryRepository.findByNombreContainingAndUsuario(nombre,userDetailsServiceImpl.getUsuarioAutenticado());
         List<CategoryDto> categoryDtos = new ArrayList<>();
 
         categories.forEach(concepto -> { categoryDtos.add(CategoryDto.builder()
@@ -95,10 +102,10 @@ public class CategoryService {
         //Limpiezas del Concepto, segun se vayan necesitando
         conceptoDescripcion = conceptoDescripcion.trim();
         String conceptoDescripcionUpper = conceptoDescripcion.toUpperCase();
-
+        Usuario user = userDetailsServiceImpl.getUsuarioAutenticado();
         Map<String, Category> conceptosEnBDMap =  new HashMap<>();
         categoryRepository
-                .findAll()
+                .findAllByUsuario(user)
                 .forEach( concepto -> conceptosEnBDMap.put(concepto.getNombre().toUpperCase(),concepto) );
 
         Category categoryResultado;
@@ -107,7 +114,13 @@ public class CategoryService {
             categoryResultado = conceptosEnBDMap.get(conceptoDescripcionUpper);
         }else{
             categoryResultado =  categoryRepository.save(
-                    Category.builder().nombre(conceptoDescripcion).ingreso(CONCEPTO_TIPO_DEFAULT).build());
+                    Category.builder()
+                            .nombre(conceptoDescripcion)
+                            .ingreso(CONCEPTO_TIPO_DEFAULT)
+                            .usuario(user)
+                            .build()
+
+            );
         }
 
         return categoryResultado;

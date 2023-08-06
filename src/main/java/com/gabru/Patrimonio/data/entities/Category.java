@@ -22,10 +22,16 @@ public class Category {
     boolean ingreso;
     @Column(columnDefinition = "smalldatetime")
     LocalDateTime borrado;
+
+    @ManyToOne @JoinColumn(nullable = false, name = "id_usuario")
+    Usuario usuario;
     @PreRemove
     public void borrado(){
         this.borrado = LocalDateTime.now();
     }
+
+
+
 }
 
 

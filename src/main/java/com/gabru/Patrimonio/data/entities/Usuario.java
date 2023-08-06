@@ -23,9 +23,6 @@ public class Usuario {
     boolean activo;
     LocalDate registro;
 
-    @Transient
-    Role[] roles = new Role[]{Role.ADMIN}; //Todo Role Management
-
     @Enumerated(EnumType.STRING)
     private Role role;
 }

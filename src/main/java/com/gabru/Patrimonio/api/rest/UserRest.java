@@ -19,16 +19,12 @@ public class UserRest {
     public static final String LOGIN = "/login";
     public static final String CONFIRM_REGISTER = "/codigo-confirmacion";
     UserService userService;
-
     @PostMapping()
     public void registrar(@Valid @RequestBody UserDto userDto){
-        userService.registrar(userDto);
+        userService.register(userDto);
     }
-
     @GetMapping(CONFIRM_REGISTER)
-    public void confirmacionCuenta ( @RequestParam() String confirmationCode){
-        userService.confirmacionCuenta(confirmationCode);
-    }
+    public String confirmacionCuenta (@RequestParam() String confirmationCode){return userService.userConfirmation(confirmationCode);}
     @PreAuthorize("authenticated")
     @PostMapping(LOGIN)
     public TokenOutputDto login( @AuthenticationPrincipal User activeUser) { //User class from spring security

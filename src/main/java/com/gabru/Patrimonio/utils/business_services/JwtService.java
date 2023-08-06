@@ -21,15 +21,19 @@ public class JwtService {
     private static final String ISSUER = "Minkatec";
     private static final int EXPIRES_IN_MILLISECOND = 3600000;
 
+
+    private static final String ROLE = "role";
+
     public String createToken(String user, String name, String[] roles) {
         return JWT.create()
                 .withIssuer(ISSUER)
                 .withIssuedAt(new Date())
-                .withNotBefore(new Date()) //No se puede usar antes de la fecha establecida
+                .withNotBefore(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRES_IN_MILLISECOND))
                 .withClaim(USER, user)
                 .withClaim(NAME, name)
-                .withArrayClaim(ROLES, roles)
+                .withClaim(NAME, name)
+                .withArrayClaim(ROLES, roles) //For many roles
                 .sign(Algorithm.HMAC256(SECRET));
     }
 
