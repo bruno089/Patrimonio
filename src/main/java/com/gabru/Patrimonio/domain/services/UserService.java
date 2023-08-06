@@ -94,12 +94,12 @@ public class UserService {
 
         return new TokenOutputDto(jwtService.createToken(user.getNombre(), user.getNombre(),roles));
     }
-    String getEnvironmentHost() {
+    private String getEnvironmentHost() {
         String host = "https://finanzas.brunolopezcross.com/";
-        String profile = System.getProperty("spring.config.activate.on-profile");
-        if(profile == null || ! profile.equals("docker")) {
+        /*String profile = System.getProperty("spring.config.activate.on-profile");
+        if(profile == null  ) {
             host = "http://localhost:8080/";
-        }
+        }*/
         return host;
     }
 
