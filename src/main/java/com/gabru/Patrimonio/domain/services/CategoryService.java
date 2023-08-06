@@ -64,10 +64,16 @@ public class CategoryService {
     }
 
     //Search Section
-    public List<Category> buscarTodos(){
-        List<Category> categories; //Refactor for CategoryDto[] using mapstruct
-        categories = categoryRepository.findAllByUsuario(userDetailsServiceImpl.getUsuarioAutenticado());
-        return categories;
+    public List<CategoryDto> buscarTodos(){
+        List<Category> categories = categoryRepository.findAllByUsuario(userDetailsServiceImpl.getUsuarioAutenticado());
+        List<CategoryDto> categoriesDto = new ArrayList<>();
+        categories.forEach(category -> { categoriesDto.add(CategoryDto.builder()
+                .id(category.getId())
+                .nombre(category.getNombre())
+                .ingreso(category.isIngreso())
+                .borrado(category.getBorrado()).build());
+        });
+        return categoriesDto;
     }
     public List<CategoryDto> buscarPorNombre( String nombre){
         List<Category> categories;

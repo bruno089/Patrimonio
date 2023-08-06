@@ -19,7 +19,6 @@ import java.util.List;
 public class CategoryRest {
     public static final String CATEGORIES = "/conceptos";
     public static final String ID = "/{id}";
-
     public static final String CONCEPTO_NOMBRE = "/nombre";
     CategoryService categoryService;
     @PostMapping
@@ -38,11 +37,11 @@ public class CategoryRest {
     public void delete ( @PathVariable int id){
         categoryService.delete(id);
     }
-    @GetMapping    @Operation(summary = "buscarTodos", security = @SecurityRequirement(name = "JWT Token"))
-    public List<Category> buscarTodos(){
+    @GetMapping    @Operation(summary = "searchAll", security = @SecurityRequirement(name = "JWT Token"))
+    public List<CategoryDto> buscarTodos(){
         return categoryService.buscarTodos();
     }
-    @GetMapping(CONCEPTO_NOMBRE) // Este tipo de busqueda la sintaxis CREO no es la indicada averiguar y arreglar
+    @GetMapping(CONCEPTO_NOMBRE)  // Este tipo de busqueda la sintaxis CREO no es la indicada averiguar y arreglar
     public List<CategoryDto> buscarPorNombre( @RequestParam String nombre){
         return categoryService.buscarPorNombre(nombre);
     }

@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
+
 @Data @NoArgsConstructor
 @AllArgsConstructor @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -19,11 +21,12 @@ public class CategoryDto {
     String nombre;
     @NotNull
     boolean ingreso;
-
+    LocalDateTime borrado;
     public CategoryDto ( Category category ){
         this.id = category.getId();
         this.nombre = category.getNombre();
         this.ingreso = category.isIngreso();
+        this.borrado = category.getBorrado();
     }
 }
 
