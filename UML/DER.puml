@@ -1,0 +1,46 @@
+@startuml
+
+entity User {
+  /'+ user_id (PK)
+  --
+  name'/
+}
+entity Transaction {
+/'  + transaction_id (PK)
+  --
+  amount
+  date
+  --
+  user_id (FK)
+  category_id (FK)'/
+}
+
+entity Category {
+/'  + category_id (PK)
+  --
+  name
+  --
+  user_id (FK)
+  categoryGroup_id (FK)'/
+}
+entity CategoryGroup{
+ /' + categoryGroup_id (PK)
+  --
+    name
+  --
+  user_id (FK)
+  category_id (FK)'/
+}
+entity ConfirmationCode{}
+/'Creation User Relationships'/
+User "1" -- Transaction : 0..*
+User "1" -- Category: 0..*
+User "1" -- CategoryGroup : 0..1
+User "1" -- ConfirmationCode : 1
+/'Transaction Relationships and Clasification'/
+Transaction "1" --- Category : 0..1
+Category "1" - CategoryGroup : 0..1
+
+note right of User : User can have many transactions, categories and category groups
+
+@enduml
