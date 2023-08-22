@@ -1,0 +1,15 @@
+@startuml
+
+class Transaction {}
+class Category {}
+class CategoryGroup {}
+class User {}
+
+Transaction "0..*"  o--- "1" Category :  -category
+Category "0..*" o-- "1" CategoryGroup : -categoryGroup
+
+CategoryGroup "0..*" o-- "1" User : -user
+Category "0..*" o- "1" User : -user
+Transaction "0..*" o- "1" User : -user
+
+@enduml

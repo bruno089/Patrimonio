@@ -33,7 +33,7 @@ entity CategoryGroup{
 }
 entity ConfirmationCode{}
 /'Creation User Relationships'/
-User "1" -- Transaction : 0..*
+User "1" --- Transaction : 0..*
 User "1" -- Category: 0..*
 User "1" -- CategoryGroup : 0..1
 User "1" -- ConfirmationCode : 1
