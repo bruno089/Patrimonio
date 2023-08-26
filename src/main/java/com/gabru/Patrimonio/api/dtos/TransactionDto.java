@@ -27,7 +27,7 @@ public class TransactionDto {
         this.observacion = transaction.getObservacion();
         this.fecha = transaction.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         this.conceptoDescripcion = transaction.getCategory().getNombre();
-        this.conceptoIngreso = transaction.getCategory().isIngreso();
+     //   this.conceptoIngreso = transaction.getCategory().isIngreso();
         this.alta = transaction.getAlta().toString();
     }
 }

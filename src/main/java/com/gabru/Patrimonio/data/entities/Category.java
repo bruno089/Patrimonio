@@ -18,20 +18,20 @@ import java.time.LocalDateTime;
 public class Category {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
+
     String nombre;
+
     boolean ingreso;
     @Column(columnDefinition = "smalldatetime")
     LocalDateTime borrado;
 
     @ManyToOne @JoinColumn(nullable = false, name = "id_usuario")
     Usuario usuario;
+
+    @ManyToOne @JoinColumn(name = "id_category_group")
+    CategoryGroup categoryGroup;
     @PreRemove
-    public void borrado(){
-        this.borrado = LocalDateTime.now();
-    }
-
-
-
+    public void borrado(){ this.borrado = LocalDateTime.now(); }
 }
 
 

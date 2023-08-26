@@ -25,7 +25,7 @@ public class CategoryService {
 
         Category category =  Category.builder()
                 .nombre(categoryDto.getNombre())
-                .ingreso(categoryDto.isIngreso())
+                //.ingreso(categoryDto.isIngreso())
                 .usuario(userDetailsServiceImpl.getUsuarioAutenticado())
                 .build();
 
@@ -52,7 +52,7 @@ public class CategoryService {
                 .orElseThrow(() -> new NotFoundException("Not found category ID: : " + id ));
 
         category.setNombre(categoryDto.getNombre());
-        category.setIngreso(categoryDto.isIngreso());
+        //category.setIngreso(categoryDto.isIngreso());
         categoryRepository.save(category);
 
         return new CategoryDto(category);
@@ -70,7 +70,7 @@ public class CategoryService {
         categories.forEach(category -> { categoriesDto.add(CategoryDto.builder()
                 .id(category.getId())
                 .nombre(category.getNombre())
-                .ingreso(category.isIngreso())
+              //  .ingreso(category.isIngreso())
                 .borrado(category.getBorrado()).build());
         });
         return categoriesDto;
@@ -83,7 +83,8 @@ public class CategoryService {
         categories.forEach(concepto -> { categoryDtos.add(CategoryDto.builder()
                 .id(concepto.getId())
                 .nombre(concepto.getNombre())
-                .ingreso(concepto.isIngreso()).build());
+                //.ingreso(concepto.isIngreso())
+                .build());
         });
 
         //TODO PREGUNTAR SI SE PUEDE NO USAR ESTA FORMA
@@ -122,7 +123,7 @@ public class CategoryService {
             categoryResultado =  categoryRepository.save(
                     Category.builder()
                             .nombre(conceptoDescripcion)
-                            .ingreso(CONCEPTO_TIPO_DEFAULT)
+                  //          .ingreso(CONCEPTO_TIPO_DEFAULT)
                             .usuario(user)
                             .build()
 
