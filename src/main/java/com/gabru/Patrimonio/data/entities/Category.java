@@ -12,26 +12,24 @@ import java.time.LocalDateTime;
 
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
 @Entity
-@Table(name = "Concepto")
-@SQLDelete(sql = "UPDATE Concepto SET borrado = CURRENT_TIMESTAMP  where id = ?" , check = ResultCheckStyle.COUNT)
-@Where(clause = "borrado IS NULL")
+@Table(name = "Category")
+@SQLDelete(sql = "UPDATE Category SET deleted = CURRENT_TIMESTAMP  where id = ?" , check = ResultCheckStyle.COUNT)
+@Where(clause = "deleted IS NULL")
 public class Category {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
-
-    String nombre;
-
-    boolean ingreso;
+    @Column(nullable = false,length = 50) //unique = true
+    String name;
     @Column(columnDefinition = "smalldatetime")
-    LocalDateTime borrado;
+    LocalDateTime deleted;
 
     @ManyToOne @JoinColumn(nullable = false, name = "id_usuario")
-    Usuario usuario;
+    Usuario user;
 
     @ManyToOne @JoinColumn(name = "id_category_group")
     CategoryGroup categoryGroup;
     @PreRemove
-    public void borrado(){ this.borrado = LocalDateTime.now(); }
+    public void deleted (){ this.deleted = LocalDateTime.now(); }
 }
 
 

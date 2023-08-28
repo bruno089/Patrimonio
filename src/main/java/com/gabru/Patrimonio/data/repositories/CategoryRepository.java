@@ -8,9 +8,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CategoryRepository extends JpaRepository<Category,Integer> {
-    Optional<Category> findByNombre( String nombre);
-    List<Category> findByNombreContainingAndUsuario( String nombre,Usuario usuario);
-    List<Category> findAllByUsuario( Usuario usuario );
-    Optional<Category> findByIdAndUsuario(Integer id,Usuario usuario);
-    Optional<Category> findByNombreAndUsuario( String nombre,Usuario usuario);
+    List<Category> findByNameContainingAndUser ( String nombre, Usuario usuario);
+    List<Category> findAllByUser ( Usuario usuario );
+    Optional<Category> findByIdAndUser ( Integer id, Usuario usuario);
+    Optional<Category> findByNameAndUser ( String nombre, Usuario usuario);
 }

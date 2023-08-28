@@ -29,6 +29,7 @@ public class Transaction {
     @Column(columnDefinition = "smalldatetime")
     LocalDateTime borrado;
     @ManyToOne @JoinColumn(name = "idconcepto")
+    //@ManyToOne @JoinColumn(name = "id_category")
     Category category;
 
     @ManyToOne @JoinColumn(nullable = false, name = "id_usuario")

@@ -19,14 +19,11 @@ public class CategoryDto {
     int id;
     @NotNull @Size(min = 2, max = 100 , message = "El tamaño es entre 2 y 100") @NotBlank(message = "Nombre es obligatorio")
     String nombre;
-    @NotNull
-    boolean ingreso;
     LocalDateTime borrado;
     public CategoryDto ( Category category ){
         this.id = category.getId();
-        this.nombre = category.getNombre();
-        this.ingreso = category.isIngreso();
-        this.borrado = category.getBorrado();
+        this.nombre = category.getName();
+        this.borrado = category.getDeleted();
     }
 }
 

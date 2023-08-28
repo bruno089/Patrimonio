@@ -35,10 +35,10 @@ class CategoryServiceTest {
         List<Category> conceptosMock = new ArrayList<>();
         Category categoryMock =  new Category();
         categoryMock.setId(4);
-        categoryMock.setNombre("Comida");
+        categoryMock.setName("Comida");
         conceptosMock.add(categoryMock);
 
-        Mockito.when(categoryRepository.findAllByUsuario(Mockito.any())).thenReturn(conceptosMock);
+        Mockito.when(categoryRepository.findAllByUser(Mockito.any())).thenReturn(conceptosMock);
 
         Category category = categoryService.getConcepto(conceptoEntrante);
 
@@ -59,10 +59,10 @@ class CategoryServiceTest {
         List<Category> conceptosMock = new ArrayList<>();
         Category categoryMock =  new Category();
         categoryMock.setId(4);
-        categoryMock.setNombre("Comida");
-        categoryMock.setUsuario(user);
+        categoryMock.setName("Comida");
+        categoryMock.setUser(user);
         conceptosMock.add(categoryMock);
-        Mockito.when(categoryRepository.findAllByUsuario(Mockito.any())).thenReturn(conceptosMock);
+        Mockito.when(categoryRepository.findAllByUser(Mockito.any())).thenReturn(conceptosMock);
         //Proceso
         Category category = categoryService.getConcepto(conceptoEntranteConEspacios);
         //Aseveracion
