@@ -11,29 +11,29 @@ import org.hibernate.annotations.Where;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
-@Entity()
-@Table(name = "Movimiento")
-@SQLDelete(sql = "UPDATE Movimiento  SET borrado = CURRENT_TIMESTAMP  where id = ?" , check = ResultCheckStyle.COUNT)
-@Where(clause = "borrado IS NULL")
+@Entity
+@Table(name = "[Transaction]")
+@SQLDelete(sql = "UPDATE Transaction  SET deleted = CURRENT_TIMESTAMP  where id = ?" , check = ResultCheckStyle.COUNT)
+@Where(clause = "deleted IS NULL")
 public class Transaction {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
-    Double importe;
-    String observacion;
+    Double amount;
+
+    String detail;
     @Column(columnDefinition = "smalldatetime")
-    LocalDate fecha;
+    LocalDate date;
     @Column(columnDefinition = "smalldatetime")
-    LocalDateTime alta;
+    LocalDateTime dateCreation;
     @Column(columnDefinition = "smalldatetime")
-    LocalDateTime borrado;
-    @ManyToOne @JoinColumn(name = "idconcepto")
-    //@ManyToOne @JoinColumn(name = "id_category")
+    LocalDateTime deleted;
+
+    @ManyToOne @JoinColumn(name = "id_category")
     Category category;
 
-    @ManyToOne @JoinColumn(nullable = false, name = "id_usuario")
-    Usuario usuario;
+    @ManyToOne @JoinColumn(nullable = false, name = "id_user")
+    Usuario user;
 
 
     /** Esto es para cuando se necesita consultar el estado borrado  en el mismo flujo del algoritmo.
@@ -41,8 +41,8 @@ public class Transaction {
     Entonces se ejecutara  este codigo automaticamente para setear este valor en esos casos.
     No es necesario cuando se corta el flujo luego de borrar **/
     @PreRemove
-    public void borrado(){
-        this.borrado = LocalDateTime.now();
+    public void deleted (){
+        this.deleted = LocalDateTime.now();
     }
 
 

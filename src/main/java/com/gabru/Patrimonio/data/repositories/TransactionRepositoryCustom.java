@@ -16,18 +16,18 @@ public class TransactionRepositoryCustom {
 
     public List<MovimientosTotalesPorConceptoDto> findByFechasBetweenGroupByMonth( LocalDate fechaInicial, LocalDate fechaFinal){
         String sql = " select " +
-                "datename(month, t.fecha) + '/'+ cast(year(t.fecha) as varchar(4)) as mes, " +
-                "t2.nombre as concepto , " +
-                "sum(t.importe) as importe " +
-                "from Movimiento t " +
-                "inner join Concepto t2 on t.idConcepto = t2.id " +
-                "where t.borrado is null and  t.fecha between :fechaInicial and :fechaFinal " +
+                "datename(month, t.date) + '/'+ cast(year(t.date) as varchar(4)) as mes, " +
+                "cat.name as concepto , " +
+                "sum(t.amount) as importe " +
+                "from Transaction t " +
+                "inner join Category cat on t.id_category = cat.id " +
+                "where t.deleted is null and  t.date between :fechaInicial and :fechaFinal " +
                 "OR :fechaInicial is null or :fechaFinal is null " +
-                "group by datename(month, t.fecha) + '/'+ cast(year(t.fecha) as varchar(4)) , " +
-                "'01/'+ cast(month(t.fecha) as varchar(4)) + '/'+ cast(year(t.fecha) as varchar(4)), " +
-                "t2.nombre " +
-                "order by '01/'+ cast(month(t.fecha) as varchar(4)) + '/'+ cast(year(t.fecha) as varchar(4)), " +
-                "t2.nombre";
+                "group by datename(month, t.date) + '/'+ cast(year(t.date) as varchar(4)) , " +
+                "'01/'+ cast(month(t.date) as varchar(4)) + '/'+ cast(year(t.date) as varchar(4)), " +
+                "cat.name " +
+                "order by '01/'+ cast(month(t.date) as varchar(4)) + '/'+ cast(year(t.date) as varchar(4)), " +
+                "cat.nombre";
 
         Query query = entityManager.createNativeQuery(sql);
 
@@ -42,7 +42,6 @@ public class TransactionRepositoryCustom {
                 .importe( Double.valueOf(registro[2].toString()) )
                 .build();
             return dto;
-
         }) .collect(Collectors.toList());
     }
 }

@@ -13,16 +13,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TransactionRepository extends JpaRepository<Transaction,Integer> {
-    List<Transaction> findAllByAltaBetween( LocalDateTime fechaInicial, LocalDateTime fechaFinal); //Nombrado.Implementa Spring por detras
-    @Query("SELECT m FROM Transaction AS m WHERE m.alta BETWEEN :fechaInicial and :fechaFinal" )
-    List<Transaction> findAllByAltaBetween_Jpql ( LocalDateTime fechaInicial, LocalDateTime fechaFinal); //JPQL
-    @Query(value = "select * from movimiento t where t.fecha between :fechaInicial and :fechaFinal ",nativeQuery = true )
-    List<Transaction> findAllByAltaBetween_Sql_Nativo ( LocalDateTime fechaInicial, LocalDateTime fechaFinal); //Nativo
-    List<TransactionDto> findAllByFechaBetween( LocalDate fechaInicial, LocalDate fechaFinal);
-    List<TransactionDto> findAllByFechaBetweenOrderByFecha( LocalDate fechaInicial, LocalDate fechaFinal);
-    List<TransactionDto> findAllByFechaBetweenAndUsuarioOrderByFecha( LocalDate fechaInicial, LocalDate fechaFinal, Usuario usuario );
-    Optional<Transaction> findById( int id);
-    Optional<Transaction> findByIdAndUsuario( Integer id, Usuario usuario);
+    @Query("SELECT t FROM Transaction AS t WHERE t.dateCreation BETWEEN :fechaInicial and :fechaFinal" )
+    List<Transaction> findAllByAltaBetween_Jpql ( LocalDateTime fechaInicial, LocalDateTime fechaFinal);
+    List<TransactionDto> findAllByDateBetweenOrderByDate ( LocalDate init , LocalDate end);
+    Optional<Transaction> findById ( int id);
+    Optional<Transaction> findByIdAndUser ( Integer id, Usuario user);
+    List<Transaction> findAllByUser ( Usuario  user, Sort sort );
 
-    List<Transaction> findAllByUsuario( Usuario  usuario, Sort sort );
 }

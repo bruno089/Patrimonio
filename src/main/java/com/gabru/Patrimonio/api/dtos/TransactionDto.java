@@ -23,11 +23,11 @@ public class TransactionDto {
 
     public TransactionDto ( Transaction transaction ) {
         this.id = transaction.getId();
-        this.importe = transaction.getImporte();
-        this.observacion = transaction.getObservacion();
-        this.fecha = transaction.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        this.importe = transaction.getAmount();
+        this.observacion = transaction.getDetail();
+        this.fecha = transaction.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         this.conceptoDescripcion = transaction.getCategory().getName();
      //   this.conceptoIngreso = transaction.getCategory().isIngreso();
-        this.alta = transaction.getAlta().toString();
+        this.alta = transaction.getDateCreation().toString();
     }
 }

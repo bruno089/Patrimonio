@@ -32,7 +32,7 @@ class TransactionControllerTest {
 
         List<TransactionDto> movimientos = new ArrayList<>();
         movimientos.add(TransactionDto.builder().id(6).importe(100.00).observacion("pago de helado").build());
-        Mockito.when(transactionRepository.findAllByFechaBetweenOrderByFecha(Mockito.any(),Mockito.any())).thenReturn(movimientos);
+        Mockito.when(transactionRepository.findAllByDateBetweenOrderByDate(Mockito.any(),Mockito.any())).thenReturn(movimientos);
 
         List<TransactionDto> resultado = transactionService.buscarMovimientosPorFecha(fechaInicial,fechaFinal);
 

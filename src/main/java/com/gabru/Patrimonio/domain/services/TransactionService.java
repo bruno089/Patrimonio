@@ -40,17 +40,17 @@ public class TransactionService {
     /** CRUD **/
     public TransactionDto create ( TransactionDto transactionDto ) {
 
-        LocalDate fecha = LocalDate.parse(transactionDto.getFecha(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        LocalDate date = LocalDate.parse(transactionDto.getFecha(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
         Category newCategory =  categoryService.getConcepto(transactionDto.getConceptoDescripcion());
 
         Transaction transaction = Transaction.builder()
-                .observacion(transactionDto.getObservacion())
-                .importe(transactionDto.getImporte())
-                .fecha(fecha)
-                .alta(LocalDateTime.now())
+                .detail(transactionDto.getObservacion())
+                .amount(transactionDto.getImporte())
+                .date(date)
+                .dateCreation(LocalDateTime.now())
                 .category(newCategory)
-                .usuario(userDetailsServiceImpl.getUsuarioAutenticado())
+                .user(userDetailsServiceImpl.getUsuarioAutenticado())
                 .build();
 
         transactionRepository.save(transaction);
@@ -59,39 +59,39 @@ public class TransactionService {
     }
     public TransactionDto create ( List<TransactionDto> transactionDtoList ) {
         try {
-            // Obtengo el usuario autenticado
+            // Get User authenticated
             Usuario usuarioAutenticado = userDetailsServiceImpl.getUsuarioAutenticado();
 
             // Lista para almacenar los nuevos movimientos creados
-            List<Transaction> nuevosTransactions = new ArrayList<>();
+            List<Transaction> transactions = new ArrayList<>();
 
             // Recorro la lista de MovimientoDto recibida
             for (TransactionDto transactionDto : transactionDtoList) {
                 // Parseo la fecha del movimientoDto
-                LocalDate fecha = LocalDate.parse(transactionDto.getFecha(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                LocalDate date = LocalDate.parse(transactionDto.getFecha(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
                 // Obtengo el Concepto correspondiente
                 Category category = categoryService.getConcepto(transactionDto.getConceptoDescripcion());
 
                 // Creo el nuevo Movimiento
                 Transaction transaction = Transaction.builder()
-                        .observacion(transactionDto.getObservacion())
-                        .importe(transactionDto.getImporte())
-                        .fecha(fecha)
-                        .alta(LocalDateTime.now())
+                        .detail(transactionDto.getObservacion())
+                        .amount(transactionDto.getImporte())
+                        .date(date)
+                        .dateCreation(LocalDateTime.now())
                         .category(category)
-                        .usuario(usuarioAutenticado)
+                        .user(usuarioAutenticado)
                         .build();
 
                 // Agrego el nuevo Movimiento a la lista de nuevosMovimientos
-                nuevosTransactions.add(transaction);
+                transactions.add(transaction);
             }
 
             // Guardo todos los nuevos movimientos en la base de datos
-            transactionRepository.saveAll(nuevosTransactions);
+            transactionRepository.saveAll(transactions);
 
             // Retorno el primer MovimientoDto creado, podrías ajustar esto según tus necesidades
-            return new TransactionDto(nuevosTransactions.get(0));
+            return new TransactionDto(transactions.get(0));
 
         } catch (DateTimeParseException e) {
             e.printStackTrace();
@@ -115,14 +115,15 @@ public class TransactionService {
         return  new TransactionDto(transaction);
     }
     public TransactionDto update ( int id, TransactionDto transactionDto ) {
-        Transaction transaction = transactionRepository.findById(id).orElseThrow(()-> new NotFoundException("No se encuentra el movimiento con ID: " + id));
+        Transaction transaction = transactionRepository.findById(id)
+                .orElseThrow(()-> new NotFoundException("Not found transaction id: " + id));
 
         Category elCategory =  categoryService.getConcepto(transactionDto.getConceptoDescripcion()); //Todo Fix Break when is null
 
         transaction.setCategory(elCategory);
-        transaction.setFecha(FechaConverterService.stringtoLocalDate(transactionDto.getFecha(), "dd/MM/yyyy"));
-        transaction.setImporte(transactionDto.getImporte());
-        transaction.setObservacion(transactionDto.getObservacion());
+        transaction.setDate(FechaConverterService.stringtoLocalDate(transactionDto.getFecha(), "dd/MM/yyyy"));
+        transaction.setAmount(transactionDto.getImporte());
+        transaction.setDetail(transactionDto.getObservacion());
         transactionRepository.save(transaction);
 
         return new TransactionDto(transaction);
@@ -130,7 +131,7 @@ public class TransactionService {
     public void delete ( int movimientoId) {
 
         Transaction transaction = transactionRepository
-                .findByIdAndUsuario(movimientoId, userDetailsServiceImpl.getUsuarioAutenticado())
+                .findByIdAndUser(movimientoId, userDetailsServiceImpl.getUsuarioAutenticado())
                 .orElseThrow(()-> new NotFoundException("No encontrado movimiento: " + movimientoId ));
 
         transactionRepository.delete(transaction);
@@ -150,7 +151,7 @@ public class TransactionService {
         LocalDate fechaIni = stringtoLocalDate(fechaInicial,"d/M/yyyy");
         LocalDate fechaFin = stringtoLocalDate(fechaFinal,"d/M/yyyy");
 
-        List<TransactionDto> movimientos = transactionRepository.findAllByFechaBetweenOrderByFecha(fechaIni,fechaFin);
+        List<TransactionDto> movimientos = transactionRepository.findAllByDateBetweenOrderByDate(fechaIni,fechaFin);
        // List<MovimientoDto> movimientos = movimientoRepository.findAllByFechaBetweenAndUsuarioOrderByFecha(fechaIni,fechaFin,usuarioService.getUsuarioAutenticado());
 
         return movimientos;
@@ -167,7 +168,7 @@ public class TransactionService {
 
         Sort sort = Sort.by(Sort.Direction.DESC, "fecha","id");
 
-        List<Transaction> transactions = transactionRepository.findAllByUsuario(userDetailsServiceImpl.getUsuarioAutenticado(),sort);
+        List<Transaction> transactions = transactionRepository.findAllByUser(userDetailsServiceImpl.getUsuarioAutenticado(),sort);
 
         return transactions.stream()
                 .map(TransactionDto::new)
