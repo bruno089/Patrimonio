@@ -4,9 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ResultCheckStyle;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -22,6 +19,6 @@ public class CategoryGroup {
     @Column(unique = true , length = 50 )
     String name;
     @ManyToOne @JoinColumn(nullable = false, name = "id_usuario")
-    Usuario usuario;
+    Usuario user;
 
 }
