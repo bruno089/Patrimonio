@@ -166,7 +166,7 @@ public class TransactionService {
     }
     public List<TransactionDto> buscarTodos(){ //Todo Paginado and Sorting: hacer esto como en PERSONAS API.
 
-        Sort sort = Sort.by(Sort.Direction.DESC, "fecha","id");
+        Sort sort = Sort.by(Sort.Direction.DESC, "date","id");
 
         List<Transaction> transactions = transactionRepository.findAllByUser(userDetailsServiceImpl.getUsuarioAutenticado(),sort);
 
