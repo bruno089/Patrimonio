@@ -43,10 +43,10 @@ public class StrategyCsv implements LectorArchivosStrategy {
         }
 
         return TransactionDto.builder()
-                .fecha(fecha)
-                .importe(importe)
-                .observacion(observacion)
-                .conceptoDescripcion(concepto)
+                .date(fecha)
+                .amount(importe)
+                .detail(observacion)
+                .categoryName(concepto)
                 .build();
     }
 

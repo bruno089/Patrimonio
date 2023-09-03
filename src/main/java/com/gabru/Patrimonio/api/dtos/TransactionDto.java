@@ -13,21 +13,21 @@ import java.time.format.DateTimeFormatter;
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
 public class TransactionDto {
     Integer id;
-    Double importe;
-    String observacion;
-    String fecha;
-    Integer idConcepto;
-    String conceptoDescripcion;
+    Double amount;
+    String detail;
+    String date;
+    String dateCreation;
+    String categoryName;
+    Integer categoryId;
 
-    Boolean conceptoIngreso;
-    String alta;
 
     public TransactionDto ( Transaction transaction ) {
         this.id = transaction.getId();
-        this.importe = transaction.getAmount();
-        this.observacion = transaction.getDetail();
-        this.fecha = transaction.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        this.conceptoDescripcion =  transaction.getCategory() == null ? null : transaction.getCategory().getName();
-        this.alta = transaction.getDateCreation().toString();
+        this.amount = transaction.getAmount();
+        this.detail = transaction.getDetail();
+        this.date = transaction.getDate() == null ? null : transaction.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        this.categoryName =  transaction.getCategory() == null ? null : transaction.getCategory().getName();
+        this.categoryId = transaction.getCategory() == null ? null : transaction.getCategory().getId();
+        this.dateCreation = transaction.getDateCreation().toString();
     }
 }

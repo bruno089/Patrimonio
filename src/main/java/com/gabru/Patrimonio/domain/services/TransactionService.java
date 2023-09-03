@@ -40,13 +40,13 @@ public class TransactionService {
     /** CRUD **/
     public TransactionDto create ( TransactionDto transactionDto ) {
 
-        LocalDate date = LocalDate.parse(transactionDto.getFecha(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        LocalDate date = LocalDate.parse(transactionDto.getDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
-        Category category =  categoryService.getConcepto(transactionDto.getConceptoDescripcion());
+        Category category =  categoryService.getConcepto(transactionDto.getCategoryName());
 
         Transaction transaction = Transaction.builder()
-                .detail(transactionDto.getObservacion())
-                .amount(transactionDto.getImporte())
+                .detail(transactionDto.getDetail())
+                .amount(transactionDto.getAmount())
                 .date(date)
                 .dateCreation(LocalDateTime.now())
                 .category(category)
@@ -68,15 +68,15 @@ public class TransactionService {
             // Recorro la lista de MovimientoDto recibida
             for (TransactionDto transactionDto : transactionDtoList) {
                 // Parseo la fecha del movimientoDto
-                LocalDate date = LocalDate.parse(transactionDto.getFecha(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                LocalDate date = LocalDate.parse(transactionDto.getDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
                 // Obtengo el Concepto correspondiente
-                Category category = categoryService.getConcepto(transactionDto.getConceptoDescripcion());
+                Category category = categoryService.getConcepto(transactionDto.getCategoryName());
 
                 // Creo el nuevo Movimiento
                 Transaction transaction = Transaction.builder()
-                        .detail(transactionDto.getObservacion())
-                        .amount(transactionDto.getImporte())
+                        .detail(transactionDto.getDetail())
+                        .amount(transactionDto.getAmount())
                         .date(date)
                         .dateCreation(LocalDateTime.now())
                         .category(category)
@@ -106,11 +106,11 @@ public class TransactionService {
             throw new RuntimeException("Error al agregar los movimientos: " + e.getMessage());
         }
     }
-    public TransactionDto read ( Integer movimientoId ) {
+    public TransactionDto read ( Integer id ) {
 
         Transaction transaction = transactionRepository
-                .findById(movimientoId)
-                .orElseThrow(() -> new NotFoundException("No encontrado id: "+ movimientoId));
+                .findById(id)
+                .orElseThrow(() -> new NotFoundException("Not found Transaction id: " + id));
 
         return  new TransactionDto(transaction);
     }
@@ -118,26 +118,28 @@ public class TransactionService {
 
         Transaction transaction = transactionRepository
                 .findByIdAndUser(id, userDetailsServiceImpl.getUsuarioAutenticado())
-                .orElseThrow(()-> new NotFoundException("Not found transaction id: " + id));
+                .orElseThrow(()-> new NotFoundException("Not found Transaction id: " + id));
 
-        if ( transactionDto.getConceptoDescripcion() != null && transactionDto.getConceptoDescripcion()  != transaction.getCategory().getName() ){
-            Category  newCategory =  categoryService.getConcepto(transactionDto.getConceptoDescripcion());
+        if ( transactionDto.getCategoryName() != null &&
+             transactionDto.getCategoryName()  != transaction.getCategory().getName() ){
+
+            Category  newCategory =  categoryService.getConcepto(transactionDto.getCategoryName());
             transaction.setCategory(newCategory);
         }
-
-        transaction.setAmount(transactionDto.getImporte());
-        transaction.setDate(FechaConverterService.stringtoLocalDate(transactionDto.getFecha(), "dd/MM/yyyy"));
-        transaction.setDetail(transactionDto.getObservacion());
+        //Todo si tiene valor que modifique, sino no? o permito que limpie datos?
+        transaction.setAmount(transactionDto.getAmount());
+        transaction.setDate(FechaConverterService.stringtoLocalDate(transactionDto.getDate(), "dd/MM/yyyy"));
+        transaction.setDetail(transactionDto.getDetail());
 
         transactionRepository.save(transaction);
 
         return new TransactionDto(transaction);
     }
-    public void delete ( int movimientoId) {
+    public void delete ( int id ){
 
         Transaction transaction = transactionRepository
-                .findByIdAndUser(movimientoId, userDetailsServiceImpl.getUsuarioAutenticado())
-                .orElseThrow(()-> new NotFoundException("No encontrado movimiento: " + movimientoId ));
+                .findByIdAndUser(id, userDetailsServiceImpl.getUsuarioAutenticado())
+                .orElseThrow(()-> new NotFoundException("Not found Transaction id: " + id));
 
         transactionRepository.delete(transaction);
     }
@@ -152,7 +154,7 @@ public class TransactionService {
         transactionDtos.forEach(movimientoDto -> this.create( movimientoDto));
     }
 
-    public List<TransactionDto> buscarMovimientosPorFecha( String fechaInicial, String fechaFinal) {
+    public List<TransactionDto> readBetweenDates ( String fechaInicial, String fechaFinal) {
         LocalDate fechaIni = stringtoLocalDate(fechaInicial,"d/M/yyyy");
         LocalDate fechaFin = stringtoLocalDate(fechaFinal,"d/M/yyyy");
 
@@ -169,7 +171,7 @@ public class TransactionService {
 
         return resultado;
     }
-    public List<TransactionDto> buscarTodos(){ //Todo Paginado and Sorting: hacer esto como en PERSONAS API.
+    public List<TransactionDto> readAll (){ //Todo Paginado and Sorting: hacer esto como en PERSONAS API.
 
         Sort sort = Sort.by(Sort.Direction.DESC, "date","id");
 

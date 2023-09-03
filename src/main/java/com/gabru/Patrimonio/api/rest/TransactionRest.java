@@ -15,10 +15,10 @@ import java.util.List;
 @RequestMapping(TransactionRest.TRANSACTION)
 @AllArgsConstructor
 public class TransactionRest {
-    public static final String TRANSACTION = "/movimientos";
+    public static final String TRANSACTION = "/transactions";
     public static final String TRANSACTION_ID = "/{transactionId}";
 
-    public static final String SEARCH = "/busqueda";
+    public static final String SEARCH = "/search";
     TransactionService transactionService;
 
     /** CRUD **/
@@ -46,14 +46,14 @@ public class TransactionRest {
 
     /** Searchs **/
     @GetMapping()
-    public List<TransactionDto> buscarTodos(){
-        return transactionService.buscarTodos();
+    public List<TransactionDto> readAll (){
+        return transactionService.readAll();
     }
-    @GetMapping("/busqueda/movimientoEntreFechas")
-    public List<TransactionDto> buscarMovimientosPorFecha( String fechaInicial, String fechaFinal){
-        return transactionService.buscarMovimientosPorFecha(fechaInicial, fechaFinal);
+    @GetMapping(SEARCH + "/movimientoEntreFechas")
+    public List<TransactionDto> readBetweenDates ( String fechaInicial, String fechaFinal){
+        return transactionService.readBetweenDates(fechaInicial, fechaFinal);
     }
-    @GetMapping("/busqueda/totalizador")
+    @GetMapping(SEARCH + "/totalizador")
     public List<MovimientosTotalesPorConceptoDto> totalizador( String fechaInicial, String fechaFinal){
         return transactionService.totalizador(fechaInicial, fechaFinal);
     }

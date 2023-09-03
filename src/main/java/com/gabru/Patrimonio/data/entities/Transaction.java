@@ -14,11 +14,12 @@ import java.time.LocalDateTime;
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
 @Entity
 @Table(name = "[Transaction]")
-@SQLDelete(sql = "UPDATE Transaction  SET deleted = CURRENT_TIMESTAMP  where id = ?" , check = ResultCheckStyle.COUNT)
+@SQLDelete(sql = "UPDATE [Transaction]  SET deleted = CURRENT_TIMESTAMP  where id = ?" , check = ResultCheckStyle.COUNT)
 @Where(clause = "deleted IS NULL")
 public class Transaction {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
+
     Double amount;
 
     String detail;
