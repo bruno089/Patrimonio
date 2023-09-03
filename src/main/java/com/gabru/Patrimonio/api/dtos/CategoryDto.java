@@ -17,13 +17,13 @@ import java.time.LocalDateTime;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CategoryDto {
     int id;
-    @NotNull @Size(min = 2, max = 100 , message = "El tamaño es entre 2 y 100") @NotBlank(message = "Nombre es obligatorio")
-    String nombre;
-    LocalDateTime borrado;
+    @NotNull @Size(min = 2, max = 100 , message = "Size between 2 and 100") @NotBlank(message = "name is required")
+    String name;
+    LocalDateTime deleted;
     public CategoryDto ( Category category ){
         this.id = category.getId();
-        this.nombre = category.getName();
-        this.borrado = category.getDeleted();
+        this.name = category.getName();
+        this.deleted = category.getDeleted();
     }
 }
 

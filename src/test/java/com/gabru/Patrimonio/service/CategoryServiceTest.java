@@ -40,7 +40,7 @@ class CategoryServiceTest {
 
         Mockito.when(categoryRepository.findAllByUser(Mockito.any())).thenReturn(conceptosMock);
 
-        Category category = categoryService.getConcepto(conceptoEntrante);
+        Category category = categoryService.getCategory(conceptoEntrante);
 
         assertEquals(4, category.getId());
 
@@ -64,7 +64,7 @@ class CategoryServiceTest {
         conceptosMock.add(categoryMock);
         Mockito.when(categoryRepository.findAllByUser(Mockito.any())).thenReturn(conceptosMock);
         //Proceso
-        Category category = categoryService.getConcepto(conceptoEntranteConEspacios);
+        Category category = categoryService.getCategory(conceptoEntranteConEspacios);
         //Aseveracion
         assertEquals(4, category.getId());
     }

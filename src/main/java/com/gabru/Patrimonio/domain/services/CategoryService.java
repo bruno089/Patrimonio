@@ -14,26 +14,27 @@ import java.util.*;
 @Service
 @AllArgsConstructor
 public class CategoryService {
-    public static final boolean CONCEPTO_TIPO_DEFAULT = false;
     CategoryRepository categoryRepository;
     UserDetailsServiceImpl userDetailsServiceImpl;
     public CategoryDto create ( CategoryDto categoryDto ){
 
-        if ( categoryRepository.findByNameAndUser(categoryDto.getNombre(),userDetailsServiceImpl.getUsuarioAutenticado()).isPresent()){
-            throw new ConflictException("Already exist Category: " + categoryDto.getNombre());
+        if ( categoryRepository.findByNameAndUser
+                (categoryDto.getName(),userDetailsServiceImpl.getUserAuth()).isPresent()){
+
+            throw new ConflictException("Already exist Category: " + categoryDto.getName());
         }
 
         Category category =  Category.builder()
-                .name(categoryDto.getNombre())
-                //.ingreso(categoryDto.isIngreso())
-                .user(userDetailsServiceImpl.getUsuarioAutenticado())
+                .name(categoryDto.getName())
+                .user(userDetailsServiceImpl.getUserAuth())
                 .build();
 
         categoryRepository.save(category);
+
         return new CategoryDto(category);
     }
     public CategoryDto read ( int id){
-        Optional<Category> categoryOptional = categoryRepository.findByIdAndUser(id,userDetailsServiceImpl.getUsuarioAutenticado());
+        Optional<Category> categoryOptional = categoryRepository.findByIdAndUser(id,userDetailsServiceImpl.getUserAuth());
 
         if (! categoryOptional.isPresent()){
             throw new NotFoundException("Not found category ID: " + id );
@@ -41,47 +42,46 @@ public class CategoryService {
 
         return CategoryDto.builder()
                 .id((categoryOptional.get().getId()))
-                .nombre(categoryOptional.get().getName())
+                .name(categoryOptional.get().getName())
                 .build();
     }
     public CategoryDto update ( Integer id, CategoryDto categoryDto ) {
 
         Category category = categoryRepository
-                .findByIdAndUser(id,userDetailsServiceImpl.getUsuarioAutenticado())
+                .findByIdAndUser(id,userDetailsServiceImpl.getUserAuth())
                 .orElseThrow(() -> new NotFoundException("Not found category ID: : " + id ));
 
-        category.setName(categoryDto.getNombre());
-        //category.setIngreso(categoryDto.isIngreso());
+        category.setName(categoryDto.getName());
+
         categoryRepository.save(category);
 
         return new CategoryDto(category);
     }
-    public void delete ( int id){
-        if ( categoryRepository.findByIdAndUser(id, userDetailsServiceImpl.getUsuarioAutenticado()).isPresent()){
+    public void delete ( int id ){
+        if ( categoryRepository.findByIdAndUser(id, userDetailsServiceImpl.getUserAuth()).isPresent()){
             categoryRepository.deleteById(id);
         }
     }
 
     //Search Section
-    public List<CategoryDto> buscarTodos(){
-        List<Category> categories = categoryRepository.findAllByUser(userDetailsServiceImpl.getUsuarioAutenticado());
+    public List<CategoryDto> readAll (){
+        List<Category> categories = categoryRepository.findAllByUser(userDetailsServiceImpl.getUserAuth());
         List<CategoryDto> categoriesDto = new ArrayList<>();
         categories.forEach(category -> { categoriesDto.add(CategoryDto.builder()
                 .id(category.getId())
-                .nombre(category.getName())
-              //  .ingreso(category.isIngreso())
-                .borrado(category.getDeleted()).build());
+                .name(category.getName())
+                .deleted(category.getDeleted()).build());
         });
         return categoriesDto;
     }
-    public List<CategoryDto> buscarPorNombre( String nombre){
+    public List<CategoryDto> findByName ( String nombre){
         List<Category> categories;
-        categories = categoryRepository.findByNameContainingAndUser(nombre,userDetailsServiceImpl.getUsuarioAutenticado());
+        categories = categoryRepository.findByNameContainingAndUser(nombre,userDetailsServiceImpl.getUserAuth());
         List<CategoryDto> categoryDtos = new ArrayList<>();
 
         categories.forEach(concepto -> { categoryDtos.add(CategoryDto.builder()
                 .id(concepto.getId())
-                .nombre(concepto.getName())
+                .name(concepto.getName())
                 //.ingreso(concepto.isIngreso())
                 .build());
         });
@@ -92,8 +92,7 @@ public class CategoryService {
         //}
         return categoryDtos;
     }
-    public Category getConcepto( String conceptoDescripcion){ //Todo try catch?
-        if ( conceptoDescripcion == null || conceptoDescripcion.isEmpty() ){ return null; }
+    public Category getCategory ( String categoryName){ //Todo try catch?
         /** Concepto  - Servicio
          *
          * El manejo de concepto tiene q estar nucleado en un solo lugar (Principio de Unica Responsabilidad)
@@ -106,30 +105,30 @@ public class CategoryService {
          * *
          * */
 
+        if ( categoryName == null || categoryName.isEmpty() ){ return null; }
+
         //Limpiezas del Concepto, segun se vayan necesitando
-        conceptoDescripcion = conceptoDescripcion.trim();
-        String conceptoDescripcionUpper = conceptoDescripcion.toUpperCase();
-        Usuario user = userDetailsServiceImpl.getUsuarioAutenticado();
-        Map<String, Category> conceptosEnBDMap =  new HashMap<>();
+        categoryName = categoryName.trim();
+        String conceptoDescripcionUpper = categoryName.toUpperCase();
+        Usuario user = userDetailsServiceImpl.getUserAuth();
+        Map<String, Category> categoryMap =  new HashMap<>();
         categoryRepository
                 .findAllByUser(user)
-                .forEach( concepto -> conceptosEnBDMap.put(concepto.getName().toUpperCase(),concepto) );
+                .forEach( category -> categoryMap.put(category.getName().toUpperCase(),category) );
 
-        Category categoryResultado;
+        Category categoryResult;
 
-        if ( conceptosEnBDMap.containsKey(conceptoDescripcionUpper) ){
-            categoryResultado = conceptosEnBDMap.get(conceptoDescripcionUpper);
+        if ( categoryMap.containsKey(conceptoDescripcionUpper) ){
+            categoryResult = categoryMap.get(conceptoDescripcionUpper);
         }else{
-            categoryResultado =  categoryRepository.save(
+            categoryResult =  categoryRepository.save(
                     Category.builder()
-                            .name(conceptoDescripcion)
-                  //          .ingreso(CONCEPTO_TIPO_DEFAULT)
+                            .name(categoryName)
                             .user(user)
                             .build()
-
             );
         }
 
-        return categoryResultado;
+        return categoryResult;
     }
 }

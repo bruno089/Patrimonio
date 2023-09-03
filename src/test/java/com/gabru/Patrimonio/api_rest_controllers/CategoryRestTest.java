@@ -27,7 +27,7 @@ class CategoryRestTest {
 
     @Test
     void buscarTodos () throws Exception {
-        this.mockMvc.perform(get("/conceptos")
+        this.mockMvc.perform(get("/categories")
                         .content("")
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk());

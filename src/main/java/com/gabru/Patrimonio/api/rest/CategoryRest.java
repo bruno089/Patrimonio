@@ -1,6 +1,5 @@
 package com.gabru.Patrimonio.api.rest;
 
-import com.gabru.Patrimonio.data.entities.Category;
 import com.gabru.Patrimonio.domain.services.CategoryService;
 import com.gabru.Patrimonio.api.dtos.CategoryDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,9 +16,9 @@ import java.util.List;
 @RequestMapping(CategoryRest.CATEGORIES)
 @AllArgsConstructor
 public class CategoryRest {
-    public static final String CATEGORIES = "/conceptos";
+    public static final String CATEGORIES = "/categories";
     public static final String ID = "/{id}";
-    public static final String CONCEPTO_NOMBRE = "/nombre";
+    public static final String CATEGORY_NAME = "/name";
     CategoryService categoryService;
     @PostMapping
     public CategoryDto create ( @Valid @RequestBody CategoryDto categoryDto ){
@@ -37,12 +36,12 @@ public class CategoryRest {
     public void delete ( @PathVariable int id){
         categoryService.delete(id);
     }
-    @GetMapping    @Operation(summary = "searchAll", security = @SecurityRequirement(name = "JWT Token"))
-    public List<CategoryDto> buscarTodos(){
-        return categoryService.buscarTodos();
+    @GetMapping    @Operation(summary = "readAll", security = @SecurityRequirement(name = "JWT Token"))
+    public List<CategoryDto> readAll (){
+        return categoryService.readAll();
     }
-    @GetMapping(CONCEPTO_NOMBRE)  // Este tipo de busqueda la sintaxis CREO no es la indicada averiguar y arreglar
-    public List<CategoryDto> buscarPorNombre( @RequestParam String nombre){
-        return categoryService.buscarPorNombre(nombre);
+    @GetMapping(CATEGORY_NAME)
+    public List<CategoryDto> findByName ( @RequestParam String name ){
+        return categoryService.findByName(name);
     }
 }

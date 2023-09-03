@@ -42,7 +42,7 @@ public class TransactionService {
 
         LocalDate date = LocalDate.parse(transactionDto.getDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
-        Category category =  categoryService.getConcepto(transactionDto.getCategoryName());
+        Category category =  categoryService.getCategory(transactionDto.getCategoryName());
 
         Transaction transaction = Transaction.builder()
                 .detail(transactionDto.getDetail())
@@ -50,7 +50,7 @@ public class TransactionService {
                 .date(date)
                 .dateCreation(LocalDateTime.now())
                 .category(category)
-                .user(userDetailsServiceImpl.getUsuarioAutenticado())
+                .user(userDetailsServiceImpl.getUserAuth())
                 .build();
 
         transactionRepository.save(transaction);
@@ -60,7 +60,7 @@ public class TransactionService {
     public TransactionDto create ( List<TransactionDto> transactionDtoList ) {
         try {
             // Get User authenticated
-            Usuario usuarioAutenticado = userDetailsServiceImpl.getUsuarioAutenticado();
+            Usuario usuarioAutenticado = userDetailsServiceImpl.getUserAuth();
 
             // Lista para almacenar los nuevos movimientos creados
             List<Transaction> transactions = new ArrayList<>();
@@ -71,7 +71,7 @@ public class TransactionService {
                 LocalDate date = LocalDate.parse(transactionDto.getDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
                 // Obtengo el Concepto correspondiente
-                Category category = categoryService.getConcepto(transactionDto.getCategoryName());
+                Category category = categoryService.getCategory(transactionDto.getCategoryName());
 
                 // Creo el nuevo Movimiento
                 Transaction transaction = Transaction.builder()
@@ -117,13 +117,13 @@ public class TransactionService {
     public TransactionDto update ( int id, TransactionDto transactionDto ) {
 
         Transaction transaction = transactionRepository
-                .findByIdAndUser(id, userDetailsServiceImpl.getUsuarioAutenticado())
+                .findByIdAndUser(id, userDetailsServiceImpl.getUserAuth())
                 .orElseThrow(()-> new NotFoundException("Not found Transaction id: " + id));
 
         if ( transactionDto.getCategoryName() != null &&
              transactionDto.getCategoryName()  != transaction.getCategory().getName() ){
 
-            Category  newCategory =  categoryService.getConcepto(transactionDto.getCategoryName());
+            Category  newCategory =  categoryService.getCategory(transactionDto.getCategoryName());
             transaction.setCategory(newCategory);
         }
         //Todo si tiene valor que modifique, sino no? o permito que limpie datos?
@@ -138,7 +138,7 @@ public class TransactionService {
     public void delete ( int id ){
 
         Transaction transaction = transactionRepository
-                .findByIdAndUser(id, userDetailsServiceImpl.getUsuarioAutenticado())
+                .findByIdAndUser(id, userDetailsServiceImpl.getUserAuth())
                 .orElseThrow(()-> new NotFoundException("Not found Transaction id: " + id));
 
         transactionRepository.delete(transaction);
@@ -175,7 +175,7 @@ public class TransactionService {
 
         Sort sort = Sort.by(Sort.Direction.DESC, "date","id");
 
-        List<Transaction> transactions = transactionRepository.findAllByUser(userDetailsServiceImpl.getUsuarioAutenticado(),sort);
+        List<Transaction> transactions = transactionRepository.findAllByUser(userDetailsServiceImpl.getUserAuth(),sort);
 
         return transactions.stream()
                 .map(TransactionDto::new)

@@ -16,8 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class TransactionRest {
     public static final String TRANSACTION = "/transactions";
-    public static final String TRANSACTION_ID = "/{transactionId}";
-
+    public static final String ID = "/{id}";
     public static final String SEARCH = "/search";
     TransactionService transactionService;
 
@@ -26,17 +25,17 @@ public class TransactionRest {
     public TransactionDto create ( @Valid @RequestBody TransactionDto transactionDto ){
         return transactionService.create(transactionDto);
     }
-    @GetMapping(TRANSACTION_ID)
-    public TransactionDto read ( @PathVariable Integer transactionId){
-        return transactionService.read(transactionId);
+    @GetMapping(ID)
+    public TransactionDto read ( @PathVariable Integer id){
+        return transactionService.read(id);
     }
-    @PutMapping(TRANSACTION_ID)
-    public TransactionDto update ( @PathVariable Integer transactionId, @Valid @RequestBody TransactionDto transactionDto ){
-        return  transactionService.update(transactionId, transactionDto);
+    @PutMapping(ID)
+    public TransactionDto update ( @PathVariable Integer id, @Valid @RequestBody TransactionDto transactionDto ){
+        return  transactionService.update(id, transactionDto);
     }
-    @DeleteMapping(TRANSACTION_ID)
-    public void delete ( @PathVariable int transactionId){
-        transactionService.delete(transactionId);
+    @DeleteMapping(ID)
+    public void delete ( @PathVariable int id){
+        transactionService.delete(id);
     }
 
     @PostMapping("/csv")

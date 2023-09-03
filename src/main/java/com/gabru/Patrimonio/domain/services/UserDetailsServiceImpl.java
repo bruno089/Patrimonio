@@ -46,7 +46,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return usuario;
     }
 
-    public Usuario getUsuarioAutenticado (){
+    public Usuario getUserAuth (){
         return this.getUsuarioPorNombre(this.getNombreUsuarioAuthJWToken());
     }
 
