@@ -42,14 +42,14 @@ public class TransactionService {
 
         LocalDate date = LocalDate.parse(transactionDto.getFecha(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
-        Category newCategory =  categoryService.getConcepto(transactionDto.getConceptoDescripcion());
+        Category category =  categoryService.getConcepto(transactionDto.getConceptoDescripcion());
 
         Transaction transaction = Transaction.builder()
                 .detail(transactionDto.getObservacion())
                 .amount(transactionDto.getImporte())
                 .date(date)
                 .dateCreation(LocalDateTime.now())
-                .category(newCategory)
+                .category(category)
                 .user(userDetailsServiceImpl.getUsuarioAutenticado())
                 .build();
 
@@ -115,15 +115,20 @@ public class TransactionService {
         return  new TransactionDto(transaction);
     }
     public TransactionDto update ( int id, TransactionDto transactionDto ) {
-        Transaction transaction = transactionRepository.findById(id)
+
+        Transaction transaction = transactionRepository
+                .findByIdAndUser(id, userDetailsServiceImpl.getUsuarioAutenticado())
                 .orElseThrow(()-> new NotFoundException("Not found transaction id: " + id));
 
-        Category elCategory =  categoryService.getConcepto(transactionDto.getConceptoDescripcion()); //Todo Fix Break when is null
+        if ( transactionDto.getConceptoDescripcion() != null && transactionDto.getConceptoDescripcion()  != transaction.getCategory().getName() ){
+            Category  newCategory =  categoryService.getConcepto(transactionDto.getConceptoDescripcion());
+            transaction.setCategory(newCategory);
+        }
 
-        transaction.setCategory(elCategory);
-        transaction.setDate(FechaConverterService.stringtoLocalDate(transactionDto.getFecha(), "dd/MM/yyyy"));
         transaction.setAmount(transactionDto.getImporte());
+        transaction.setDate(FechaConverterService.stringtoLocalDate(transactionDto.getFecha(), "dd/MM/yyyy"));
         transaction.setDetail(transactionDto.getObservacion());
+
         transactionRepository.save(transaction);
 
         return new TransactionDto(transaction);

@@ -18,6 +18,7 @@ public class TransactionDto {
     String fecha;
     Integer idConcepto;
     String conceptoDescripcion;
+
     Boolean conceptoIngreso;
     String alta;
 
@@ -26,8 +27,7 @@ public class TransactionDto {
         this.importe = transaction.getAmount();
         this.observacion = transaction.getDetail();
         this.fecha = transaction.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        this.conceptoDescripcion = transaction.getCategory().getName();
-     //   this.conceptoIngreso = transaction.getCategory().isIngreso();
+        this.conceptoDescripcion =  transaction.getCategory() == null ? null : transaction.getCategory().getName();
         this.alta = transaction.getDateCreation().toString();
     }
 }

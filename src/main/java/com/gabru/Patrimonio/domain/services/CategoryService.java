@@ -93,6 +93,7 @@ public class CategoryService {
         return categoryDtos;
     }
     public Category getConcepto( String conceptoDescripcion){ //Todo try catch?
+        if ( conceptoDescripcion == null || conceptoDescripcion.isEmpty() ){ return null; }
         /** Concepto  - Servicio
          *
          * El manejo de concepto tiene q estar nucleado en un solo lugar (Principio de Unica Responsabilidad)
