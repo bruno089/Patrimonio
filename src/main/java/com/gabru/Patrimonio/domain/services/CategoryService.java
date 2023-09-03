@@ -2,7 +2,9 @@ package com.gabru.Patrimonio.domain.services;
 
 import com.gabru.Patrimonio.api.dtos.CategoryDto;
 import com.gabru.Patrimonio.data.entities.Category;
+import com.gabru.Patrimonio.data.entities.CategoryGroup;
 import com.gabru.Patrimonio.data.entities.Usuario;
+import com.gabru.Patrimonio.data.repositories.CategoryGroupRepository;
 import com.gabru.Patrimonio.domain.exceptions.ConflictException;
 import com.gabru.Patrimonio.domain.exceptions.NotFoundException;
 import com.gabru.Patrimonio.data.repositories.CategoryRepository;
@@ -15,17 +17,21 @@ import java.util.*;
 @AllArgsConstructor
 public class CategoryService {
     CategoryRepository categoryRepository;
+    CategoryGroupRepository categoryGroupRepository;
     UserDetailsServiceImpl userDetailsServiceImpl;
     public CategoryDto create ( CategoryDto categoryDto ){
 
-        if ( categoryRepository.findByNameAndUser
-                (categoryDto.getName(),userDetailsServiceImpl.getUserAuth()).isPresent()){
+         CategoryGroup categoryGroup = categoryGroupRepository
+                .findCategoryGroupByIdAndUser(categoryDto.getCategoryGroupId(),userDetailsServiceImpl.getUserAuth())
+                .orElse(null);
 
+        if ( categoryRepository.findByNameAndUser(categoryDto.getName(),userDetailsServiceImpl.getUserAuth()).isPresent()){
             throw new ConflictException("Already exist Category: " + categoryDto.getName());
         }
 
         Category category =  Category.builder()
                 .name(categoryDto.getName())
+                .categoryGroup(categoryGroup)
                 .user(userDetailsServiceImpl.getUserAuth())
                 .build();
 
@@ -34,16 +40,12 @@ public class CategoryService {
         return new CategoryDto(category);
     }
     public CategoryDto read ( int id){
+
         Optional<Category> categoryOptional = categoryRepository.findByIdAndUser(id,userDetailsServiceImpl.getUserAuth());
 
-        if (! categoryOptional.isPresent()){
-            throw new NotFoundException("Not found category ID: " + id );
-        }
+        if (! categoryOptional.isPresent() ){ throw new NotFoundException("Not found category ID: " + id ); }
 
-        return CategoryDto.builder()
-                .id((categoryOptional.get().getId()))
-                .name(categoryOptional.get().getName())
-                .build();
+        return new CategoryDto(categoryOptional.get());
     }
     public CategoryDto update ( Integer id, CategoryDto categoryDto ) {
 
@@ -51,6 +53,11 @@ public class CategoryService {
                 .findByIdAndUser(id,userDetailsServiceImpl.getUserAuth())
                 .orElseThrow(() -> new NotFoundException("Not found category ID: : " + id ));
 
+        CategoryGroup categoryGroup = categoryGroupRepository
+                .findCategoryGroupByIdAndUser(categoryDto.getCategoryGroupId(),userDetailsServiceImpl.getUserAuth())
+                .orElse(null);
+
+        category.setCategoryGroup(category.getCategoryGroup() != null ? categoryGroup : null);
         category.setName(categoryDto.getName());
 
         categoryRepository.save(category);
@@ -65,32 +72,21 @@ public class CategoryService {
 
     //Search Section
     public List<CategoryDto> readAll (){
-        List<Category> categories = categoryRepository.findAllByUser(userDetailsServiceImpl.getUserAuth());
         List<CategoryDto> categoriesDto = new ArrayList<>();
-        categories.forEach(category -> { categoriesDto.add(CategoryDto.builder()
-                .id(category.getId())
-                .name(category.getName())
-                .deleted(category.getDeleted()).build());
-        });
+
+        List<Category> categories = categoryRepository.findAllByUser(userDetailsServiceImpl.getUserAuth());
+        categories.forEach(category -> categoriesDto.add(new CategoryDto(category)));
+
         return categoriesDto;
     }
     public List<CategoryDto> findByName ( String nombre){
-        List<Category> categories;
-        categories = categoryRepository.findByNameContainingAndUser(nombre,userDetailsServiceImpl.getUserAuth());
-        List<CategoryDto> categoryDtos = new ArrayList<>();
 
-        categories.forEach(concepto -> { categoryDtos.add(CategoryDto.builder()
-                .id(concepto.getId())
-                .name(concepto.getName())
-                //.ingreso(concepto.isIngreso())
-                .build());
-        });
+        List<CategoryDto> categoriesDto = new ArrayList<>();
 
-        //TODO PREGUNTAR SI SE PUEDE NO USAR ESTA FORMA
-        //if (conceptos.isEmpty()){
-         //   throw new ConflictException("No hay elementos con: " + nombre );
-        //}
-        return categoryDtos;
+        List<Category> categories = categoryRepository.findByNameContainingAndUser(nombre,userDetailsServiceImpl.getUserAuth());
+        categories.forEach(category ->  categoriesDto.add(new CategoryDto(category)) );
+
+        return categoriesDto;
     }
     public Category getCategory ( String categoryName){ //Todo try catch?
         /** Concepto  - Servicio

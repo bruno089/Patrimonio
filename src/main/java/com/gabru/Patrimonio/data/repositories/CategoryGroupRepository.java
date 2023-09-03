@@ -16,4 +16,6 @@ public interface CategoryGroupRepository extends JpaRepository<CategoryGroup,Int
     Optional<CategoryGroup> findByIdAndUser ( int id, Usuario usuarioAutenticado );
 
     List<CategoryGroup> findAllByUser ( Usuario usuarioAutenticado );
+
+    Optional<CategoryGroup> findCategoryGroupByIdAndUser ( Integer categoryGroupId, Usuario userAuth );
 }
