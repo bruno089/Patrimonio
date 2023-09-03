@@ -16,27 +16,27 @@ import java.util.stream.Stream;
 public class CategoryGroupRest {
      CategoryGroupService categoryGroupService;
     public static final String CATEGORY_GROUP = "/categoryGroup";
-    public static final String CATEGORY_GROUP_ID = "/{categoryGroupId}";
+    public static final String ID = "/{id}";
 
     @PostMapping
     public CategoryGroupDto create ( @Valid @RequestBody CategoryGroupDto categoryGroupDto ){
         return categoryGroupService.create(categoryGroupDto);
     }
-    @GetMapping(CATEGORY_GROUP_ID)
-    public CategoryGroupDto read ( @PathVariable Integer categoryGroupId){
-        return categoryGroupService.read(categoryGroupId);
+    @GetMapping(ID)
+    public CategoryGroupDto read ( @PathVariable Integer id ){
+        return categoryGroupService.read(id);
     }
     @GetMapping()
     public Stream<CategoryGroupDto> readAll (){
         return categoryGroupService.readAll();
     }
-    @PutMapping(CATEGORY_GROUP_ID)
-    public CategoryGroupDto update ( @PathVariable Integer categoryGroupId, @Valid @RequestBody CategoryGroupDto categoryGroupDto ){
-        return  categoryGroupService.update(categoryGroupId, categoryGroupDto);
+    @PutMapping(ID)
+    public CategoryGroupDto update ( @PathVariable Integer id, @Valid @RequestBody CategoryGroupDto categoryGroupDto ){
+        return  categoryGroupService.update(id, categoryGroupDto);
     }
-    @DeleteMapping(CATEGORY_GROUP_ID)
-    public void delete ( @PathVariable int categoryGroupId){
-        categoryGroupService.delete(categoryGroupId);
+    @DeleteMapping(ID)
+    public void delete ( @PathVariable int id ){
+        categoryGroupService.delete(id);
     }
 
 }
