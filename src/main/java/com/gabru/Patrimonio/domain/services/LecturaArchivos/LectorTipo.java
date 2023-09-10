@@ -9,7 +9,7 @@ public enum LectorTipo {
     LectorTipo(Supplier<LectorArchivosStrategy> figureCreator) {
         this.figureCreator = figureCreator;
     }
-    public LectorArchivosStrategy createFigure() {
+    public LectorArchivosStrategy create () {
         return this.figureCreator.get();
     }
 

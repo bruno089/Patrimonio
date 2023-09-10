@@ -10,7 +10,7 @@ public class LectorArchivosContext {
     private LectorTipo lectorTipo;
     public LectorArchivosContext ( LectorTipo lectorTipo ) {
         this.lectorTipo = lectorTipo;
-        lectorArchivosStrategy = this.lectorTipo.createFigure();
+        lectorArchivosStrategy = this.lectorTipo.create();
     }
     public List<TransactionDto> ejecutar ( MultipartFile archivo){
         return   lectorArchivosStrategy.leerArchivoConvertirMovimientos(archivo);
