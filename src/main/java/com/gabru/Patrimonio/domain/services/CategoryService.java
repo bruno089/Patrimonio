@@ -1,11 +1,11 @@
 package com.gabru.Patrimonio.domain.services;
 
 import com.gabru.Patrimonio.api.dtos.CategoryDto;
+import com.gabru.Patrimonio.api.dtos.CategoryGroupDto;
 import com.gabru.Patrimonio.data.entities.Category;
 import com.gabru.Patrimonio.data.entities.CategoryGroup;
 import com.gabru.Patrimonio.data.entities.Usuario;
 import com.gabru.Patrimonio.data.repositories.CategoryGroupRepository;
-import com.gabru.Patrimonio.domain.exceptions.ConflictException;
 import com.gabru.Patrimonio.domain.exceptions.NotFoundException;
 import com.gabru.Patrimonio.data.repositories.CategoryRepository;
 import lombok.AllArgsConstructor;
@@ -16,28 +16,42 @@ import java.util.*;
 @Service
 @AllArgsConstructor
 public class CategoryService {
+
     CategoryRepository categoryRepository;
     CategoryGroupRepository categoryGroupRepository;
     UserDetailsServiceImpl userDetailsServiceImpl;
-    public CategoryDto create ( CategoryDto categoryDto ){
 
-         CategoryGroup categoryGroup = categoryGroupRepository
-                .findCategoryGroupByIdAndUser(categoryDto.getCategoryGroupId(),userDetailsServiceImpl.getUserAuth())
-                .orElse(null);
 
-        if ( categoryRepository.findByNameAndUser(categoryDto.getName(),userDetailsServiceImpl.getUserAuth()).isPresent()){
-            throw new ConflictException("Already exist Category: " + categoryDto.getName());
+    public CategoryDto createCategory ( CategoryDto categoryDto ){
+        return  new CategoryDto(this.create(categoryDto) );
+    }
+    private Category create(CategoryDto categoryDto) {
+        Usuario user = userDetailsServiceImpl.getUserAuth();
+
+        CategoryGroup categoryGroup = null;
+        if (categoryDto.getCategoryGroupId() != null || categoryDto.getCategoryGroupName() != null) {
+
+            categoryGroup = categoryGroupRepository
+                    .findByIdAndUserOrNameAndUser(categoryDto.getCategoryGroupId(),categoryDto.getCategoryGroupName(), user)
+                    .orElse(categoryGroupRepository.save(CategoryGroup.builder()//todo Encapsulate in a method in CategoryGroupService
+                            .name(categoryDto.getCategoryGroupName())
+                            .user(user)
+                            .build()));
         }
 
-        Category category =  Category.builder()
-                .name(categoryDto.getName())
-                .categoryGroup(categoryGroup)
-                .user(userDetailsServiceImpl.getUserAuth())
-                .build();
+        Optional<Category> optionalCategory = categoryRepository.findByNameAndUserCleanedName(categoryDto.getName(), user);
 
-        categoryRepository.save(category);
-
-        return new CategoryDto(category);
+        if (optionalCategory.isPresent()) {
+            return optionalCategory.get();
+        } else {
+            //Central category creation
+            Category category = Category.builder()
+                    .name(categoryDto.getName())
+                    .categoryGroup(categoryGroup)
+                    .user(user)
+                    .build();
+            return categoryRepository.save(category);
+        }
     }
     public CategoryDto read ( int id){
 
@@ -54,7 +68,7 @@ public class CategoryService {
                 .orElseThrow(() -> new NotFoundException("Not found category ID: : " + id ));
 
         CategoryGroup categoryGroup = categoryGroupRepository
-                .findCategoryGroupByIdAndUser(categoryDto.getCategoryGroupId(),userDetailsServiceImpl.getUserAuth())
+                .findByIdAndUserOrNameAndUser(categoryDto.getCategoryGroupId(),categoryDto.getCategoryGroupName(), userDetailsServiceImpl.getUserAuth())
                 .orElse(null);
 
         category.setCategoryGroup(category.getCategoryGroup() != null ? categoryGroup : null);
@@ -69,7 +83,20 @@ public class CategoryService {
             categoryRepository.deleteById(id);
         }
     }
+    public Category findByNameOrSaveCategory ( CategoryDto categoryDto) {
+        if (categoryDto == null || categoryDto.getName() == null || categoryDto.getName().isEmpty()) {
+            return null;
+        }
 
+        Usuario user = userDetailsServiceImpl.getUserAuth();
+        Optional<Category> optionalCategory = categoryRepository.findByNameAndUserCleanedName(categoryDto.getName(), user);
+
+        if (optionalCategory.isPresent()) {
+            return optionalCategory.get();
+        } else {
+            return create(categoryDto);
+        }
+    }
     //Search Section
     public List<CategoryDto> readAll (){
         List<CategoryDto> categoriesDto = new ArrayList<>();
@@ -79,7 +106,7 @@ public class CategoryService {
 
         return categoriesDto;
     }
-    public List<CategoryDto> findByName ( String nombre){
+    public List<CategoryDto> readAllByName ( String nombre){
 
         List<CategoryDto> categoriesDto = new ArrayList<>();
 
@@ -88,43 +115,7 @@ public class CategoryService {
 
         return categoriesDto;
     }
-    public Category getCategory ( String categoryName){ //Todo try catch?
-        /** Concepto  - Servicio
-         *
-         * El manejo de concepto tiene q estar nucleado en un solo lugar (Principio de Unica Responsabilidad)
-         * El servicio se debe de encargar de devolver el concepto en base a su descripcion. Debe poder distinguir entre minusculas y mayusculas Comida COMIDA
-         *          *  Ademas si el concepto no existe en BD se debe guardar este concepto
-         * Cuidado:
-         * - Case sensitive                 --
-         * - En plural y/o en singular      xx
-         * - Con muchas llamadas a BD       --
-         * *
-         * */
 
-        if ( categoryName == null || categoryName.isEmpty() ){ return null; }
 
-        //Limpiezas del Concepto, segun se vayan necesitando
-        categoryName = categoryName.trim();
-        String conceptoDescripcionUpper = categoryName.toUpperCase();
-        Usuario user = userDetailsServiceImpl.getUserAuth();
-        Map<String, Category> categoryMap =  new HashMap<>();
-        categoryRepository
-                .findAllByUser(user)
-                .forEach( category -> categoryMap.put(category.getName().toUpperCase(),category) );
 
-        Category categoryResult;
-
-        if ( categoryMap.containsKey(conceptoDescripcionUpper) ){
-            categoryResult = categoryMap.get(conceptoDescripcionUpper);
-        }else{
-            categoryResult =  categoryRepository.save(
-                    Category.builder()
-                            .name(categoryName)
-                            .user(user)
-                            .build()
-            );
-        }
-
-        return categoryResult;
-    }
 }

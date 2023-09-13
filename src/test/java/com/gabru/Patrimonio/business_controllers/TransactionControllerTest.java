@@ -34,7 +34,7 @@ class TransactionControllerTest {
         movimientos.add(TransactionDto.builder().id(6).amount(100.00).detail("pago de helado").build());
         Mockito.when(transactionRepository.findAllByDateBetweenOrderByDate(Mockito.any(),Mockito.any())).thenReturn(movimientos);
 
-        List<TransactionDto> resultado = transactionService.readBetweenDates(fechaInicial,fechaFinal);
+        List<TransactionDto> resultado = transactionService.readAllBetweenDates(fechaInicial,fechaFinal);
 
         Assertions.assertNotNull(resultado);
         assertEquals(100.00, resultado.get(0).getAmount());
@@ -45,7 +45,7 @@ class TransactionControllerTest {
         String fechaInicial = "SinFormato";
         String fechaFinal = "06/01/2022";
 
-        assertThrows( DateTimeParseException.class, () -> { transactionService.readBetweenDates(fechaInicial,fechaFinal); });
+        assertThrows( DateTimeParseException.class, () -> { transactionService.readAllBetweenDates(fechaInicial,fechaFinal); });
     }
 
 }

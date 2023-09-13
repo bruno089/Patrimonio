@@ -22,7 +22,7 @@ public class CategoryRest {
     CategoryService categoryService;
     @PostMapping
     public CategoryDto create ( @Valid @RequestBody CategoryDto categoryDto ){
-        return categoryService.create(categoryDto);
+        return categoryService.createCategory(categoryDto);
     }
     @GetMapping(ID)
     public CategoryDto read ( @PathVariable Integer id){
@@ -42,6 +42,6 @@ public class CategoryRest {
     }
     @GetMapping(CATEGORY_NAME)
     public List<CategoryDto> findByName ( @RequestParam String name ){
-        return categoryService.findByName(name);
+        return categoryService.readAllByName(name);
     }
 }

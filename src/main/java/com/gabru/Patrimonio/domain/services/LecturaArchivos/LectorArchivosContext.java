@@ -12,7 +12,7 @@ public class LectorArchivosContext {
         this.lectorTipo = lectorTipo;
         lectorArchivosStrategy = this.lectorTipo.create();
     }
-    public List<TransactionDto> ejecutar ( MultipartFile archivo){
+    public List<TransactionDto> read ( MultipartFile archivo){
         return   lectorArchivosStrategy.leerArchivoConvertirMovimientos(archivo);
     }
 

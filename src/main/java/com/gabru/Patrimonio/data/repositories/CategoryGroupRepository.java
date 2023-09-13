@@ -4,6 +4,7 @@ import com.gabru.Patrimonio.data.entities.Category;
 import com.gabru.Patrimonio.data.entities.CategoryGroup;
 import com.gabru.Patrimonio.data.entities.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,6 +17,8 @@ public interface CategoryGroupRepository extends JpaRepository<CategoryGroup,Int
     Optional<CategoryGroup> findByIdAndUser ( int id, Usuario usuarioAutenticado );
 
     List<CategoryGroup> findAllByUser ( Usuario usuarioAutenticado );
-
-    Optional<CategoryGroup> findCategoryGroupByIdAndUser ( Integer categoryGroupId, Usuario userAuth );
+    @Query("SELECT cg FROM CategoryGroup cg " +
+            "WHERE (cg.id = :categoryGroupId AND cg.user = :user)" +
+            "OR (TRIM(UPPER(cg.name)) = TRIM(UPPER(:name)) AND cg.user = :user)")
+    Optional<CategoryGroup> findByIdAndUserOrNameAndUser ( Integer categoryGroupId,String name, Usuario user );
 }

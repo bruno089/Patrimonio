@@ -19,8 +19,10 @@ public class TransactionDto {
     String dateCreation;
     String categoryName;
     Integer categoryId;
+    Integer categoryGroupId;
+    String categoryGroupName;
 
-
+    CategoryDto category;
     public TransactionDto ( Transaction transaction ) {
         this.id = transaction.getId();
         this.amount = transaction.getAmount();
@@ -29,5 +31,8 @@ public class TransactionDto {
         this.categoryName =  transaction.getCategory() == null ? null : transaction.getCategory().getName();
         this.categoryId = transaction.getCategory() == null ? null : transaction.getCategory().getId();
         this.dateCreation = transaction.getDateCreation().toString();
+        this.categoryGroupId = transaction.getCategory().getCategoryGroup() == null ? null : transaction.getCategory().getCategoryGroup().getId();
+        this.categoryGroupName = transaction.getCategory().getCategoryGroup() == null ? null : transaction.getCategory().getCategoryGroup().getName();
+
     }
 }

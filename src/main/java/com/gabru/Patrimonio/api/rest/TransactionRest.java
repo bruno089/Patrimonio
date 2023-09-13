@@ -40,7 +40,7 @@ public class TransactionRest {
 
     @PostMapping("/csv")
     public void registrarCsv ( @Valid ArchivoDto archivoDto, @RequestHeader(required = false) String tipoImportacion ){
-        transactionService.CsvAMovimientoDtoList(archivoDto.getArchivo(),tipoImportacion);
+        transactionService.createTransactionsFromCSV(archivoDto.getArchivo(),tipoImportacion);
     }
 
     /** Searchs **/
@@ -50,7 +50,7 @@ public class TransactionRest {
     }
     @GetMapping(SEARCH + "/movimientoEntreFechas")
     public List<TransactionDto> readBetweenDates ( String fechaInicial, String fechaFinal){
-        return transactionService.readBetweenDates(fechaInicial, fechaFinal);
+        return transactionService.readAllBetweenDates(fechaInicial, fechaFinal);
     }
     @GetMapping(SEARCH + "/totalizador")
     public List<MovimientosTotalesPorConceptoDto> totalizador( String fechaInicial, String fechaFinal){

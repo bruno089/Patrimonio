@@ -8,7 +8,6 @@ import com.gabru.Patrimonio.api.dtos.MovimientosTotalesPorConceptoDto;
 import com.gabru.Patrimonio.data.entities.Transaction;
 
 
-import com.gabru.Patrimonio.data.entities.Usuario;
 import com.gabru.Patrimonio.domain.exceptions.ConflictException;
 import com.gabru.Patrimonio.domain.exceptions.NotFoundException;
 
@@ -40,58 +39,18 @@ public class TransactionService {
     /** CRUD **/
     public TransactionDto create ( TransactionDto transactionDto ) {
 
-        LocalDate date = LocalDate.parse(transactionDto.getDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+       Transaction transaction = transactionRepository.save(this.builderTransaction(transactionDto));
 
-        Category category =  categoryService.getCategory(transactionDto.getCategoryName());
-
-        Transaction transaction = Transaction.builder()
-                .detail(transactionDto.getDetail())
-                .amount(transactionDto.getAmount())
-                .date(date)
-                .dateCreation(LocalDateTime.now())
-                .category(category)
-                .user(userDetailsServiceImpl.getUserAuth())
-                .build();
-
-        transactionRepository.save(transaction);
-
-        return new TransactionDto(transaction);
+       return new TransactionDto(transaction);
     }
-    public TransactionDto create ( List<TransactionDto> transactionDtoList ) {
+    public void create ( List<TransactionDto> transactionDtoList ) {
+        //Todo report quantity of transactions created vs quantity of transactions received
         try {
-            // Get User authenticated
-            Usuario usuarioAutenticado = userDetailsServiceImpl.getUserAuth();
-
-            // Lista para almacenar los nuevos movimientos creados
             List<Transaction> transactions = new ArrayList<>();
-
-            // Recorro la lista de MovimientoDto recibida
             for (TransactionDto transactionDto : transactionDtoList) {
-                // Parseo la fecha del movimientoDto
-                LocalDate date = LocalDate.parse(transactionDto.getDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-
-                // Obtengo el Concepto correspondiente
-                Category category = categoryService.getCategory(transactionDto.getCategoryName());
-
-                // Creo el nuevo Movimiento
-                Transaction transaction = Transaction.builder()
-                        .detail(transactionDto.getDetail())
-                        .amount(transactionDto.getAmount())
-                        .date(date)
-                        .dateCreation(LocalDateTime.now())
-                        .category(category)
-                        .user(usuarioAutenticado)
-                        .build();
-
-                // Agrego el nuevo Movimiento a la lista de nuevosMovimientos
-                transactions.add(transaction);
+                transactions.add(this.builderTransaction(transactionDto));
             }
-
-            // Guardo todos los nuevos movimientos en la base de datos
             transactionRepository.saveAll(transactions);
-
-            // Retorno el primer MovimientoDto creado, podrías ajustar esto según tus necesidades
-            return new TransactionDto(transactions.get(0));
 
         } catch (DateTimeParseException e) {
             e.printStackTrace();
@@ -120,10 +79,11 @@ public class TransactionService {
                 .findByIdAndUser(id, userDetailsServiceImpl.getUserAuth())
                 .orElseThrow(()-> new NotFoundException("Not found Transaction id: " + id));
 
-        if ( transactionDto.getCategoryName() != null &&
+        if ( transactionDto.getCategoryName()  != null &&
              transactionDto.getCategoryName()  != transaction.getCategory().getName() ){
 
-            Category  newCategory =  categoryService.getCategory(transactionDto.getCategoryName());
+            Category  newCategory =  categoryService.findByNameOrSaveCategory(transactionDto.getCategory());
+
             transaction.setCategory(newCategory);
         }
         //Todo si tiene valor que modifique, sino no? o permito que limpie datos?
@@ -143,18 +103,16 @@ public class TransactionService {
 
         transactionRepository.delete(transaction);
     }
-    public void CsvAMovimientoDtoList ( MultipartFile archivo, String tipoImportacion ){
+    public void createTransactionsFromCSV ( MultipartFile archivo, String tipoImportacion ){
 
         LectorArchivosContext lectorArchivosContext = new LectorArchivosContext(LectorTipo.CSV );
 
-        List<TransactionDto> transactionDtos =  lectorArchivosContext.ejecutar(archivo);
+        List<TransactionDto> transactionDtos =  lectorArchivosContext.read(archivo);
 
-        //this.agregar(movimientoDtos); //Todo check this
-
-        transactionDtos.forEach(movimientoDto -> this.create( movimientoDto));
+        this.create(transactionDtos);
     }
 
-    public List<TransactionDto> readBetweenDates ( String fechaInicial, String fechaFinal) {
+    public List<TransactionDto> readAllBetweenDates ( String fechaInicial, String fechaFinal) {
         LocalDate fechaIni = stringtoLocalDate(fechaInicial,"d/M/yyyy");
         LocalDate fechaFin = stringtoLocalDate(fechaFinal,"d/M/yyyy");
 
@@ -180,6 +138,25 @@ public class TransactionService {
         return transactions.stream()
                 .map(TransactionDto::new)
                 .collect(Collectors.toList());
+    }
+
+    //encapsulathe create logic in a method
+    private Transaction builderTransaction ( TransactionDto transactionDto ) {
+
+        LocalDate date = LocalDate.parse(transactionDto.getDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+        Category category =  categoryService.findByNameOrSaveCategory(transactionDto.getCategory());
+
+        Transaction transaction = Transaction.builder()
+                .detail(transactionDto.getDetail())
+                .amount(transactionDto.getAmount())
+                .date(date)
+                .dateCreation(LocalDateTime.now())
+                .category(category)
+                .user(userDetailsServiceImpl.getUserAuth())
+                .build();
+
+        return  transaction;
     }
 
 }
