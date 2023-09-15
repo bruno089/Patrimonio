@@ -31,20 +31,25 @@ public class CategoryService {
         CategoryGroup categoryGroup = null;
         if (categoryDto.getCategoryGroupId() != null || categoryDto.getCategoryGroupName() != null) {
 
-            categoryGroup = categoryGroupRepository
-                    .findByIdAndUserOrNameAndUser(categoryDto.getCategoryGroupId(),categoryDto.getCategoryGroupName(), user)
-                    .orElse(categoryGroupRepository.save(CategoryGroup.builder()//todo Encapsulate in a method in CategoryGroupService
-                            .name(categoryDto.getCategoryGroupName())
-                            .user(user)
-                            .build()));
+            Optional<CategoryGroup> optionalCategoryGroup = categoryGroupRepository
+                    .findByIdAndUserOrNameAndUser(categoryDto.getCategoryGroupId(),categoryDto.getCategoryGroupName(), user);
+
+            if (  optionalCategoryGroup.isPresent() ){
+                categoryGroup = optionalCategoryGroup.get();
+            }
+            else {//todo Encapsulate in a method in CategoryGroupService
+                categoryGroupRepository.save(CategoryGroup.builder()
+                        .name(categoryDto.getCategoryGroupName())
+                        .user(user)
+                        .build());
+            }
         }
 
         Optional<Category> optionalCategory = categoryRepository.findByNameAndUserCleanedName(categoryDto.getName(), user);
 
         if (optionalCategory.isPresent()) {
             return optionalCategory.get();
-        } else {
-            //Central category creation
+        } else {   //Central Category creation
             Category category = Category.builder()
                     .name(categoryDto.getName())
                     .categoryGroup(categoryGroup)
