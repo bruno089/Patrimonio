@@ -29,20 +29,16 @@ public class CategoryService {
         Usuario user = userDetailsServiceImpl.getUserAuth();
 
         CategoryGroup categoryGroup = null;
+
         if (categoryDto.getCategoryGroupId() != null || categoryDto.getCategoryGroupName() != null) {
 
             Optional<CategoryGroup> optionalCategoryGroup = categoryGroupRepository
                     .findByIdAndUserOrNameAndUser(categoryDto.getCategoryGroupId(),categoryDto.getCategoryGroupName(), user);
 
-            if (  optionalCategoryGroup.isPresent() ){
-                categoryGroup = optionalCategoryGroup.get();
-            }
-            else {//todo Encapsulate in a method in CategoryGroupService
-                categoryGroupRepository.save(CategoryGroup.builder()
-                        .name(categoryDto.getCategoryGroupName())
-                        .user(user)
-                        .build());
-            }
+            categoryGroup = optionalCategoryGroup.orElseGet(() -> categoryGroupRepository.save(CategoryGroup.builder()
+                    .name(categoryDto.getCategoryGroupName())
+                    .user(user)
+                    .build()));
         }
 
         Optional<Category> optionalCategory = categoryRepository.findByNameAndUserCleanedName(categoryDto.getName(), user);
