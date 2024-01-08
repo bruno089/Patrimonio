@@ -26,6 +26,7 @@ public class CategoryService {
         return  new CategoryDto(this.create(categoryDto) );
     }
     private Category create(CategoryDto categoryDto) {
+        //Todo al crear si ya tiene asingado null una groupCategory, no se le puede asignar otra desde CSV import
         Usuario user = userDetailsServiceImpl.getUserAuth();
 
         CategoryGroup categoryGroup = null;
@@ -43,16 +44,24 @@ public class CategoryService {
 
         Optional<Category> optionalCategory = categoryRepository.findByNameAndUserCleanedName(categoryDto.getName(), user);
 
+        Category category;
         if (optionalCategory.isPresent()) {
-            return optionalCategory.get();
+
+            category = optionalCategory.get();
+
+            if ( category.getCategoryGroup() == null && categoryGroup != null ) {
+                category.setCategoryGroup(categoryGroup);
+            }
         } else {   //Central Category creation
-            Category category = Category.builder()
+             category = Category.builder()
                     .name(categoryDto.getName())
                     .categoryGroup(categoryGroup)
                     .user(user)
                     .build();
-            return categoryRepository.save(category);
+
         }
+        categoryRepository.save(category);
+        return category;
     }
     public CategoryDto read ( int id){
 

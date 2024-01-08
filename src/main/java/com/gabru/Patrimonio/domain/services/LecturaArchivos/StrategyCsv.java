@@ -1,5 +1,6 @@
 package com.gabru.Patrimonio.domain.services.LecturaArchivos;
 
+import com.gabru.Patrimonio.api.dtos.CategoryDto;
 import com.gabru.Patrimonio.api.dtos.TransactionDto;
 import com.gabru.Patrimonio.domain.exceptions.ConflictException;
 import org.apache.commons.csv.CSVFormat;
@@ -27,13 +28,15 @@ public class StrategyCsv implements LectorArchivosStrategy {
         String fecha;
         Double importe;
         String observacion;
-        String concepto;
+        String categoryName;
+        String categoryGroupName;
 
         try {
             fecha = registro.get(0);
             importe = Double.parseDouble(registro.get(1));
             observacion = registro.get(2);
-            concepto  = registro.get(3);
+            categoryName  = registro.get(3);
+            categoryGroupName =  registro.get(4).isEmpty()  ? null : registro.get(4);
 
         }catch ( ConflictException e ){
             throw new ConflictException("Error en conversion del Movimiento");
@@ -41,12 +44,16 @@ public class StrategyCsv implements LectorArchivosStrategy {
         catch ( Exception e ){
             throw new RuntimeException("StrategyCsv.leerArchivoConvertirMovimientos: Error en conversion " + registro.toString() + e.getMessage());
         }
+        CategoryDto categoryDto = CategoryDto.builder()
+                .name(categoryName)
+                .categoryGroupName(categoryGroupName)
+                .build();
 
         return TransactionDto.builder()
                 .date(fecha)
                 .amount(importe)
                 .detail(observacion)
-                .categoryName(concepto)
+                .category(categoryDto)
                 .build();
     }
 

@@ -17,10 +17,12 @@ public class TransactionDto {
     String detail;
     String date;
     String dateCreation;
-    String categoryName;
+
+
+/*    String  categoryName;
     Integer categoryId;
     Integer categoryGroupId;
-    String categoryGroupName;
+    String  categoryGroupName;*/
 
     CategoryDto category;
     public TransactionDto ( Transaction transaction ) {
@@ -28,11 +30,19 @@ public class TransactionDto {
         this.amount = transaction.getAmount();
         this.detail = transaction.getDetail();
         this.date = transaction.getDate() == null ? null : transaction.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        this.categoryName =  transaction.getCategory() == null ? null : transaction.getCategory().getName();
-        this.categoryId = transaction.getCategory() == null ? null : transaction.getCategory().getId();
+       /* this.categoryName =  transaction.getCategory() == null ? null : transaction.getCategory().getName();
+        this.categoryId = transaction.getCategory() == null ? null : transaction.getCategory().getId();*/
         this.dateCreation = transaction.getDateCreation().toString();
-        this.categoryGroupId = transaction.getCategory().getCategoryGroup() == null ? null : transaction.getCategory().getCategoryGroup().getId();
-        this.categoryGroupName = transaction.getCategory().getCategoryGroup() == null ? null : transaction.getCategory().getCategoryGroup().getName();
+
+        if ( transaction.getCategory() != null ) { category = new CategoryDto(transaction.getCategory()); }
+
+       /* if ( transaction.getCategory() != null && transaction.getCategory().getCategoryGroup() != null ) {
+            this.categoryGroupId = transaction.getCategory().getCategoryGroup() == null ? null : transaction.getCategory().getCategoryGroup().getId();
+            this.categoryGroupName = transaction.getCategory().getCategoryGroup() == null ? null : transaction.getCategory().getCategoryGroup().getName();
+        }*/
+
+
+
 
     }
 }

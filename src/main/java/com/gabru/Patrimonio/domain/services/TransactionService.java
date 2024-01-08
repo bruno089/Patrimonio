@@ -79,8 +79,8 @@ public class TransactionService {
                 .findByIdAndUser(id, userDetailsServiceImpl.getUserAuth())
                 .orElseThrow(()-> new NotFoundException("Not found Transaction id: " + id));
 
-        if ( transactionDto.getCategoryName()  != null &&
-             transactionDto.getCategoryName()  != transaction.getCategory().getName() ){
+        if ( transactionDto.getCategory().getName()  != null &&
+             transactionDto.getCategory().getName()  != transaction.getCategory().getName() ){
 
             Category  newCategory =  categoryService.findByNameOrSaveCategory(transactionDto.getCategory());
 
