@@ -4,7 +4,7 @@ on:
     branches: ['dev', 'ng-dev', 'release-*']
 jobs:
   ci:
-    name: Test - Unit & Integration
+    name: Test - Unit & Integration & SonarCloud Scan
     runs-on: ubuntu-latest # macos-latest macos-11 windows-2019 ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -14,3 +14,14 @@ jobs:
           java-version: 8
       - name: Unit & Integration Tests
         run: mvn -B verify # -B: --batch-mode
+      - name: Sonar
+        if: success() # always() failure() success()
+        run: >
+          mvn -B verify -DskipTests sonar:sonar
+          -Dsonar.projectKey= patrimonio-api
+          -Dsonar.organization=minkatec
+          -Dsonar.host.url=https://sonarcloud.io
+          -Dsonar.login=$SONAR_TOKEN
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
