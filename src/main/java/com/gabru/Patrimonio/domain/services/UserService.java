@@ -15,13 +15,14 @@ import com.gabru.Patrimonio.data.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
-@Controller
+@Service
 @AllArgsConstructor
 public class UserService {
     UserRepository userRepository;

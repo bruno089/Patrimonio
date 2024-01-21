@@ -17,6 +17,7 @@ import com.gabru.Patrimonio.utils.business_services.FechaConverterService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -28,7 +29,7 @@ import java.util.stream.Collectors;
 
 import static com.gabru.Patrimonio.utils.business_services.FechaConverterService.stringtoLocalDate;
 
-@Controller
+@Service
 @AllArgsConstructor
 public class TransactionService {
     TransactionRepository transactionRepository;
